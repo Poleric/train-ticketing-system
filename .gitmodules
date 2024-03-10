@@ -1,0 +1,3 @@
+[submodules "openssl"]
+        path = include/openssl
+        url = git://github.com/openssl/openssl.git
