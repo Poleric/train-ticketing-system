@@ -11,11 +11,25 @@ Prerequisites
 Development requires the following
 
 - [Git](https://git-scm.com/)
+- [OpenSSL](#installing-openssl)
+
+Installing OpenSSL
+------------------
+
+### Debian
+
+```shell
+sudo apt-get install openssl
+```
+
+### Windows
+
+OpenSSL binaries is already included in the repo.
 
 Getting Started
 ---------------
 
-Check the prerequisites, and install any required packages / tools.
+Check the [Prerequisites](#prerequisites), and install any required packages / tools.
 
 1. Clone the repo
    ```shell
