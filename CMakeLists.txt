@@ -3,6 +3,10 @@ project(TrainTicketingSystem C)
 
 set(CMAKE_C_STANDARD 23)
 
+if (WIN32 OR MSVC)
+    add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
+endif ()
+
 add_executable(TrainTicketingSystem
         src/main.c
         src/utils.c)
@@ -10,9 +14,6 @@ target_include_directories(TrainTicketingSystem PRIVATE include/)
 
 # OpenSSL
 target_include_directories(TrainTicketingSystem PRIVATE include/openssl/include/)
-if (WIN32 OR MSVC)
-    SET(OPENSSL_ROOT_DIR include/openssl)
-endif ()
 find_package(OpenSSL REQUIRED)
 if (OpenSSL_FOUND)
     target_link_libraries(TrainTicketingSystem PRIVATE OpenSSL::SSL)
