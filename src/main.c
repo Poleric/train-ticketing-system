@@ -4,7 +4,8 @@
 
 
 int main() {
-    char hash[SHA256_HASH_LENGTH];
+    char hash[SHA256_HASH_LENGTH + 1];
+    hash[SHA256_HASH_LENGTH] = 0;
     char* message = "Hello, World!";
     hash_message(message, hash);
 
