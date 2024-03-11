@@ -18,6 +18,8 @@ Installing OpenSSL
 
 ### Debian
 
+Run
+
 ```shell
 sudo apt-get install openssl
 ```
@@ -29,23 +31,23 @@ For compiling and building on Windows, it's recommended to use `vcpkg` to manage
 #### Installing vcpkg
 
 ```cmd
-> git clone https://github.com/microsoft/vcpkg
-> cd vcpkg
-> bootstrap-vcpkg.bat
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+bootstrap-vcpkg.bat
 ```
 
-- Installing required dependencies
+#### Installing required dependencies
 
 ```cmd
-> vcpkg search ssl
-> vcpkg install openssl-windows
+vcpkg search ssl
+vcpkg install openssl-windows
 ```
 
 In order to use vcpkg with Visual Studio,
 run the following command (may require administrator elevation):
 
 ```cmd
-> .\vcpkg\vcpkg integrate install
+vcpkg integrate install
 ```
 
 #### Visual Studio Code with CMake Tools
