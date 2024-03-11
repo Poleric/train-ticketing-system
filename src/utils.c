@@ -49,7 +49,8 @@ int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]) {
 }
 
 bool compare_digest(const char* not_hashed, const char* hashed) {
-    char to_hash[SHA256_HASH_LENGTH];
+    char to_hash[SHA256_HASH_LENGTH + 1];
+    to_hash[SHA256_HASH_LENGTH] = 0;
     hash_message(not_hashed, to_hash);
 
     return strncmp(to_hash, hashed, 64);
