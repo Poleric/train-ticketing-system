@@ -13,7 +13,7 @@ int main() {
         fgets(buffer, 100, stdin);
         buffer[strcspn(buffer, "\n")] = 0;
 
-        if (compare_digest(buffer, hashed_password) == 0) {
+        if (compare_hash(buffer, hashed_password) == 0) {
             printf("Welcome!\n");
             break;
         }
