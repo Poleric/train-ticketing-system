@@ -8,20 +8,22 @@ Made for a semester assignment
 Prerequisites
 -------------
 
-Development requires the following
+Development requires the following:
 
 - [Git](https://git-scm.com/)
-- [OpenSSL](#installing-openssl)
+- OpenSSL
+- ncurses
 
-Installing OpenSSL
-------------------
+Read [Installing dependencies](#installing-dependencies) on instruction how to install.
+
+Installing dependencies
+-----------------------
 
 ### Debian
 
-Run
-
 ```shell
-sudo apt-get install openssl
+sudo apt-get update
+sudo apt-get install openssl libncurses5-dev libnursesw5-dev
 ```
 
 ### Windows
@@ -40,7 +42,7 @@ bootstrap-vcpkg.bat
 
 ```cmd
 vcpkg search ssl
-vcpkg install openssl-windows
+vcpkg install openssl-windows:x64-windows pdcurses:x64-windows
 ```
 
 In order to use vcpkg with Visual Studio,
