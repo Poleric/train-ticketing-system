@@ -2,4 +2,5 @@
 
 int staff() {
 
+	return 0;
 }
