@@ -6,7 +6,7 @@ enum Permissions {
     MANAGE_STAFF = 0b10,
 };
 
-struct Staff {
+typedef struct Staff {
     char* id;
     char* name;
     char* email;
@@ -14,6 +14,6 @@ struct Staff {
     char* position;
     enum Permissions permissions;
     double salary;
-};
+} staff_t;
 
 #endif //TRAINTICKETINGSYSTEM_STAFF_H
