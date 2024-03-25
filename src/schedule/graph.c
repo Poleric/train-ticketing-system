@@ -3,82 +3,85 @@
 #include <stdio.h>
 #include <string.h>
 
-struct StationNode* init_node(const char* location_name) {
+
+struct StationNode* init_node(int id, const char* station_id, const char* station_name) {
     struct StationNode* node = malloc(sizeof (struct StationNode));
-    node->name = location_name;
-    node->edge = (struct Edge){};
+    node->id = id;
+    node->details = (struct StationDetails){
+            station_id,
+            station_name
+    };
 
     return node;
 }
 
-struct Stations* init_graph() {
-    struct Stations* graph = malloc(sizeof (struct Stations));
-    graph->max_size = 1;
-    graph->number_of_nodes = 0;
-    graph->locations = calloc(1, sizeof (struct StationNode*));
-
-    return graph;
+struct StationNode* copy_node(struct StationNode *node) {
+    return init_node(node->id, node->details.station_id, node->details.station_name);
 }
 
 struct StationNode* get_next_node(struct StationNode* node) {
     return node->edge.next;
 }
 
-int add_next_connection(struct StationNode* node, const char* location_name, int distance) {
-    node->edge.next = init_node(location_name);
-    node->edge.distance = distance;
+int node_add_next_connection(struct StationNode* start_node, struct StationNode* next_node, int distance) {
+    start_node->edge.next = copy_node(next_node);
+    start_node->edge.distance = distance;
     return EXIT_SUCCESS;
 }
 
-int add_connection(struct StationNode* start_node, const char* location_name, int distance) {
+int node_add_connection(struct StationNode* start_node, struct StationNode* next_node, int distance) {
     struct StationNode* node = start_node;
     while (get_next_node(node) != NULL) {
         node = get_next_node(node);
     }
-    add_next_connection(node, location_name, distance);
+    node_add_next_connection(node, next_node, distance);
     return EXIT_SUCCESS;
 }
 
-int add_connection_to_connection(struct StationNode* node_1, struct StationNode* node_2, int distance) {
-    add_connection(node_1, node_2->name, distance);
-    add_connection(node_2, node_1->name, distance);
+struct StationGraph* init_graph() {
+    struct StationGraph* graph = malloc(sizeof (struct StationGraph));
+    graph->max_size = 1;
+    graph->number_of_nodes = 0;
+    graph->stations = calloc(1, sizeof (struct StationNode*));
+
+    return graph;
+}
+
+int resize_graph(struct StationGraph *graph) {
+    struct StationNode** tmp = realloc(graph->stations, 2 * graph->number_of_nodes * sizeof (struct StationNode *));
+    if (tmp == NULL)
+        return EXIT_FAILURE;
+    graph->stations = tmp;
+    graph->max_size *= 2;
     return EXIT_SUCCESS;
 }
 
-int add_root_node(struct Stations* graph, const char* location_name) {
-    if (graph->max_size <= graph->number_of_nodes) {
-        struct StationNode** tmp = realloc(graph->locations, 2 * graph->number_of_nodes * sizeof (struct StationNode *));
-        if (tmp == NULL)
-            return EXIT_FAILURE;
-        graph->locations = tmp;
-        graph->max_size *= 2;
-    }
-    graph->locations[graph->number_of_nodes++] = init_node(location_name);
-    return EXIT_SUCCESS;
-}
-
-
-struct StationNode* get_node(struct Stations* graph, const char* location_name) {
+struct StationNode* graph_get_node(struct StationGraph* graph, const char* station_id) {
     for (int i = 0; i < graph->number_of_nodes; i++)
-        if (strcmp(graph->locations[i]->name, location_name) == 0)
-            return graph->locations[i];
+        if (strcmp(graph->stations[i]->details.station_id, station_id) == 0)
+            return graph->stations[i];
     return NULL;
 }
 
-void print_node_link(struct StationNode* node) {
-    printf("%s", node->name);
-    while (node) {
-        if (node->edge.distance != 0)
-            printf(" -(%d)-> %s\n", node->edge.distance, node->edge.next->name);
-        node = get_next_node(node);
-    }
+int graph_add_connection(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance) {
+    struct StationNode* node = graph_get_node(graph, station_id);
+    struct StationNode* next_node = graph_get_node(graph, next_station_id);
+
+    node_add_connection(node, next_node, distance);
+    node_add_connection(next_node, node, distance);
+
+    return EXIT_SUCCESS;
 }
 
-void print_graph(struct Stations* graph) {
-    for (int i = 0; i < graph->number_of_nodes; i++) {
-        print_node_link(graph->locations[i]);
-        printf("\n");
+int graph_add_node(struct StationGraph* graph, struct StationDetails details) {
+    static int index = 0;
+
+    if (graph->max_size <= graph->number_of_nodes) {
+       if (resize_graph(graph) == EXIT_FAILURE)
+           return EXIT_FAILURE;
     }
+    graph->stations[graph->number_of_nodes++] = init_node(index++, details.station_id, details.station_name);
+    return EXIT_SUCCESS;
 }
 
 void free_node_list(struct StationNode* node) {
@@ -89,25 +92,41 @@ void free_node_list(struct StationNode* node) {
     }
 }
 
-void free_graph(struct Stations* graph) {
+void free_graph(struct StationGraph* graph) {
     for (int i = 0; i < graph->number_of_nodes; i++)
-        free_node_list(graph->locations[i]);
-    free(graph->locations);
+        free_node_list(graph->stations[i]);
+    free(graph->stations);
     free(graph);
 }
 
+void print_node_link(struct StationNode* node) {
+    printf("%s (%s)", node->details.station_name, node->details.station_id);
+    while (node) {
+        if (node->edge.distance != 0)
+            printf(" -(%d)-> %s\n", node->edge.distance, node->edge.next->details.station_name);
+        node = get_next_node(node);
+    }
+}
+
+void print_graph(struct StationGraph* graph) {
+    for (int i = 0; i < graph->number_of_nodes; i++) {
+        print_node_link(graph->stations[i]);
+        printf("\n");
+    }
+}
+
 int main() {
-    struct Stations* graph = init_graph();
+    struct StationGraph* graph = init_graph();
 
-    add_root_node(graph, "KL");
-    add_root_node(graph, "TH");
-    add_root_node(graph, "SG");
-    add_root_node(graph, "JB");
+    graph_add_node(graph, (struct StationDetails){"KL", "Kuala Lumpur"});
+    graph_add_node(graph, (struct StationDetails){"TH", "Thailand"});
+    graph_add_node(graph, (struct StationDetails){"SG", "Singapore"});
+    graph_add_node(graph, (struct StationDetails){"JB", "Johor Bahru"});
 
-    add_connection_to_connection(get_node(graph, "KL"), get_node(graph, "TH"), 120);
-    add_connection_to_connection(get_node(graph, "KL"), get_node(graph, "SG"), 80);
-    add_connection_to_connection(get_node(graph, "JB"), get_node(graph, "SG"), 20);
-    add_connection_to_connection(get_node(graph, "SG"), get_node(graph, "TH"), 200);
+    graph_add_connection(graph, "KL", "TH", 120);
+    graph_add_connection(graph, "KL", "SG", 80);
+    graph_add_connection(graph, "JB", "SG", 20);
+    graph_add_connection(graph, "SG", "TH", 200);
 
     print_graph(graph);
 

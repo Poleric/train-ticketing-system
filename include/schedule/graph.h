@@ -17,10 +17,10 @@ struct StationNode {
     struct Edge edge;
 };
 
-struct Stations {
+struct StationGraph {
     int max_size;
     int number_of_nodes;
-    struct StationNode** locations;
+    struct StationNode** stations;
 };
 
 #endif //TRAINTICKETINGSYSTEM_GRAPH_H
