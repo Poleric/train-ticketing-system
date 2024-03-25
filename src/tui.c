@@ -63,8 +63,6 @@ current_menu_t staff_menu() {
 
 int confirmation_menu(const char* message) {
     WINDOW* confirmation_window;
-    # define CONFIRMATION_WINDOW_WIDTH 30
-    # define CONFIRMATION_WINDOW_HEIGHT 3
 
     confirmation_window = newwin(
             CONFIRMATION_WINDOW_HEIGHT,
@@ -72,40 +70,33 @@ int confirmation_menu(const char* message) {
             get_centered_y_start(stdscr, CONFIRMATION_WINDOW_HEIGHT),
             get_centered_x_start(stdscr, CONFIRMATION_WINDOW_WIDTH)
             );
-    keypad(confirmation_window, TRUE);
+    keypad(confirmation_window, TRUE);  // enable arrow keys
     curs_set(0);  // hide cursor
 
-    # define DEFAULT_OPTION 0  // 0 = left, 1 = right
-    # define YES_LENGTH 3
-    # define NO_LENGTH 2
-    # define OPTION_GAP_LENGTH 2
-
     // message
-    wmove(confirmation_window,
-          0,
-          get_centered_x_start(confirmation_window, strlen(message))
-          );
-    waddstr(confirmation_window, message);
+    mvwaddstr(confirmation_window,
+              0,
+              get_centered_x_start(confirmation_window, (int)strlen(message)),
+              message);
 
     // display options
     int option_start_y = CONFIRMATION_WINDOW_HEIGHT - 1;
-    int option_start_x = get_centered_x_start(confirmation_window, YES_LENGTH + NO_LENGTH + OPTION_GAP_LENGTH);
-    wmove(confirmation_window,
-          option_start_y,
-          option_start_x
-          );
-    waddstr(confirmation_window, "Yes  No");
+    int option_start_x = get_centered_x_start(confirmation_window, CONFIRMATION_YES_LENGTH + CONFIRMATION_NO_LENGTH + CONFIRMATION_OPTION_GAP_LENGTH);
+    mvwaddstr(confirmation_window,
+              option_start_y,
+              option_start_x,
+              "Yes  No");
 
     int exit = 0;
-    int selection = DEFAULT_OPTION;
+    int selection = CONFIRMATION_DEFAULT_OPTION;
     do {
         // clear highlight
-        mvwchgat(confirmation_window, option_start_y, option_start_x, YES_LENGTH + NO_LENGTH + OPTION_GAP_LENGTH, 0, 0, NULL);
+        mvwchgat(confirmation_window, option_start_y, option_start_x, CONFIRMATION_YES_LENGTH + CONFIRMATION_NO_LENGTH + CONFIRMATION_OPTION_GAP_LENGTH, 0, 0, NULL);
 
         if (selection)  // highlight yes
-            mvwchgat(confirmation_window, option_start_y, option_start_x, YES_LENGTH, A_STANDOUT, 0, NULL);
+            mvwchgat(confirmation_window, option_start_y, option_start_x, CONFIRMATION_YES_LENGTH, A_STANDOUT, 0, NULL);
         else  // highlight no
-            mvwchgat(confirmation_window, option_start_y, option_start_x + YES_LENGTH + OPTION_GAP_LENGTH, NO_LENGTH, A_STANDOUT, 0, NULL);
+            mvwchgat(confirmation_window, option_start_y, option_start_x + CONFIRMATION_YES_LENGTH + CONFIRMATION_OPTION_GAP_LENGTH, CONFIRMATION_NO_LENGTH, A_STANDOUT, 0, NULL);
         wrefresh(confirmation_window);
         mvwprintw(confirmation_window, selection, 0, 0);
 

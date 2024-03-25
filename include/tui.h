@@ -14,6 +14,14 @@
 #define CTRL(c) ((c) & 0x1f)
 #define KEY_ESC 27
 
+
+# define CONFIRMATION_WINDOW_WIDTH 30
+# define CONFIRMATION_WINDOW_HEIGHT 3
+# define CONFIRMATION_DEFAULT_OPTION 0  // 0 = left, 1 = right
+# define CONFIRMATION_YES_LENGTH 3
+# define CONFIRMATION_NO_LENGTH 2
+# define CONFIRMATION_OPTION_GAP_LENGTH 2
+
 typedef enum CurrentMenu {
     EXIT = 0,
     MEMBER_MENU = 1,
