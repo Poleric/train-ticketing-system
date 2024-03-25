@@ -14,9 +14,6 @@ struct Member {
     char *email;
     char *contact_no;
     enum Membership membership;
-}
-
-
-
+};
 
 #endif //TRAINTICKETINGSYSTEM_MEMBER_H
