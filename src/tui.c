@@ -1,6 +1,4 @@
 #include <tui.h>
-#include <staff.h>
-#include <member.h>
 
 
 int start_menu() {
