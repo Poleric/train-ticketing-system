@@ -98,7 +98,6 @@ int confirmation_menu(const char* message) {
         else  // highlight no
             mvwchgat(confirmation_window, option_start_y, option_start_x + CONFIRMATION_YES_LENGTH + CONFIRMATION_OPTION_GAP_LENGTH, CONFIRMATION_NO_LENGTH, A_STANDOUT, 0, NULL);
         wrefresh(confirmation_window);
-        mvwprintw(confirmation_window, selection, 0, 0);
 
         switch (wgetch(confirmation_window)) {
             case KEY_LEFT:
