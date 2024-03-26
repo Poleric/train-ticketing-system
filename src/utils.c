@@ -35,6 +35,7 @@ int decode_digest(const unsigned char* digest, size_t digest_size, char* buff, s
         snprintf(buff, 3, "%02x", digest[i]);
         buff += 2;
     }
+    return EXIT_SUCCESS;
 }
 
 int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]) {
