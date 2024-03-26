@@ -1,4 +1,4 @@
-<mxfile compressed="false" host="app.diagrams.net" modified="2024-03-26T14:17:12.844Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="7oMDYBeFNua0IGp3I1q-" version="24.0.4" type="github">
+<mxfile compressed="false" host="app.diagrams.net" modified="2024-03-26T14:23:28.619Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="S4nciNULWc0Nuh6NRALr" version="24.0.4" type="github">
   <diagram id="B3oRqTaJLOvQRfe40nun" name="Page-1">
     <mxGraphModel dx="2554" dy="696" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -166,9 +166,6 @@
         <mxCell id="5mkOq1AOxVc8VsjbNNZK-59" value="Manage Ticket" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="430" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HU2wz1AR68LFRofTaJY_-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="5mkOq1AOxVc8VsjbNNZK-62" target="HU2wz1AR68LFRofTaJY_-17">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="5mkOq1AOxVc8VsjbNNZK-62" value="View Schedule" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="340" y="430" width="120" height="60" as="geometry" />
         </mxCell>
@@ -295,9 +292,6 @@
         </mxCell>
         <mxCell id="HU2wz1AR68LFRofTaJY_-15" value="Enter staff ID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-733" y="540" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="HU2wz1AR68LFRofTaJY_-17" value="Check seat availability" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="260" y="540" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
