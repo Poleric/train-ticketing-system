@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <staff.h>
 #include <member.h>
+#include <form.h>
+#include <menu.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #include <curses.h>
