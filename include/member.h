@@ -16,4 +16,7 @@ typedef struct Member {
     enum Membership membership;
 } member_t;
 
+
+void free_member(member_t* member);
+
 #endif //TRAINTICKETINGSYSTEM_MEMBER_H

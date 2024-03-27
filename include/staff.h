@@ -16,4 +16,7 @@ typedef struct Staff {
     double salary;
 } staff_t;
 
+
+void free_staff(staff_t* staff);
+
 #endif //TRAINTICKETINGSYSTEM_STAFF_H
