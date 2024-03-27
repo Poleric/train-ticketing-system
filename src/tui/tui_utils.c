@@ -1,5 +1,6 @@
 #include <tui/tui_utils.h>
 #include <string.h>
+#include <ctype.h>
 
 static int g_last_y, g_last_x;
 
@@ -21,6 +22,31 @@ int get_centered_x_start(WINDOW* window, int length) {
 
 int get_centered_y_start(WINDOW* window, int length) {
     return get_offset_for_centered(length, getmaxy(window));
+}
+
+/*
+ * For trimming the padded space from form fields.
+ */
+char* trim_whitespaces(char *str) {
+    char *end;
+
+    // trim leading space
+    while(isspace(*str))
+        str++;
+
+    if(*str == 0) // all spaces?
+        return str;
+
+    // trim trailing space
+    end = str + strnlen(str, 128) - 1;
+
+    while(end > str && isspace(*end))
+        end--;
+
+    // write new null terminator
+    *(end+1) = '\0';
+
+    return str;
 }
 
 bool confirmation_menu(const char* message) {
@@ -83,6 +109,7 @@ bool confirmation_menu(const char* message) {
     }
 
     wclear(confirmation_window);
+    wrefresh(confirmation_window);
     delwin(confirmation_window);
 
     curs_set(1);  // return cursor
