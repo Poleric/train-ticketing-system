@@ -7,13 +7,13 @@ enum Membership {
     PLATINUM = 0x100
 };
 
-struct Member {
+typedef struct Member {
     char *id;
     char *name;
     char gender;
     char *email;
     char *contact_no;
     enum Membership membership;
-};
+} member_t;
 
 #endif //TRAINTICKETINGSYSTEM_MEMBER_H
