@@ -1,11 +1,7 @@
 #ifndef TRAINTICKETINGSYSTEM_TUI_UTILS_H
 #define TRAINTICKETINGSYSTEM_TUI_UTILS_H
 
-#include <form.h>
-#include <menu.h>
-
-#define CTRL(c) ((c) & 0x1f)
-#define KEY_ESC 27
+#include <tui/tui_common.h>
 
 # define CONFIRMATION_WINDOW_WIDTH 30
 # define CONFIRMATION_WINDOW_HEIGHT 5
