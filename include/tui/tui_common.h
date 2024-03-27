@@ -3,6 +3,7 @@
 
 #include <form.h>
 #include <menu.h>
+#include <panel.h>
 
 typedef enum CurrentMenu {
     EXIT = 0,

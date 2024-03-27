@@ -51,6 +51,7 @@ char* trim_whitespaces(char *str) {
 
 bool confirmation_menu(const char* message) {
     WINDOW* confirmation_window;
+    PANEL*
     int exit = FALSE, selection = CONFIRMATION_DEFAULT_OPTION;
 
     confirmation_window = newwin(
