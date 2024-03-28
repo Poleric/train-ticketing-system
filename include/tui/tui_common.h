@@ -15,10 +15,6 @@ typedef enum CurrentMenu {
 #define KEY_ESC 27
 #define KEY_CTRL_BACKSPACE 8  // same as ^H
 
-#define LOGIN_USERNAME_LABEL "Username :"
-#define LOGIN_PASSWORD_LABEL "Password :"
-#define LOGIN_FIELD_OFFSET_X 11
-
 
 #define MINORI "      ..........................................................................................      \n" \
                "      ..........................................................................................      \n" \
