@@ -49,16 +49,16 @@ char* trim_whitespaces(char *str) {
     return str;
 }
 
-bool confirmation_menu(const char* message) {
+bool confirmation_menu(WINDOW* window, const char* message) {
     WINDOW* confirmation_window;
-    PANEL*
     int exit = FALSE, selection = CONFIRMATION_DEFAULT_OPTION;
 
-    confirmation_window = newwin(
+    confirmation_window = derwin(
+            window,
             CONFIRMATION_WINDOW_HEIGHT,
             CONFIRMATION_WINDOW_WIDTH,
-            get_centered_y_start(stdscr, CONFIRMATION_WINDOW_HEIGHT),
-            get_centered_x_start(stdscr, CONFIRMATION_WINDOW_WIDTH)
+            get_centered_y_start(window, CONFIRMATION_WINDOW_HEIGHT),
+            get_centered_x_start(window, CONFIRMATION_WINDOW_WIDTH)
     );
     keypad(confirmation_window, TRUE);  // enable arrow keys
 
@@ -80,6 +80,7 @@ bool confirmation_menu(const char* message) {
               option_start_y,
               option_start_x,
               "Yes  No");
+    wrefresh(confirmation_window);
 
     while (!exit) {
         // clear highlight
@@ -89,7 +90,6 @@ bool confirmation_menu(const char* message) {
             mvwchgat(confirmation_window, option_start_y, option_start_x, CONFIRMATION_YES_LENGTH, A_STANDOUT, 0, NULL);
         else  // highlight no
             mvwchgat(confirmation_window, option_start_y, option_start_x + CONFIRMATION_YES_LENGTH + CONFIRMATION_OPTION_GAP_LENGTH, CONFIRMATION_NO_LENGTH, A_STANDOUT, 0, NULL);
-        wrefresh(confirmation_window);
 
         switch (wgetch(confirmation_window)) {
             case KEY_LEFT:

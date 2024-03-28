@@ -17,6 +17,6 @@ int get_centered_x_start(WINDOW* window, int length);
 int get_centered_y_start(WINDOW* window, int length);
 char* trim_whitespaces(char *str);
 
-bool confirmation_menu(const char* message);
+bool confirmation_menu(WINDOW* window, const char* message);
 
 #endif //TRAINTICKETINGSYSTEM_TUI_UTILS_H
