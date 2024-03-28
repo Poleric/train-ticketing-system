@@ -6,7 +6,7 @@
 #include <panel.h>
 
 typedef enum CurrentMenu {
-    EXIT = 0,
+    EXIT_MENU = 0,
     MEMBER_MENU = 1,
     STAFF_MENU = 2
 } current_menu_t;
