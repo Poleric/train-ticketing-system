@@ -14,10 +14,11 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils.c
     ${CMAKE_SOURCE_DIR}/src/staff.c
 
-    ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/staff_menu.c
+#    ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
+#    ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
+#    ${CMAKE_SOURCE_DIR}/src/tui/staff_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/tui_utils.c
+    ${CMAKE_SOURCE_DIR}/src/tui/template/login_menu.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
