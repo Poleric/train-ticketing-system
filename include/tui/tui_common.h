@@ -1,8 +1,6 @@
 #ifndef TRAINTICKETINGSYSTEM_TUI_COMMON_H
 #define TRAINTICKETINGSYSTEM_TUI_COMMON_H
 
-#include <form.h>
-#include <menu.h>
 #include <panel.h>
 
 typedef enum CurrentMenu {
