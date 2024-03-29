@@ -68,6 +68,7 @@ void print_input_field_buffer(LOGIN_FORM* login_form, int field_n) {
 
     wmove(login_form->window, y, x); wclrtoeol(login_form->window);
     mvwprintw(login_form->window, y, x, "%s", login_form->field_buffers[field_n]);
+    wmove(login_form->window, y, x); wchgat(login_form->window, -1, A_UNDERLINE, 0, 0);
 }
 
 void delete_char(char* buffer, int pos) {
