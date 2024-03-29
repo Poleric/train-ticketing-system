@@ -24,6 +24,10 @@ int get_centered_y_start(WINDOW* window, int length) {
     return get_offset_for_centered(length, getmaxy(window));
 }
 
+void add_chars(WINDOW* window, int ch, int n) {
+    while (n--) waddch(window, ch);
+}
+
 /*
  * For trimming the padded space from form fields.
  */
