@@ -1,6 +1,7 @@
 #include <tui/template/login_menu.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 static int LOGIN_FORM_LINES = 0, LOGIN_FORM_COLS = 0;
@@ -171,11 +172,12 @@ login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
             break;
 
         default:
-            if ((strlen(login_form->field_buffers[selection_row]) < login_form->buffer_length)) {
-                add_char(login_form->field_buffers[selection_row], (char)ch, selection_col++);
-                print_input_field_buffer(login_form, selection_row);
-                move_cursor_to_input_field(login_form, selection_row, selection_col);
-            }
+            if (isprint(ch))
+                if ((strlen(login_form->field_buffers[selection_row]) < login_form->buffer_length)) {
+                    add_char(login_form->field_buffers[selection_row], (char)ch, selection_col++);
+                    print_input_field_buffer(login_form, selection_row);
+                    move_cursor_to_input_field(login_form, selection_row, selection_col);
+                }
             break;
     }
     wrefresh(login_form->window);
