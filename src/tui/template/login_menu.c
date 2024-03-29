@@ -156,6 +156,7 @@ login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
 
         case KEY_BACKSPACE:
         case 127:
+        case '\b':
             if (selection_col > 0) {
                 delete_char(login_form->field_buffers[selection_row], --selection_col);
                 print_input_field_buffer(login_form, selection_row);
