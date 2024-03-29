@@ -15,7 +15,7 @@ void restore_last_pos(WINDOW* window);
 int get_offset_for_centered(int length, int total_length);
 int get_centered_x_start(WINDOW* window, int length);
 int get_centered_y_start(WINDOW* window, int length);
-void add_chars(WINDOW* window, int ch, int n);
+void wadd_chars(WINDOW* window, int ch, int n);
 char* trim_whitespaces(char *str);
 
 bool confirmation_menu(WINDOW* window, const char* message);
