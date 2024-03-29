@@ -3,73 +3,101 @@
 #include <string.h>
 
 
-static FIELD** init_login_fields (int input_field_length) {
-    FIELD** fields = calloc(sizeof(FIELD*), 3);
-    fields[0] = new_field(1, input_field_length, 0, LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP, 0, 0);
-    fields[1] = new_field(1, input_field_length, 1, LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP, 0, 0);
-    fields[2] = NULL;
+static int LOGIN_FORM_LINES = 0, LOGIN_FORM_COLS = 0;
 
-    field_opts_off(fields[0], O_AUTOSKIP);
-    field_opts_off(fields[1], O_AUTOSKIP | O_PUBLIC);
+LOGIN_FORM* init_login_form(WINDOW* form_window) {
+    LOGIN_FORM* login_form = malloc(sizeof (LOGIN_FORM));
 
-    set_field_back(fields[0], A_UNDERLINE);
-    set_field_back(fields[1], A_UNDERLINE);
+    if (login_form == NULL)
+        return NULL;
 
-    return fields;
+    getmaxyx(form_window, LOGIN_FORM_LINES, LOGIN_FORM_COLS);
+    login_form->window = form_window;
+    login_form->buffer_length = LOGIN_FORM_COLS - LOGIN_LABEL_FIELD_LENGTH - LOGIN_FIELD_GAP;
+    login_form->n_buffer = 2;
+    login_form->field_buffers = malloc(login_form->n_buffer * sizeof (char *));
+    for (int i = 0; i < login_form->n_buffer; i++)
+        login_form->field_buffers[i] = calloc(sizeof (char), login_form->buffer_length);
+
+    return login_form;
 }
 
-FORM* init_login_form(WINDOW* form_window, const char* header_message, bool box, int margin_from_sides) {
-    bool have_header = header_message != NULL;
-    int WINDOW_LINES, WINDOW_COLS;
-    getmaxyx(form_window, WINDOW_LINES, WINDOW_COLS);
+void print_login_fields(LOGIN_FORM* login_form, bool underline) {
+    /*
+     * Prints labels and the input fields
+     */
 
-    FIELD** login_fields = init_login_fields(WINDOW_COLS - LOGIN_LABEL_FIELD_LENGTH - LOGIN_FIELD_GAP - margin_from_sides * 2 - box * 2);
+    wmove(login_form->window, 0, 0);
+    wprintw(login_form->window, LOGIN_USERNAME_LABEL);
+    if (underline) {
+        wadd_chars(login_form->window, ' ', LOGIN_FIELD_GAP);
+        wchgat(login_form->window, -1, A_UNDERLINE, 0, 0);
+    }
 
-    FORM* form = new_form(login_fields);
-    set_form_userptr(form, login_fields);  // userptr is the login field to free later
-
-    WINDOW* form_fields_win = derwin(
-            form_window,
-            WINDOW_LINES - margin_from_sides * 2 - have_header - box * 2,
-            WINDOW_COLS - margin_from_sides * 2 - box * 2,
-            margin_from_sides + have_header + box,
-            margin_from_sides + box
-            );
-
-    set_form_win(form, form_window);
-    set_form_sub(form, form_fields_win);
-
-    keypad(form_fields_win, TRUE);
-
-    post_form(form);
-
-    if (box)
-        box(form_window, 0, 0);
-
-    if (header_message)
-        print_login_form_header(form_window, header_message, box);
-
-    print_login_field_labels(form_fields_win);
-
-    wrefresh(form_window);
-    wrefresh(form_fields_win);
-
-    return form;
+    wmove(login_form->window, 1, 0);
+    wprintw(login_form->window, LOGIN_PASSWORD_LABEL);
+    if (underline) {
+        wadd_chars(login_form->window, ' ', LOGIN_FIELD_GAP);
+        wchgat(login_form->window, -1, A_UNDERLINE, 0, 0);
+    }
 }
 
-static void print_login_form_header(WINDOW* window, const char* header_message, bool box) {
-    mvwprintw(window, box, get_centered_x_start(window, (int)strlen(header_message)), "%s", header_message);
-    mvwchgat(window, box, box, getmaxx(window) - box * 2, A_STANDOUT, 0, 0);
+void move_cursor_to_input_field(LOGIN_FORM* login_form, int field_n, int pos) {
+    /*
+     * field_n: 0 - username field, 1 - password field
+     */
+    int y, x;
+
+    y = field_n;
+    x = LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP + pos;
+
+    wmove(login_form->window, y, x);
 }
 
-static void print_login_field_labels(WINDOW* form_fields_window) {
-    mvwprintw(form_fields_window, 0, 0, LOGIN_USERNAME_LABEL);
-    mvwprintw(form_fields_window, 1, 0, LOGIN_PASSWORD_LABEL);
-    wmove(form_fields_window, 0, LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP);
+int move_cursor_to_end_of_input_field(LOGIN_FORM* login_form, int field_n) {
+    int pos = (int)strlen(login_form->field_buffers[field_n]);
+    move_cursor_to_input_field(login_form, field_n, pos);
+    return pos;
 }
 
-login_form_action_t login_form_driver(FORM* login_form, int ch, char** username_buffer, char** password_buffer) {
-    static int selection_index = 0;
+void print_input_field_buffer(LOGIN_FORM* login_form, int field_n) {
+    int y, x;
+
+    y = field_n;
+    x = LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP;
+
+    wmove(login_form->window, y, x); wclrtoeol(login_form->window);
+    mvwprintw(login_form->window, y, x, "%s", login_form->field_buffers[field_n]);
+}
+
+void delete_char(char* buffer, int pos) {
+    /* unsafe
+     * helper function to remove character in middle and shift all char
+     */
+    buffer += pos;
+    while (*(buffer++)) {
+        *(buffer - 1) = *buffer;
+    }
+    *buffer = 0;
+}
+
+
+void add_char(char* buffer, char ch, int pos) {
+    /* unsafe
+     * helper function to add character in middle and shift all char
+     */
+    size_t i = strlen(buffer);
+    buffer += i;
+    *(buffer + 1) = 0;
+    while (i-- != pos) {
+        *buffer = *(buffer - 1);
+        buffer--;
+    }
+    *buffer = ch;
+}
+
+login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
+    static int selection_row = 0, selection_col = 0;
 
     switch (ch) {
         case KEY_F(1):
@@ -77,115 +105,111 @@ login_form_action_t login_form_driver(FORM* login_form, int ch, char** username_
 
         case KEY_ESC:
         case CTRL('C'):
-            store_last_pos(stdscr);
-            if (confirmation_menu(form_sub(login_form), "Exit Menu?") == EXIT_SUCCESS)
+            store_last_pos(login_form->window);
+            if (confirmation_menu(login_form->window, "Exit Menu?") == EXIT_SUCCESS)
                 return EXIT_FORM_ACTION;
-            restore_last_pos(stdscr);
+
+            restore_last_pos(login_form->window);
             break;
 
         case KEY_DOWN:
-            if (selection_index < 1) {
-                form_driver(login_form, REQ_NEXT_FIELD);
-                form_driver(login_form, REQ_END_LINE);
-                selection_index++;
+            if (selection_row < 1) {
+                selection_row++;
+                selection_col = move_cursor_to_end_of_input_field(login_form, selection_row);
             }
             break;
 
         case KEY_UP:
-            if (selection_index > 0) {
-                form_driver(login_form, REQ_PREV_FIELD);
-                form_driver(login_form, REQ_END_LINE);
-                selection_index--;
+            if (selection_row > 0) {
+                selection_row--;
+                selection_col = move_cursor_to_end_of_input_field(login_form, selection_row);
+            }
+            break;
+
+        case KEY_RIGHT:
+            if (selection_col < strlen(login_form->field_buffers[selection_row])) {
+                selection_col++;
+                move_cursor_to_input_field(login_form, selection_row, selection_col);
             }
             break;
 
         case KEY_LEFT:
-            form_driver(login_form, REQ_PREV_CHAR);
-            break;
-
-        case KEY_RIGHT:
-            form_driver(login_form, REQ_NEXT_CHAR);
+            if (selection_col > 0) {
+                selection_col--;
+                move_cursor_to_input_field(login_form, selection_row, selection_col);
+            }
             break;
 
         case KEY_ENTER:
         case '\n':
         case '\r':
-            if (selection_index < 1) {
-                form_driver(login_form, REQ_NEXT_FIELD);
-                form_driver(login_form, REQ_END_LINE);
-                selection_index++;
-            } else {  // submit
-                // store input
-                form_driver(login_form, REQ_VALIDATION);
-
-                FIELD **fields = form_fields(login_form);
-                *username_buffer = trim_whitespaces(field_buffer(fields[0], 0));
-                *password_buffer = trim_whitespaces(field_buffer(fields[1], 0));
-                return LOGIN_ACTION;
+            if (selection_row < 1) {  // same as key down
+                selection_row++;
+                selection_col = move_cursor_to_end_of_input_field(login_form, selection_row);
+            }
+            else {  // submit
+                return SUBMIT_ACTION;
             }
             break;
 
         case KEY_BACKSPACE:
         case 127:
-            form_driver(login_form, REQ_DEL_PREV);
+            if (selection_col > 0) {
+                delete_char(login_form->field_buffers[selection_row], --selection_col);
+                print_input_field_buffer(login_form, selection_row);
+                move_cursor_to_input_field(login_form, selection_row, selection_col);
+            }
             break;
 
         case KEY_DC:
-            form_driver(login_form, REQ_DEL_CHAR);
-            break;
-
-        case KEY_CTRL_BACKSPACE:
-            form_driver(login_form, REQ_DEL_WORD);
+            if ((strlen(login_form->field_buffers[selection_row]) - selection_col) > 0) {
+                delete_char(login_form->field_buffers[selection_row], selection_col);
+                print_input_field_buffer(login_form, selection_row);
+                move_cursor_to_input_field(login_form, selection_row, selection_col);
+            }
             break;
 
         default:
-            form_driver(login_form, ch);
+            if ((strlen(login_form->field_buffers[selection_row]) < login_form->buffer_length)) {
+                add_char(login_form->field_buffers[selection_row], (char)ch, selection_col++);
+                print_input_field_buffer(login_form, selection_row);
+                move_cursor_to_input_field(login_form, selection_row, selection_col);
+            }
             break;
     }
-    wrefresh(form_win(login_form));
-    wrefresh(form_sub(login_form));
+    wrefresh(login_form->window);
 
     return NO_ACTION;
 }
 
-void print_message_below_form(FORM* login_form, const char* message, int offset_y, int offset_x, bool center) {
-    int start_y, start_x;
-
-    WINDOW* fields_win = form_sub(login_form);
-    store_last_pos(fields_win);
-
-    start_y = 2 + offset_y;
-    if (center)
-        start_x = get_centered_x_start(fields_win, (int)strlen(message) + offset_x);
-    else
-        start_x = offset_x;
-
-    mvwprintw(fields_win, start_y, start_x, "%s", message);
-    restore_last_pos(fields_win);
-    wrefresh(fields_win);
+void free_login_form(LOGIN_FORM* login_form) {
+    for (int i = 0; i < login_form->n_buffer; i++)
+        free(login_form->field_buffers[i]);
+    free(login_form->field_buffers);
+    free(login_form);
 }
 
-void cleanup_login_form(FORM* login_form) {
-    /*
-     * Clear and free memory
-     */
-    unpost_form(login_form);
-
-    WINDOW* window = form_win(login_form);
-    WINDOW* sub_win = form_sub(login_form);
-    wclear(window); wclear(sub_win);
-    wrefresh(window); wrefresh(sub_win);
-
-    FIELD** login_fields = form_userptr(login_form);
-
-    free_form(login_form);
-    free_login_fields(login_fields);
-
-    delwin(sub_win);
+void cleanup_login_form(LOGIN_FORM* login_form) {
+    wclear(login_form->window);
+    wrefresh(login_form->window);
+    free_login_form(login_form);
 }
 
-static void free_login_fields(FIELD** login_fields) {
-    for (int i = 0; login_fields[i]; i++)
-        free_field(login_fields[i]);
-    free(login_fields);
+/*
+ * Helpers
+ */
+
+LOGIN_FORM* create_login_form(WINDOW* form_window) {
+
+    LOGIN_FORM* login_form = init_login_form(form_window);
+
+    if (login_form == NULL)
+        return NULL;
+
+    print_login_fields(login_form, TRUE);
+    move_cursor_to_end_of_input_field(login_form, 0);
+
+    wrefresh(login_form->window);
+
+    return login_form;
 }
