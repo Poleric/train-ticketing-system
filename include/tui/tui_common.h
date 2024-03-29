@@ -11,7 +11,6 @@ typedef enum CurrentMenu {
 
 #define CTRL(c) ((c) & 0x1f)
 #define KEY_ESC 27
-#define KEY_CTRL_BACKSPACE 8  // same as ^H
 
 
 #define MINORI "      ..........................................................................................      \n" \
