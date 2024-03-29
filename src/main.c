@@ -14,15 +14,23 @@ int main() {
     initscr();
     raw();
     noecho();
-    keypad(stdscr, TRUE);
 
-    LOGIN_FORM* login_form = create_login_form(stdscr);
+    WINDOW* login_win = derwin(
+            stdscr,
+            10,
+            50,
+            0,
+            get_centered_x_start(stdscr, 50)
+            );
+    keypad(login_win, TRUE);
+
+    LOGIN_FORM* login_form = create_login_form(login_win);
 
     bool exit = FALSE;
     login_form_action_t action;
     char* username, *password;
     while (!exit) {
-        int ch = getch();
+        int ch = wgetch(login_win);
         action = form_driver(login_form, ch);
         switch (action) {
             case SUBMIT_ACTION:
@@ -31,9 +39,9 @@ int main() {
                     password = strdup(login_form->field_buffers[1]);
                     exit = TRUE;
                 } else {
-                    store_last_pos(stdscr);
+                    store_last_pos(login_win);
                     mvprintw(3, 0, "Wrong password");
-                    restore_last_pos(stdscr);
+                    restore_last_pos(login_win);
                 }
                 break;
 
@@ -61,6 +69,7 @@ int main() {
         getch();
     }
 
+    delwin(login_win);
     endwin();
 
     return 0;
