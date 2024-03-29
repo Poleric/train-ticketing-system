@@ -40,7 +40,7 @@ int main() {
                     exit = TRUE;
                 } else {
                     store_last_pos(login_win);
-                    mvprintw(3, 0, "Wrong password");
+                    mvwprintw(login_win, 3, 0, "Wrong password");
                     restore_last_pos(login_win);
                 }
                 break;
