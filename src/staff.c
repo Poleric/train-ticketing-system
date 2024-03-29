@@ -4,5 +4,7 @@ int staff() {
 
 	staff_t ali;
 
+	
+
 	return 0;
 }

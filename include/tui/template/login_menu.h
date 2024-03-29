@@ -4,11 +4,16 @@
 #include <tui/tui_common.h>
 #include <tui/tui_utils.h>
 #include <string.h>
+#include <stdlib.h>
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+#define MAX(a,b) __max(a,b)
+#else
 #define MAX(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
+#endif
 
 #define LOGIN_USERNAME_LABEL "Username :"
 #define LOGIN_PASSWORD_LABEL "Password :"
