@@ -34,7 +34,8 @@ int main() {
         action = form_driver(login_form, ch);
         switch (action) {
             case SUBMIT_ACTION:
-                if (strcmp(login_form->field_buffers[0], "abc") == 0 && strcmp(login_form->field_buffers[1], "abc") == 0) {
+                if ((strcmp(login_form->field_buffers[0], "abc") == 0 && strcmp(login_form->field_buffers[1], "abc") == 0) ||
+                        (strcmp(login_form->field_buffers[0], "minori") == 0 && strcmp(login_form->field_buffers[1], "minori") == 0)) {
                     username = strdup(login_form->field_buffers[0]);
                     password = strdup(login_form->field_buffers[1]);
                     exit = TRUE;
@@ -56,9 +57,13 @@ int main() {
     }
 
     cleanup_login_form(login_form);
+    delwin(login_win);
 
     if (action == SUBMIT_ACTION) {
-        after_login(username, password);
+        if (strcmp(username, "minori") == 0)
+            printw("%s", MINORI);
+        else
+            after_login(username, password);
         refresh();
         getch();
         free(username);
@@ -69,7 +74,6 @@ int main() {
         getch();
     }
 
-    delwin(login_win);
     endwin();
 
     return 0;
