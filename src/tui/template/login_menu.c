@@ -5,6 +5,7 @@
 
 
 static int LOGIN_FORM_LINES = 0, LOGIN_FORM_COLS = 0;
+static int selection_row = 0, selection_col = 0;
 
 LOGIN_FORM* init_login_form(WINDOW* form_window) {
     LOGIN_FORM* login_form = malloc(sizeof (LOGIN_FORM));
@@ -99,8 +100,6 @@ void add_char(char* buffer, char ch, int pos) {
 }
 
 login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
-    static int selection_row = 0, selection_col = 0;
-
     switch (ch) {
         case KEY_F(1):
             return SWITCH_MENU_ACTION;
@@ -194,6 +193,8 @@ void free_login_form(LOGIN_FORM* login_form) {
 }
 
 void cleanup_login_form(LOGIN_FORM* login_form) {
+    selection_row = 0;
+    selection_col = 0;
     wclear(login_form->window);
     wrefresh(login_form->window);
     free_login_form(login_form);
