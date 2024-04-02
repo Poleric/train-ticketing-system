@@ -27,10 +27,10 @@ void start_menu() {
     init_menu();
 
     WINDOW* inner_window = newwin(
-            LINES - INNER_MENU_MARGIN * 2,
-            COLS - INNER_MENU_MARGIN * 2,
-            INNER_MENU_MARGIN,
-            INNER_MENU_MARGIN);
+            10,
+            50,
+            1,
+            get_centered_x_start(stdscr, 50));
 
     current_menu_t menu = MEMBER_MENU;
     while (menu) {
