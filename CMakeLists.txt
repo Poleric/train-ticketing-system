@@ -12,7 +12,8 @@ endif ()
 
 set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils.c
-    ${CMAKE_SOURCE_DIR}/src/staff.c
+#    ${CMAKE_SOURCE_DIR}/src/staff.c
+    ${CMAKE_SOURCE_DIR}/src/member.c
 
     ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
