@@ -17,7 +17,7 @@ int main() {
 
     printf("\n");
 
-    printf("Want to sign up (Y/N) ?");
+    printf("Want to sign up (Y/N) ? : ");
     scanf("%c", &char_buff);
     if (char_buff == 'Y')
         signup(members, NULL, NULL);
