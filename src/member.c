@@ -59,10 +59,10 @@ void load_members(member_vector_t* members) {
         return;
 	}
 
-    member_t *new_member = malloc(sizeof(member_t));
     char username_buffer[255], password_buffer[255];
 
     while (fscanf(file, "%s %s", username_buffer, password_buffer) == 2) {
+        member_t *new_member = malloc(sizeof(member_t));
         new_member->username = strdup(username_buffer);
         new_member->hashed_password = strdup(password_buffer);
         add_member(members, new_member);
@@ -71,7 +71,7 @@ void load_members(member_vector_t* members) {
     fclose(file);
 }
 
-member_t* login_as(member_vector_t * members, const char* username, const char* password) {
+member_t* login_as(member_vector_t* members, const char* username, const char* password) {
     int i = find_member_index(members, username);
 
     if (i == -1) {
