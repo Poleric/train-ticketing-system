@@ -2,129 +2,99 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <conio.h>
-#include <windows.h>
+#include <utils.h>
 
-#define MAX_MEMBERS 100
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+#define strdup _strdup
+#endif
 
-void member();
-void signup(const char* memberName, const char* memberPwd);
-void login();
-void memberNameExists(const char* memberName[25]);
-void loadFile();
-int loginVal(const char* memberName, const char* memberPwd);
 
-typedef struct {
-	char memberName[25];
-	char memberPwd[20];
-}Member;
-
-Member members[MAX_MEMBERS], newMember;
-int numMembers = 0;
-
-void signup(const char *memberName,const char *memberPwd) {
-	system("clear");
-	Member newMember; //give this struct a variable (name)
-	char memberName[25], memberPwd[20];
+void signup(member_vector_t *members, const char *memberName,const char *memberPwd) {
+    member_t* newMember = malloc(sizeof (member_t)); //give this struct a variable (name)
+    char input_buffer[255];
 
 	FILE* signupfp;
-	signupfp = fopen("memberSignup.txt", "a");
+	signupfp = fopen("memberSignup.txt", "a+");
 	if (signupfp == NULL) {
 		printf("Error to open this file! Please it again\n");
-		exit(-1);
-	}
-	else {
-		fprintf(signupfp, "%s %s\n", newMember.memberName, newMember.memberPwd);
-		fclose(signupfp);
-	}
-	
-	//name
-	printf("Enter full name : ");
-	rewind(stdin);
-	scanf("%s", newMember.memberName);
-
-	//check username exists
-	if (memberNameExists(newMember.memberName)) {
-		printf("Username already exists. Please choose a different one.\n");
 		return;
 	}
-	//pwd
-	printf("Enter password : ");
-	rewind(stdin);
-	scanf("%s", &newMember.memberPwd);
 
-	members[numMembers++] = newMember;
+    //name
+    printf("Enter full name : ");
+    rewind(stdin);
+    scanf("%s", input_buffer);
+    newMember->username = strdup(input_buffer);
+
+    //check username exists
+    if (is_member_exists(members, newMember->username)) {
+        printf("Username already exists. Please choose a different one.\n");
+        return;
+    }
+
+    //pwd
+    newMember->hashed_password = malloc(65);  // 65 characters
+    printf("Enter password : ");
+    rewind(stdin);
+    scanf("%s", input_buffer);
+    hash_message(input_buffer, newMember->hashed_password);
+
+    add_member(members, newMember);
+
+    fprintf(signupfp, "%s %s\n", newMember->username, newMember->hashed_password);
+
+    fclose(signupfp);
+
 	printf("Account created succesfully!\n");
 
-	fwrite(&newMember, sizeof(newMember), 1, signupfp);
 	printf("Sign Up successful!\n");
-	fclose(loginfp);
-
-	getch();
-	system("clear");
-	login();
-	
 }
 
-void loadFile() {
-	system("clear");
-	FILE* load;
-	load = fopen("memberSignup.txt", "r");
-	if ("memberSignup" != NULL) {
-		while (fscanf(load, "%s %s", members.[numMembers].memberName, members.memberPwd) == 2) {
-			numMembers++;
-			if (numMembers >= MAX_MEMBERS) {
-				break;
-			}
-		}
-		fclose(load);
+void load_members(member_vector_t* members) {
+	FILE* file;
+	file = fopen("memberSignup.txt", "r");
+
+	if (file == NULL) {
+        printf("Error to open this file!\n");
+        return;
 	}
-	else {
-		printf("Error to open this file!\n");
-	}
-	system("clear");
+
+    member_t *new_member = malloc(sizeof(member_t));
+    char username_buffer[255], password_buffer[255];
+
+    while (fscanf(file, "%s %s", username_buffer, password_buffer) == 2) {
+        new_member->username = strdup(username_buffer);
+        new_member->hashed_password = strdup(password_buffer);
+        add_member(members, new_member);
+    }
+
+    fclose(file);
 }
 
-void login() {
-	system("clear");
-	char memberName[25], memberPwd[20];
-	FILE* log;
-	log = fopen("memberLogin.txt", "r");
-	Member members;
-	printf("Enter full name : ");
-	rewind(stdin);
-	scanf("%s", &memberName);
-	printf("Enter password : ");
-	rewind(stdin);
-	scanf("%s", &memberPwd);
+member_t* login_as(member_vector_t * members, const char* username, const char* password) {
+    int i = find_member_index(members, username);
 
-	while (fread(&members, sizeof(members), 1, log)) {
-		if (strcmp(memberName, members.memberName) == 0 && strcmp(memberPwd, members.memberPwd) == 0) {
-			printf("Succesful login!\n");
-		}
-		else {
-			printf("Please enter correct username or password!\n");
-		}
-	}
-	fclose(log);
+    if (i == -1) {
+        printf("User does not exists\n");
+        return NULL;
+    }
+
+    member_t* member = members->array[i];
+    if (compare_hash(password, member->hashed_password) != 0) {
+        printf("Wrong passwordo \n");
+        return NULL;
+    }
+
+    return member;
 }
 
-int loginVal(const char* memberName, const char* memberPwd) {
-	for (int i = 0; i < numMembers; i++) {
-		if (strcmp(members[i].memberName, memberName) == 0 && strcmp(members[i].memberPwd, memberPwd) == 0) {
-			return 1;
-		}
-	}
-	return 0;
-}
 /*
 void member() {
 	system("clear");
 
 	int numMember = 0;
 	bool check;
-	char memberName[25], memberPwd[20];
+	char username[25], memberPwd[20];
 
 	FILE* memberfp;
 	memberfp = fopen("member.txt", "a");
@@ -141,12 +111,40 @@ void member() {
 
 }*/
 
-void memberNameExists(const char *memberName[25]) {
-	char memberName[25], memberPwd[20];
-	for (int i = 0; i < numMembers; i++) {
-		if (strcmp(members[i].memberName, memberName) == 0) {
-			return 1;
-		}
-	}
-	return 0;
+int find_member_index(member_vector_t* members, const char* username) {
+	for (int i = 0; i < members->num_of_members; i++)
+		if (strcmp(members->array[i]->username, username) == 0)
+			return i;
+	return -1;
+}
+
+int add_member(member_vector_t* members, member_t* member) {
+    if (members->num_of_members + 1 > members->max_size) {
+        members->max_size *= 2;
+        member_t **tmp = realloc(members->array, sizeof (member_t*) * members->max_size);
+
+        if (tmp == NULL)
+            return EXIT_FAILURE;
+
+        members->array = tmp;
+    }
+
+    members->array[members->num_of_members++] = member;
+    return EXIT_SUCCESS;
+}
+
+void free_members_vector(member_vector_t* members) {
+    for (int i = 0; i < members->num_of_members; i++)
+        free_member(members->array[i]);
+    free(members->array);
+    free(members);
+}
+
+void free_member(member_t* member) {
+    free(member->id);
+    free(member->username);
+    free(member->hashed_password);
+    free(member->email);
+    free(member->contact_no);
+    free(member);
 }
