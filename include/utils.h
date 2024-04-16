@@ -10,5 +10,7 @@ int digest_message(const unsigned char *message, size_t message_len, unsigned ch
 int decode_digest(const unsigned char* digest, size_t digest_size, char* buff, size_t buff_size);
 int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]);
 int compare_hash(const char* not_hashed, const char* hashed);
+int input(const char* prompt, char* buffer, size_t buffer_size);
+void flush(FILE* stream);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H

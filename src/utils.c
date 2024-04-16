@@ -57,3 +57,26 @@ int compare_hash(const char* not_hashed, const char* hashed) {
     return strncmp(to_hash, hashed, 64);
 }
 
+int input(const char* prompt, char* buffer, size_t buffer_size) {
+    printf("%s", prompt);
+
+    if (fgets(buffer, (int) buffer_size, stdin) == NULL)
+        return EXIT_FAILURE;
+
+    if (buffer[strlen(buffer) - 1] != '\n')  // input longer than buffer can hold
+        flush(stdin);
+
+    // trim \n
+    buffer[strcspn(buffer, "\n")] = 0;
+
+    if (buffer[0] == 0)
+        return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
+}
+
+void flush(FILE* stream) {
+    int c;
+    while ((c = getc(stream)) != '\n' && c != EOF);
+}
+
