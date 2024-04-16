@@ -1,13 +1,38 @@
 #include <member.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <utils.h>
+#include <ctype.h>
 
 #define MEMBERS_SIZE 4
 
-int main() {
-    char char_buff;
-    char username[255], password[255];
+int prompt_register(member_vector_t* members) {
+    char username_buff[255], password_buff[255];
 
+    printf("Registration\n");
+    printf("------------\n");
+
+    input("Username: ", username_buff, 255);
+    input("Password: ", password_buff, 255);
+
+    create_member_record(members, username_buff, password_buff);
+    write_members(members);
+    return EXIT_SUCCESS;
+}
+
+member_t* prompt_login(member_vector_t* members) {
+    char username_buff[255], password_buff[255];
+
+    printf("Login\n");
+    printf("-----\n");
+
+    input("Username: ", username_buff, 255);
+    input("Password: ", password_buff, 255);
+
+    return login_as(members, username_buff, password_buff);
+}
+
+int main() {
     member_vector_t* members = malloc(sizeof(member_vector_t));
     members->max_size = MEMBERS_SIZE;
     members->array = calloc(sizeof(member_t*), MEMBERS_SIZE);
@@ -15,25 +40,22 @@ int main() {
 
     load_members(members);
 
-    printf("\n");
+    char ch[2];
+    input("Want to register? (Y/N) : ", ch, 2);
 
-    printf("Want to sign up (Y/N) ? : ");
-    scanf("%c", &char_buff);
-    if (char_buff == 'Y')
-        signup(members, NULL, NULL);
-
-    printf("Username: ");
-    scanf("%s", username);
-
-    printf("Password: ");
-    scanf("%s", password);
+    if (toupper(*ch) == 'Y')
+        prompt_register(members);
 
     printf("\n");
 
-    member_t* member = login_as(members, username, password);
+    member_t* member_session = prompt_login(members);
 
-    if (member)
+    printf("\n");
+
+    if (member_session)
         printf("Login successful\n");
+    else
+        printf("Login failed. Please check username and password.\n");
 
     free_members_vector(members);
     return 0;
