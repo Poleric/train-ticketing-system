@@ -4,50 +4,16 @@
 #include <string.h>
 #include <utils.h>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
-#define strdup _strdup
-#endif
 
-
-void signup(member_vector_t *members, const char *memberName,const char *memberPwd) {
+void create_member_record(member_vector_t *members, const char *name, const char *password) {
     member_t* newMember = malloc(sizeof (member_t)); //give this struct a variable (name)
-    char input_buffer[255];
 
-	FILE* signupfp;
-	signupfp = fopen("memberSignup.txt", "a+");
-	if (signupfp == NULL) {
-		printf("Error to open this file! Please it again\n");
-		return;
-	}
+    newMember->username = strdup(name);
 
-    //name
-    printf("Enter full name : ");
-    rewind(stdin);
-    scanf("%s", input_buffer);
-    newMember->username = strdup(input_buffer);
-
-    //check username exists
-    if (is_member_exists(members, newMember->username)) {
-        printf("Username already exists. Please choose a different one.\n");
-        return;
-    }
-
-    //pwd
-    newMember->hashed_password = malloc(65);  // 65 characters
-    printf("Enter password : ");
-    rewind(stdin);
-    scanf("%s", input_buffer);
-    hash_message(input_buffer, newMember->hashed_password);
+    newMember->hashed_password = malloc(65);
+    hash_message(password, newMember->hashed_password);
 
     add_member(members, newMember);
-
-    fprintf(signupfp, "%s %s\n", newMember->username, newMember->hashed_password);
-
-    fclose(signupfp);
-
-	printf("Account created succesfully!\n");
-
-	printf("Sign Up successful!\n");
 }
 
 void load_members(member_vector_t* members) {
@@ -55,7 +21,7 @@ void load_members(member_vector_t* members) {
 	file = fopen("memberSignup.txt", "r");
 
 	if (file == NULL) {
-        printf("Error to open this file!\n");
+        fprintf(stderr, "Error to open this file!\n");
         return;
 	}
 
@@ -63,10 +29,27 @@ void load_members(member_vector_t* members) {
 
     while (fscanf(file, "%s %s", username_buffer, password_buffer) == 2) {
         member_t *new_member = malloc(sizeof(member_t));
+
         new_member->username = strdup(username_buffer);
         new_member->hashed_password = strdup(password_buffer);
+
         add_member(members, new_member);
     }
+
+    fclose(file);
+}
+
+void write_members(member_vector_t* members) {
+    FILE* file;
+    file = fopen("memberSignup.txt", "w");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error to open this file!\n");
+        return;
+    }
+
+    for (int i = 0; i < members->num_of_members; i++)
+        fprintf(file, "%s %s\n", members->array[i]->username, members->array[i]->hashed_password);
 
     fclose(file);
 }
@@ -74,42 +57,15 @@ void load_members(member_vector_t* members) {
 member_t* login_as(member_vector_t* members, const char* username, const char* password) {
     int i = find_member_index(members, username);
 
-    if (i == -1) {
-        printf("User does not exists\n");
+    if (i == -1)
         return NULL;
-    }
 
     member_t* member = members->array[i];
-    if (compare_hash(password, member->hashed_password) != 0) {
-        printf("Wrong passwordo \n");
+    if (compare_hash(password, member->hashed_password) != 0)
         return NULL;
-    }
 
     return member;
 }
-
-/*
-void member() {
-	system("clear");
-
-	int numMember = 0;
-	bool check;
-	char username[25], memberPwd[20];
-
-	FILE* memberfp;
-	memberfp = fopen("member.txt", "a");
-	
-	if (memberfp == NULL) {
-		printf("Error to open this file!\n");
-		exit(-1);
-	}
-	Member member(MAX_MEMBERS);
-	int numMember = 0;
-
-
-
-
-}*/
 
 int find_member_index(member_vector_t* members, const char* username) {
 	for (int i = 0; i < members->num_of_members; i++)
@@ -141,10 +97,10 @@ void free_members_vector(member_vector_t* members) {
 }
 
 void free_member(member_t* member) {
-    free(member->id);
-    free(member->username);
-    free(member->hashed_password);
-    free(member->email);
-    free(member->contact_no);
+    if (member->id)              free(member->id);
+    if (member->username)        free(member->username);
+    if (member->hashed_password) free(member->hashed_password);
+    if (member->email)           free(member->email);
+    if (member->contact_no)      free(member->contact_no);
     free(member);
 }
