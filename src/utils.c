@@ -39,7 +39,7 @@ int decode_digest(const unsigned char* digest, size_t digest_size, char* buff, s
 }
 
 int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]) {
-    unsigned char* digest = malloc(32);
+    unsigned char* digest;
     unsigned digest_size;
 
     digest_message((const unsigned char*)message, strlen(message), &digest, &digest_size);
