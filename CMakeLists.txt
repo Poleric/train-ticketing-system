@@ -5,7 +5,10 @@ set(CMAKE_C_STANDARD 23)
 
 # remove warning for unsafe functions.
 if (WIN32 OR MSVC)
-    add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
+    add_compile_definitions(
+        "_CRT_SECURE_NO_WARNINGS"
+        "_CRT_NONSTDC_NO_DEPRECATE"
+    )
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")  # utf-8 things
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif ()
