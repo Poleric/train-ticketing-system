@@ -39,7 +39,7 @@ int main() {
     members->num_of_members = 0;
 
     load_members(members);
-
+    
     char ch[2];
     input("Want to register? (Y/N) : ", ch, 2);
 
@@ -56,7 +56,7 @@ int main() {
         printf("Login successful\n");
     else
         printf("Login failed. Please check username and password.\n");
-
+        
     free_members_vector(members);
     return 0;
 }
