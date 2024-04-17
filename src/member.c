@@ -5,11 +5,25 @@
 #include <utils.h>
 
 
+member_t* init_member() {
+    member_t* new_member = malloc(sizeof(member_t));
+    
+    new_member->id = NULL;
+    new_member->username = NULL;
+    new_member->hashed_password = NULL;
+    new_member->gender = 0;
+    new_member->email = NULL;
+    new_member->contact_no = NULL;
+    new_member->membership = 0;
+    
+    return new_member;
+}
+
+
 void create_member_record(member_vector_t *members, const char *name, const char *password) {
-    member_t* newMember = malloc(sizeof (member_t)); //give this struct a variable (name)
+    member_t* newMember = init_member();
 
     newMember->username = strdup(name);
-
     newMember->hashed_password = malloc(65);
     hash_message(password, newMember->hashed_password);
 
@@ -28,7 +42,7 @@ void load_members(member_vector_t* members) {
     char username_buffer[255], password_buffer[255];
 
     while (fscanf(file, "%s %s", username_buffer, password_buffer) == 2) {
-        member_t *new_member = malloc(sizeof(member_t));
+        member_t *new_member = init_member();
 
         new_member->username = strdup(username_buffer);
         new_member->hashed_password = strdup(password_buffer);
