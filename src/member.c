@@ -20,7 +20,10 @@ member_t* init_member() {
 }
 
 
-void create_member_record(member_vector_t *members, const char *name, const char *password) {
+int create_member_record(member_vector_t *members, const char *name, const char *password) {
+    if (is_member_exists(members, name))
+        return EXIT_FAILURE;
+
     member_t* newMember = init_member();
 
     newMember->username = strdup(name);
@@ -28,6 +31,7 @@ void create_member_record(member_vector_t *members, const char *name, const char
     hash_message(password, newMember->hashed_password);
 
     add_member(members, newMember);
+    return EXIT_SUCCESS;
 }
 
 void load_members(member_vector_t* members) {

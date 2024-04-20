@@ -24,7 +24,7 @@ typedef struct MemberVector {
     int num_of_members;
 } member_vector_t;
 
-void create_member_record(member_vector_t *members, const char* name, const char* password);
+int create_member_record(member_vector_t *members, const char* name, const char* password);
 void load_members(member_vector_t* members);
 void write_members(member_vector_t* members);
 member_t* login_as(member_vector_t * members, const char* username, const char* password);
