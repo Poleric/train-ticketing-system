@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <schedule/graph.h>
-#include <stdio.h>
 #include <string.h>
 
 
@@ -97,20 +96,4 @@ void free_graph(struct StationGraph* graph) {
         free_node_list(graph->stations[i]);
     free(graph->stations);
     free(graph);
-}
-
-void print_node_link(struct StationNode* node) {
-    printf("%s (%s)", node->details.station_name, node->details.station_id);
-    while (node) {
-        if (node->edge.distance != 0)
-            printf(" -(%d)-> %s\n", node->edge.distance, node->edge.next->details.station_name);
-        node = get_next_node(node);
-    }
-}
-
-void print_graph(struct StationGraph* graph) {
-    for (int i = 0; i < graph->number_of_nodes; i++) {
-        print_node_link(graph->stations[i]);
-        printf("\n");
-    }
 }
