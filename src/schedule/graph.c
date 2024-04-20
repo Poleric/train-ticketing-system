@@ -73,14 +73,14 @@ int graph_add_connection(struct StationGraph* graph, const char* station_id, con
     return EXIT_SUCCESS;
 }
 
-int graph_add_node(struct StationGraph* graph, struct StationDetails details) {
+int graph_add_node(struct StationGraph* graph, const char* station_id, const char* station_name) {
     static int index = 0;
 
     if (graph->max_size <= graph->number_of_nodes) {
        if (resize_graph(graph) == EXIT_FAILURE)
            return EXIT_FAILURE;
     }
-    graph->stations[graph->number_of_nodes++] = init_node(index++, details.station_id, details.station_name);
+    graph->stations[graph->number_of_nodes++] = init_node(index++, station_id, station_name);
     return EXIT_SUCCESS;
 }
 
@@ -118,10 +118,10 @@ void print_graph(struct StationGraph* graph) {
 int main() {
     struct StationGraph* graph = init_graph();
 
-    graph_add_node(graph, (struct StationDetails){"KL", "Kuala Lumpur"});
-    graph_add_node(graph, (struct StationDetails){"TH", "Thailand"});
-    graph_add_node(graph, (struct StationDetails){"SG", "Singapore"});
-    graph_add_node(graph, (struct StationDetails){"JB", "Johor Bahru"});
+    graph_add_node(graph, "KL", "Kuala Lumpur");
+    graph_add_node(graph, "TH", "Thailand");
+    graph_add_node(graph, "SG", "Singapore");
+    graph_add_node(graph, "JB", "Johor Bahru");
 
     graph_add_connection(graph, "KL", "TH", 120);
     graph_add_connection(graph, "KL", "SG", 80);
