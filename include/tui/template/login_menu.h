@@ -48,7 +48,10 @@ login_form_action_t form_driver(LOGIN_FORM* login_form, int ch);
 void free_login_form(LOGIN_FORM* login_form);
 void cleanup_login_form(LOGIN_FORM* login_form);
 
+// helpers
 
 LOGIN_FORM* create_login_form(WINDOW* form_window);
+char* get_username(LOGIN_FORM* login_form);
+char* get_password(LOGIN_FORM* login_form);
 
 #endif //TRAINTICKETINGSYSTEM_LOGIN_MENU_H

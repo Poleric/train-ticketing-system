@@ -224,3 +224,11 @@ LOGIN_FORM* create_login_form(WINDOW* form_window) {
 
     return login_form;
 }
+
+char* get_username(LOGIN_FORM* login_form) {
+    return login_form->field_buffers[0];
+}
+
+char* get_password(LOGIN_FORM* login_form) {
+    return login_form->field_buffers[1];
+}
