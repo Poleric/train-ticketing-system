@@ -14,6 +14,15 @@ struct StationNode* init_node(int id, const char* station_id, const char* statio
     return node;
 }
 
+struct StationGraph* init_graph() {
+    struct StationGraph* graph = malloc(sizeof (struct StationGraph));
+    graph->max_size = 1;
+    graph->number_of_nodes = 0;
+    graph->stations = calloc(1, sizeof (struct StationNode*));
+
+    return graph;
+}
+
 struct StationNode* copy_node(struct StationNode *node) {
     return init_node(node->id, node->details.station_id, node->details.station_name);
 }
@@ -37,13 +46,11 @@ int node_add_connection(struct StationNode* start_node, struct StationNode* next
     return EXIT_SUCCESS;
 }
 
-struct StationGraph* init_graph() {
-    struct StationGraph* graph = malloc(sizeof (struct StationGraph));
-    graph->max_size = 1;
-    graph->number_of_nodes = 0;
-    graph->stations = calloc(1, sizeof (struct StationNode*));
-
-    return graph;
+struct StationNode* graph_get_node(struct StationGraph* graph, const char* station_id) {
+    for (int i = 0; i < graph->number_of_nodes; i++)
+        if (strcmp(graph->stations[i]->details.station_id, station_id) == 0)
+            return graph->stations[i];
+    return NULL;
 }
 
 int resize_graph(struct StationGraph *graph) {
@@ -55,11 +62,15 @@ int resize_graph(struct StationGraph *graph) {
     return EXIT_SUCCESS;
 }
 
-struct StationNode* graph_get_node(struct StationGraph* graph, const char* station_id) {
-    for (int i = 0; i < graph->number_of_nodes; i++)
-        if (strcmp(graph->stations[i]->details.station_id, station_id) == 0)
-            return graph->stations[i];
-    return NULL;
+int graph_add_node(struct StationGraph* graph, const char* station_id, const char* station_name) {
+    static int index = 0;
+
+    if (graph->max_size <= graph->number_of_nodes) {
+        if (resize_graph(graph) == EXIT_FAILURE)
+            return EXIT_FAILURE;
+    }
+    graph->stations[graph->number_of_nodes++] = init_node(index++, station_id, station_name);
+    return EXIT_SUCCESS;
 }
 
 int graph_add_connection(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance) {
@@ -69,17 +80,6 @@ int graph_add_connection(struct StationGraph* graph, const char* station_id, con
     node_add_connection(node, next_node, distance);
     node_add_connection(next_node, node, distance);
 
-    return EXIT_SUCCESS;
-}
-
-int graph_add_node(struct StationGraph* graph, const char* station_id, const char* station_name) {
-    static int index = 0;
-
-    if (graph->max_size <= graph->number_of_nodes) {
-       if (resize_graph(graph) == EXIT_FAILURE)
-           return EXIT_FAILURE;
-    }
-    graph->stations[graph->number_of_nodes++] = init_node(index++, station_id, station_name);
     return EXIT_SUCCESS;
 }
 
