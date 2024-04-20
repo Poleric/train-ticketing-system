@@ -80,3 +80,28 @@ void flush(FILE* stream) {
     while ((c = getc(stream)) != '\n' && c != EOF);
 }
 
+void delete_char(char* buffer, int pos) {
+    /* unsafe
+     * helper function to remove character in middle and shift all char
+     */
+    buffer += pos;
+    while (*(buffer++)) {
+        *(buffer - 1) = *buffer;
+    }
+    *buffer = 0;
+}
+
+void add_char(char* buffer, char ch, int pos) {
+    /* unsafe
+     * helper function to add character in middle and shift all char
+     */
+    size_t i = strlen(buffer);
+    buffer += i;
+    *(buffer + 1) = 0;
+    while (i-- != pos) {
+        *buffer = *(buffer - 1);
+        buffer--;
+    }
+    *buffer = ch;
+}
+

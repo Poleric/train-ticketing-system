@@ -32,14 +32,14 @@ void start_menu() {
             1,
             get_centered_x_start(stdscr, 50));
 
-    current_menu_t menu = MEMBER_MENU;
-    while (menu) {
-        switch (menu) {
+    current_menu_t current_menu = MEMBER_MENU;
+    while (current_menu != EXIT_MENU) {
+        switch (current_menu) {
             case MEMBER_MENU:
-                menu = member_menu(inner_window);
+                current_menu = member_login_menu(inner_window);
                 break;
             case STAFF_MENU:
-                menu = staff_menu(inner_window);
+                current_menu = staff_menu(inner_window);
                 break;
             default:
                 break;
