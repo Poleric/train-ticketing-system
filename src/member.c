@@ -34,13 +34,13 @@ int create_member_record(member_vector_t *members, const char *name, const char 
     return EXIT_SUCCESS;
 }
 
-void load_members(member_vector_t* members) {
+int load_members(member_vector_t* members) {
 	FILE* file;
 	file = fopen("memberSignup.txt", "r");
 
 	if (file == NULL) {
         fprintf(stderr, "Error to open this file!\n");
-        return;
+        return EXIT_FAILURE;
 	}
 
     char username_buffer[255], password_buffer[255];
@@ -55,21 +55,23 @@ void load_members(member_vector_t* members) {
     }
 
     fclose(file);
+    return EXIT_SUCCESS;
 }
 
-void write_members(member_vector_t* members) {
+int write_members(member_vector_t* members) {
     FILE* file;
     file = fopen("memberSignup.txt", "w");
 
     if (file == NULL) {
         fprintf(stderr, "Error to open this file!\n");
-        return;
+        return EXIT_FAILURE;
     }
 
     for (int i = 0; i < members->num_of_members; i++)
         fprintf(file, "%s %s\n", members->array[i]->username, members->array[i]->hashed_password);
 
     fclose(file);
+    return EXIT_SUCCESS;
 }
 
 member_t* login_as(member_vector_t* members, const char* username, const char* password) {
