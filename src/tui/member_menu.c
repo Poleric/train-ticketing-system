@@ -6,9 +6,14 @@
 //   / \        -> register_menu --|
 //    └----------------------------┘
 current_menu_t member_login_menu(WINDOW* menu_window) {
-    keypad(menu_window, TRUE);
+    WINDOW* login_window = newwin(
+            10,
+            50,
+            1,
+            get_centered_x_start(stdscr, 50));
+    keypad(login_window, TRUE);
 
-    LOGIN_FORM* login_form = create_login_form(menu_window);
+    LOGIN_FORM* login_form = create_login_form(login_window);
 
     current_menu_t current_menu = MEMBER_MENU;
 
@@ -17,7 +22,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
     member_t* current_member;
     while (current_menu == MEMBER_MENU) {
-        int ch = wgetch(menu_window);
+        int ch = wgetch(login_window);
 
         switch (form_driver(login_form, ch)) {
             case SUBMIT_ACTION:
@@ -25,17 +30,17 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 if (current_member) {
 
                     reset_login_form(login_form);
-                    wclear(menu_window);
+                    wclear(login_window);
 
                     current_menu = member_menu(menu_window, current_member);
 
                     print_form(login_form);
-                    wrefresh(menu_window);
+                    wrefresh(login_window);
                 }
                 else {
-                    store_last_pos(menu_window);
+                    store_last_pos(login_window);
                     mvwprintw(menu_window, 3, 0, "Wrong username or password");
-                    restore_last_pos(menu_window);
+                    restore_last_pos(login_window);
                 }
                 break;
 
@@ -60,8 +65,8 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
     cleanup_login_form(login_form);
     free_members_vector(members);
+    delwin(menu_window);
 
-    keypad(menu_window, FALSE);
     return current_menu;
 }
 
@@ -75,5 +80,6 @@ current_menu_t member_menu(WINDOW* menu_window, member_t* member) {
         current_menu = EXIT_MENU;
 
     wclear(menu_window);
+    wrefresh(menu_window);
     return current_menu;
 }

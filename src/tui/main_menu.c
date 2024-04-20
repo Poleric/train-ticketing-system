@@ -26,27 +26,19 @@ void init_menu() {
 void start_menu() {
     init_menu();
 
-    WINDOW* inner_window = newwin(
-            10,
-            50,
-            1,
-            get_centered_x_start(stdscr, 50));
-
     current_menu_t current_menu = MEMBER_MENU;
     while (current_menu != EXIT_MENU) {
         switch (current_menu) {
             case MEMBER_MENU:
-                current_menu = member_login_menu(inner_window);
+                current_menu = member_login_menu(stdscr);
                 break;
             case STAFF_MENU:
-                current_menu = staff_menu(inner_window);
+                current_menu = staff_menu(stdscr);
                 break;
             default:
                 break;
         }
     }
-
-    delwin(inner_window);
 
     endwin();
 }
