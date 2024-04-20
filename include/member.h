@@ -24,9 +24,13 @@ typedef struct MemberVector {
     int num_of_members;
 } member_vector_t;
 
+member_t* init_member();
+member_vector_t* init_members_vector();
+
 int create_member_record(member_vector_t *members, const char* name, const char* password);
 int load_members(member_vector_t* members);
 int write_members(member_vector_t* members);
+
 member_t* login_as(member_vector_t * members, const char* username, const char* password);
 
 int find_member_index(member_vector_t *members, const char* username);

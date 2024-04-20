@@ -4,6 +4,7 @@
 #include <string.h>
 #include <utils.h>
 
+#define BASE_MEMBER_LENGTH 8
 
 member_t* init_member() {
     member_t* new_member = malloc(sizeof(member_t));
@@ -19,6 +20,17 @@ member_t* init_member() {
     return new_member;
 }
 
+member_vector_t* init_members_vector() {
+    member_vector_t* members = malloc(sizeof(member_vector_t));
+    if (members == NULL)
+        return NULL;
+
+    members->max_size = BASE_MEMBER_LENGTH;
+    members->array = calloc(sizeof(member_t*), members->max_size);
+    members->num_of_members = 0;
+
+    return members;
+}
 
 int create_member_record(member_vector_t *members, const char *name, const char *password) {
     if (is_member_exists(members, name))
