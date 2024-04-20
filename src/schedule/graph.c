@@ -114,25 +114,3 @@ void print_graph(struct StationGraph* graph) {
         printf("\n");
     }
 }
-
-int main() {
-    struct StationGraph* graph = init_graph();
-
-    graph_add_node(graph, "KL", "Kuala Lumpur");
-    graph_add_node(graph, "TH", "Thailand");
-    graph_add_node(graph, "SG", "Singapore");
-    graph_add_node(graph, "JB", "Johor Bahru");
-
-    graph_add_connection(graph, "KL", "TH", 120);
-    graph_add_connection(graph, "KL", "SG", 80);
-    graph_add_connection(graph, "JB", "SG", 20);
-    graph_add_connection(graph, "SG", "TH", 200);
-
-    print_graph(graph);
-
-    free_graph(graph);
-
-    return EXIT_SUCCESS;
-}
-
-
