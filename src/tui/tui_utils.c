@@ -2,15 +2,6 @@
 #include <string.h>
 #include <ctype.h>
 
-static int g_last_y, g_last_x;
-
-void store_last_pos(WINDOW* window) {
-    getyx(window, g_last_y, g_last_x);
-}
-
-void restore_last_pos(WINDOW* window) {
-    wmove(window, g_last_y, g_last_x);
-}
 
 int get_offset_for_centered(int length, int total_length) {
     return (total_length  - length) / 2;
