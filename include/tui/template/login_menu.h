@@ -39,6 +39,7 @@ typedef struct LoginForm {
 
 LOGIN_FORM* init_login_form(WINDOW* form_window);
 void print_login_fields(LOGIN_FORM* login_form, bool underline);
+void clear_login_field(LOGIN_FORM* login_form, int field_index);
 void move_cursor_to_input_field(LOGIN_FORM* login_form, int field_n, int pos);
 int move_cursor_to_end_of_input_field(LOGIN_FORM* login_form, int field_n);
 void print_input_field_buffer(LOGIN_FORM* login_form, int field_n);
@@ -46,6 +47,7 @@ void delete_char(char* buffer, int pos);
 void add_char(char* buffer, char ch, int pos);
 login_form_action_t form_driver(LOGIN_FORM* login_form, int ch);
 void free_login_form(LOGIN_FORM* login_form);
+void reset_login_form(LOGIN_FORM* login_form);
 void cleanup_login_form(LOGIN_FORM* login_form);
 
 // helpers

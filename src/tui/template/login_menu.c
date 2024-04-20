@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <assert.h>
 
 
 static int LOGIN_FORM_LINES = 0, LOGIN_FORM_COLS = 0;
@@ -44,6 +45,12 @@ void print_login_fields(LOGIN_FORM* login_form, bool underline) {
     }
 }
 
+void clear_login_field(LOGIN_FORM* login_form, int field_index) {
+    assert(field_index < login_form->n_buffer);
+    for (int i = 0; i < login_form->buffer_length; i++)
+        login_form->field_buffers[field_index][i] = 0;
+}
+
 void move_cursor_to_input_field(LOGIN_FORM* login_form, int field_n, int pos) {
     /*
      * field_n: 0 - username field, 1 - password field
@@ -83,7 +90,6 @@ void delete_char(char* buffer, int pos) {
     }
     *buffer = 0;
 }
-
 
 void add_char(char* buffer, char ch, int pos) {
     /* unsafe
@@ -198,9 +204,15 @@ void free_login_form(LOGIN_FORM* login_form) {
     free(login_form);
 }
 
-void cleanup_login_form(LOGIN_FORM* login_form) {
+void reset_login_form(LOGIN_FORM* login_form) {
     selection_row = 0;
     selection_col = 0;
+    for (int i = 0; i < login_form->n_buffer; i++)
+        clear_login_field(login_form, i);
+}
+
+void cleanup_login_form(LOGIN_FORM* login_form) {
+    reset_login_form(login_form);
     wclear(login_form->window);
     wrefresh(login_form->window);
     free_login_form(login_form);
