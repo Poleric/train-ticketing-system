@@ -205,12 +205,16 @@ LOGIN_FORM* create_login_form(WINDOW* form_window) {
     if (login_form == NULL)
         return NULL;
 
-    print_login_fields(login_form, TRUE);
-    move_cursor_to_end_of_input_field(login_form, 0);
+    print_form(login_form);
 
     wrefresh(login_form->window);
 
     return login_form;
+}
+
+void print_form(LOGIN_FORM* login_form) {
+    print_login_fields(login_form, TRUE);
+    move_cursor_to_end_of_input_field(login_form, 0);
 }
 
 char* get_username(LOGIN_FORM* login_form) {

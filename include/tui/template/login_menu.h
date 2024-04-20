@@ -51,6 +51,7 @@ void cleanup_login_form(LOGIN_FORM* login_form);
 // helpers
 
 LOGIN_FORM* create_login_form(WINDOW* form_window);
+void print_form(LOGIN_FORM* login_form);
 char* get_username(LOGIN_FORM* login_form);
 char* get_password(LOGIN_FORM* login_form);
 
