@@ -24,7 +24,9 @@ typedef enum LoginFormAction {
     NO_ACTION = 0,
     EXIT_FORM_ACTION = 1,
     SWITCH_MENU_ACTION = 2,
-    SUBMIT_ACTION = 3
+    SUBMIT_ACTION = 3,
+    RELOAD_ACTION = 4,
+    REGISTER_ACTION = 5
 } login_form_action_t;
 
 typedef struct LoginForm {

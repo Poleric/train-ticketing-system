@@ -104,6 +104,9 @@ login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
         case KEY_F(1):
             return SWITCH_MENU_ACTION;
 
+        case KEY_F(2):
+            return RELOAD_ACTION;
+
         case KEY_ESC:
         case CTRL('C'):
             store_last_pos(login_form->window);
@@ -112,6 +115,9 @@ login_form_action_t form_driver(LOGIN_FORM* login_form, int ch) {
 
             restore_last_pos(login_form->window);
             break;
+
+        case CTRL('R'):
+            return REGISTER_ACTION;
 
         case KEY_DOWN:
             if (selection_row < 1) {
