@@ -39,7 +39,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 }
                 else {
                     store_last_pos(login_window);
-                    mvwprintw(menu_window, 3, 0, "Wrong username or password");
+                    mvwprintw(login_window, 3, 0, "Wrong username or password");
                     restore_last_pos(login_window);
                 }
                 break;
