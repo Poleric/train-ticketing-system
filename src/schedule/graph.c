@@ -73,12 +73,21 @@ int graph_add_node(struct StationGraph* graph, const char* station_id, const cha
     return EXIT_SUCCESS;
 }
 
-int graph_add_connection(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance) {
+int graph_add_connection_bidirectional(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance) {
     struct StationNode* node = graph_get_node(graph, station_id);
     struct StationNode* next_node = graph_get_node(graph, next_station_id);
 
     node_add_connection(node, next_node, distance);
     node_add_connection(next_node, node, distance);
+
+    return EXIT_SUCCESS;
+}
+
+int graph_add_connection_directional(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance) {
+    struct StationNode* node = graph_get_node(graph, station_id);
+    struct StationNode* next_node = graph_get_node(graph, next_station_id);
+
+    node_add_connection(node, next_node, distance);
 
     return EXIT_SUCCESS;
 }
@@ -96,4 +105,40 @@ void free_graph(struct StationGraph* graph) {
         free_node_list(graph->stations[i]);
     free(graph->stations);
     free(graph);
+}
+
+
+int save_connections(struct StationGraph* graph, FILE* fp) {
+    // fp open in binary
+    int n_of_connections = 0;
+    fseek(fp, sizeof(int), SEEK_SET);  // leave space for size in the beginning
+    for (int i = 0; i < graph->number_of_nodes; i++) {
+        struct StationNode* node = graph->stations[i];
+        struct StationNode* next_node = get_next_node(node);
+        while (next_node) {
+            struct s_SerializedEdge edge;
+            edge.distance = node->edge.distance;
+            strncpy(edge.from_station_id, node->details.station_id, 4);
+            strncpy(edge.to_station_id, next_node->details.station_id, 4);
+
+            fwrite(&edge, sizeof(struct s_SerializedEdge), 1, fp);
+            n_of_connections++;
+
+            next_node = get_next_node(next_node);
+        }
+    }
+    fseek(fp, 0, SEEK_SET);
+    fwrite(&n_of_connections, sizeof(int), 1, fp);
+    return EXIT_SUCCESS;
+}
+
+int load_connections(struct StationGraph* graph, FILE* fp) {
+    int n_of_connections;
+    fread(&n_of_connections, sizeof(int), 1, fp);
+    for (int i = 0; i < n_of_connections; i++) {
+        struct s_SerializedEdge edge;
+        fread(&edge, sizeof(struct s_SerializedEdge), 1, fp);
+        graph_add_connection_directional(graph, edge.from_station_id, edge.to_station_id, edge.distance);
+    }
+    return EXIT_SUCCESS;
 }

@@ -1,6 +1,8 @@
 #ifndef TRAINTICKETINGSYSTEM_GRAPH_H
 #define TRAINTICKETINGSYSTEM_GRAPH_H
 
+#include <stdio.h>
+
 struct Edge {
     struct StationNode* next;
     int distance;
@@ -35,9 +37,19 @@ int node_add_connection(struct StationNode* start_node, struct StationNode* next
 struct StationNode* graph_get_node(struct StationGraph* graph, const char* station_id);
 int resize_graph(struct StationGraph *graph);
 int graph_add_node(struct StationGraph* graph, const char* station_id, const char* station_name);
-int graph_add_connection(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance);
+int graph_add_connection_bidirectional(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance);
+int graph_add_connection_directional(struct StationGraph* graph, const char* station_id, const char* next_station_id, int distance);
 
 void free_node_list(struct StationNode* node);
 void free_graph(struct StationGraph* graph);
+
+
+struct s_SerializedEdge {
+    int distance;
+    char from_station_id[4], to_station_id[4];
+};
+
+int save_connections(struct StationGraph* graph, FILE* fp);
+int load_connections(struct StationGraph* graph, FILE* fp);
 
 #endif //TRAINTICKETINGSYSTEM_GRAPH_H
