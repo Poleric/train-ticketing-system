@@ -93,10 +93,10 @@ member_t* login_as(member_vector_t* members, const char* username, const char* p
         return NULL;
 
     member_t* member = members->array[i];
-    if (compare_hash(password, member->hashed_password) != 0)
-        return NULL;
+    if (compare_hash(password, member->hashed_password) == 0)
+        return member;
 
-    return member;
+    return NULL;
 }
 
 int find_member_index(member_vector_t* members, const char* username) {
