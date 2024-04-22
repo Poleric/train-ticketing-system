@@ -9,8 +9,8 @@ struct Edge {
 };
 
 struct StationDetails {
-    const char* station_id;
-    const char* station_name;
+    char* station_id;
+    char* station_name;
 };
 
 struct StationNode {
@@ -48,8 +48,11 @@ struct s_SerializedEdge {
     int distance;
     char from_station_id[4], to_station_id[4];
 };
-
+int save_locations(struct StationGraph* graph, FILE* fp);
+int load_locations(struct StationGraph* graph, FILE* fp);
 int save_connections(struct StationGraph* graph, FILE* fp);
 int load_connections(struct StationGraph* graph, FILE* fp);
+int save_graph(struct StationGraph* graph, const char* filepath);
+int load_graph(struct StationGraph* graph, const char* filepath);
 
 #endif //TRAINTICKETINGSYSTEM_GRAPH_H

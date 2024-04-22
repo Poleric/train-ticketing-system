@@ -7,8 +7,8 @@ struct StationNode* init_node(int id, const char* station_id, const char* statio
     struct StationNode* node = malloc(sizeof (struct StationNode));
     node->id = id;
     node->details = (struct StationDetails){
-            station_id,
-            station_name
+            strdup(station_id),
+            strdup(station_name)
     };
 
     return node;
@@ -95,6 +95,8 @@ int graph_add_connection_directional(struct StationGraph* graph, const char* sta
 void free_node_list(struct StationNode* node) {
     while (node) {
         struct StationNode* next = get_next_node(node);
+        free(node->details.station_id);
+        free(node->details.station_name);
         free(node);
         node = next;
     }
@@ -107,11 +109,39 @@ void free_graph(struct StationGraph* graph) {
     free(graph);
 }
 
+int save_locations(struct StationGraph* graph, FILE* fp) {
+    fwrite(&graph->number_of_nodes, sizeof(int), 1, fp);
+    for (int i = 0; i < graph->number_of_nodes; i++) {
+        fwrite(graph->stations[i]->details.station_id, sizeof(char), 4, fp);
+        int station_name_len = (int) strlen(graph->stations[i]->details.station_name) + 1;
+        fwrite(&station_name_len, sizeof(int), 1, fp);
+        fwrite(graph->stations[i]->details.station_id, sizeof (char), station_name_len, fp);
+    }
+    return EXIT_SUCCESS;
+}
+
+int load_locations(struct StationGraph* graph, FILE* fp) {
+    int n_of_locations;
+    fread(&n_of_locations, sizeof(int), 1, fp);
+
+    char station_id[4], *station_name;
+    int station_name_len;
+    for (int i = 0; i < n_of_locations; i++) {
+        fread(station_id, sizeof (char), 4, fp);
+        fread(&station_name_len, sizeof (int), 1, fp);
+        station_name = malloc(station_name_len);
+        fread(station_name, sizeof (char), station_name_len, fp);
+        graph_add_node(graph, station_id, station_name);
+        free(station_name);
+    }
+    return EXIT_SUCCESS;
+}
 
 int save_connections(struct StationGraph* graph, FILE* fp) {
     // fp open in binary
     int n_of_connections = 0;
-    fseek(fp, sizeof(int), SEEK_SET);  // leave space for size in the beginning
+    long start_pos = ftell(fp);
+    fseek(fp, sizeof(int), SEEK_CUR);  // leave space for size in the beginning
     for (int i = 0; i < graph->number_of_nodes; i++) {
         struct StationNode* node = graph->stations[i];
         struct StationNode* next_node = get_next_node(node);
@@ -127,7 +157,7 @@ int save_connections(struct StationGraph* graph, FILE* fp) {
             next_node = get_next_node(next_node);
         }
     }
-    fseek(fp, 0, SEEK_SET);
+    fseek(fp, start_pos, SEEK_SET);
     fwrite(&n_of_connections, sizeof(int), 1, fp);
     return EXIT_SUCCESS;
 }
@@ -140,5 +170,27 @@ int load_connections(struct StationGraph* graph, FILE* fp) {
         fread(&edge, sizeof(struct s_SerializedEdge), 1, fp);
         graph_add_connection_directional(graph, edge.from_station_id, edge.to_station_id, edge.distance);
     }
+    return EXIT_SUCCESS;
+}
+
+int save_graph(struct StationGraph* graph, const char* filepath) {
+    FILE* fp = fopen(filepath, "wb");
+
+    if (fp == NULL)
+        return EXIT_FAILURE;
+
+    save_locations(graph, fp);
+    save_connections(graph, fp);
+    return EXIT_SUCCESS;
+}
+
+int load_graph(struct StationGraph* graph, const char* filepath) {
+    FILE* fp = fopen(filepath, "rb");
+
+    if (fp == NULL)
+        return EXIT_FAILURE;
+
+    load_locations(graph, fp);
+    load_connections(graph, fp);
     return EXIT_SUCCESS;
 }
