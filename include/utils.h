@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #ifndef TRAINTICKETINGSYSTEM_UTILS_H
 #define TRAINTICKETINGSYSTEM_UTILS_H
