@@ -15,5 +15,7 @@ int input(const char* prompt, char* buffer, size_t buffer_size);
 void flush(FILE* stream);
 void delete_char(char* buffer, int pos);
 void add_char(char* buffer, char ch, int pos);
+const char* tm_mon_to_text(int tm_mon);
+const char* tm_wday_to_text(int tm_wday);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H
