@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <schedule/graph.h>
+#include <schedule/stations.h>
 #include <string.h>
 
 
@@ -109,7 +109,7 @@ void free_graph(station_graph_t* graph) {
     free(graph);
 }
 
-int save_locations(station_graph_t* graph, FILE* fp) {
+int save_stations(station_graph_t* graph, FILE* fp) {
     fwrite(&graph->number_of_nodes, sizeof(int), 1, fp);
     for (int i = 0; i < graph->number_of_nodes; i++) {
         fwrite(graph->nodes[i]->details.station_id, sizeof(char), 4, fp);
@@ -120,7 +120,7 @@ int save_locations(station_graph_t* graph, FILE* fp) {
     return EXIT_SUCCESS;
 }
 
-int load_locations(station_graph_t* graph, FILE* fp) {
+int load_stations(station_graph_t* graph, FILE* fp) {
     int n_of_locations;
     fread(&n_of_locations, sizeof(int), 1, fp);
 

@@ -18,7 +18,7 @@ set (SOURCES
 #    ${CMAKE_SOURCE_DIR}/src/staff.c
     ${CMAKE_SOURCE_DIR}/src/member.c
 
-    ${CMAKE_SOURCE_DIR}/src/schedule/graph.c
+    ${CMAKE_SOURCE_DIR}/src/schedule/stations.c
     ${CMAKE_SOURCE_DIR}/src/schedule/schedule.c
 
     ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c

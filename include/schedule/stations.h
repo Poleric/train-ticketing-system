@@ -1,5 +1,5 @@
-#ifndef TRAINTICKETINGSYSTEM_GRAPH_H
-#define TRAINTICKETINGSYSTEM_GRAPH_H
+#ifndef TRAINTICKETINGSYSTEM_STATIONS_H
+#define TRAINTICKETINGSYSTEM_STATIONS_H
 
 #include <stdio.h>
 
@@ -55,11 +55,11 @@ struct SerializedEdge {
     char from_station_id[4], to_station_id[4];
 };
 
-int save_locations(station_graph_t* graph, FILE* fp);
-int load_locations(station_graph_t* graph, FILE* fp);
+int save_stations(station_graph_t* graph, FILE* fp);
+int load_stations(station_graph_t* graph, FILE* fp);
 int save_connections(station_graph_t* graph, FILE* fp);
 int load_connections(station_graph_t* graph, FILE* fp);
 int save_graph(station_graph_t* graph, const char* filepath);
 int load_graph(station_graph_t* graph, const char* filepath);
 
-#endif //TRAINTICKETINGSYSTEM_GRAPH_H
+#endif //TRAINTICKETINGSYSTEM_STATIONS_H
