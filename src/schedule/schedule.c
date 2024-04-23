@@ -56,9 +56,9 @@ int delete_schedule_by_info(schedule_vector_t* schedules, schedule_t* schedule) 
             schedules->array[i] = NULL;
 
             // shift into empty slot
-            for (int j = i + 1; j < schedules->n_elements; i++)
-                schedules->array[i - 1] = schedules->array[i];
-            schedules->array[schedules->n_elements--] = NULL;
+            for (int j = i + 1; j < schedules->n_elements; j++)
+                schedules->array[j - 1] = schedules->array[j];
+            schedules->array[--schedules->n_elements] = NULL;
 
             return EXIT_SUCCESS;
         }
