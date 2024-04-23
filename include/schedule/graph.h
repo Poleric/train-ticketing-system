@@ -29,7 +29,7 @@ struct StationNode {
 struct StationGraph {
     int max_size;
     int number_of_nodes;
-    station_node_t** stations;
+    station_node_t** nodes;
 };
 
 station_node_t* init_node(int id, const char* station_id, const char* station_name);
