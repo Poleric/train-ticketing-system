@@ -115,7 +115,7 @@ int save_locations(struct StationGraph* graph, FILE* fp) {
         fwrite(graph->stations[i]->details.station_id, sizeof(char), 4, fp);
         int station_name_len = (int) strlen(graph->stations[i]->details.station_name) + 1;
         fwrite(&station_name_len, sizeof(int), 1, fp);
-        fwrite(graph->stations[i]->details.station_id, sizeof (char), station_name_len, fp);
+        fwrite(graph->stations[i]->details.station_name, sizeof (char), station_name_len, fp);
     }
     return EXIT_SUCCESS;
 }
