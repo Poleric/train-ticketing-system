@@ -4,7 +4,7 @@
 
 
 station_node_t* init_node(char* station_id, char* station_name) {
-    station_node_t* node = malloc(sizeof (station_node_t));
+    station_node_t* node = calloc(1, sizeof (station_node_t));
     node->station_id = station_id;
     node->station_name = station_name;
 
