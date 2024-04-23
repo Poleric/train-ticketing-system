@@ -66,6 +66,24 @@ int delete_schedule_by_info(schedule_vector_t* schedules, schedule_t* schedule) 
     return EXIT_FAILURE;
 }
 
+int delete_schedule_by_train_time(schedule_vector_t* schedules, char* train_id, dt_time_t time) {
+    for (int i = 0; i < schedules->n_elements; i++) {
+        if (strcmp(schedules->array[i]->train_id, train_id) == 0 &&
+            is_time_same(schedules->array[i]->departure_time, time)) {
+            free(schedules->array[i]);
+            schedules->array[i] = NULL;
+
+            // shift into empty slot
+            for (int j = i + 1; j < schedules->n_elements; j++)
+                schedules->array[j - 1] = schedules->array[j];
+            schedules->array[schedules->n_elements--] = NULL;
+
+            return EXIT_SUCCESS;
+        }
+    }
+    return EXIT_FAILURE;
+}
+
 bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
     return
             time_1.tm_hour == time_2.tm_hour &&
