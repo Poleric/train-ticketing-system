@@ -7,8 +7,8 @@ enum Permissions {
 };
 
 typedef struct Staff {
-    char* id;
-    char* name;
+    char* username;
+    char* hashed_password;
     char* email;
     char* contact_no;
     char* position;
