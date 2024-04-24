@@ -55,6 +55,7 @@ bool confirmation_menu(WINDOW* window, const char* message) {
             get_centered_y_start(window, CONFIRMATION_WINDOW_HEIGHT),
             get_centered_x_start(window, CONFIRMATION_WINDOW_WIDTH)
     );
+    wclear(confirmation_window);
     keypad(confirmation_window, TRUE);  // enable arrow keys
 
     curs_set(0);  // hide cursor
