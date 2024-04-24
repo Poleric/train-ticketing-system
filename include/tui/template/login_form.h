@@ -20,7 +20,7 @@
 
 FORM* create_login_form(WINDOW* form_window);
 void print_login_fields(FORM* login_form, bool underline);
-void print_form(FORM* login_form);
+void print_login_form(FORM* login_form);
 char* get_username(FORM* login_form);
 char* get_password(FORM* login_form);
 

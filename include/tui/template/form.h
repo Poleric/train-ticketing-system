@@ -29,10 +29,10 @@ void move_cursor_to_input_field(FORM* form, int field_n, int pos);
 int move_cursor_to_end_of_input_field(FORM* form, int field_n);
 void print_input_field_buffer(FORM* form, int field_n);
 form_action_t form_driver(FORM* form, int ch);
-void free_login_form(FORM* form);
+void free_form(FORM* form);
 void clear_field_buffers(FORM* login_form, int field_index);
-void reset_login_form(FORM* form);
-void cleanup_login_form(FORM* login_form);
+void reset_form(FORM* form);
+void cleanup_form(FORM* form);
 
 
 #endif //TRAINTICKETINGSYSTEM_FORM_H

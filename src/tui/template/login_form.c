@@ -6,7 +6,7 @@ FORM* create_login_form(WINDOW* form_window) {
     if (login_form == NULL)
         return NULL;
 
-    print_form(login_form);
+    print_login_form(login_form);
 
     wrefresh(login_form->window);
 
@@ -33,7 +33,7 @@ void print_login_fields(FORM* login_form, bool underline) {
     }
 }
 
-void print_form(FORM* login_form) {
+void print_login_form(FORM* login_form) {
     print_login_fields(login_form, TRUE);
     move_cursor_to_end_of_input_field(login_form, 0);
 }

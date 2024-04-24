@@ -16,9 +16,11 @@ FORM* init_form(WINDOW* form_window, int n_buffer, int label_field_length) {
     getmaxyx(form_window, form->LOGIN_FORM_LINES, form->LOGIN_FORM_COLS);
     form->selection_col = form->selection_row = 0;
     form->buffer_length = form->LOGIN_FORM_COLS - label_field_length;
+    assert(form->buffer_length > 0);
+
     form->field_start_x = label_field_length;
     form->n_buffer = n_buffer;
-    form->field_buffers = calloc(sizeof(char), form->n_buffer);
+    form->field_buffers = calloc(sizeof(char*), form->n_buffer);
     for (int i = 0; i < form->n_buffer; i++)
         form->field_buffers[i] = calloc(sizeof (char), form->buffer_length);
 
@@ -146,7 +148,7 @@ form_action_t form_driver(FORM* form, int ch) {
     return NO_ACTION;
 }
 
-void free_login_form(FORM* form) {
+void free_form(FORM* form) {
     for (int i = 0; i < form->n_buffer; i++)
         free(form->field_buffers[i]);
     free(form->field_buffers);
@@ -159,16 +161,16 @@ void clear_field_buffers(FORM* login_form, int field_index) {
         login_form->field_buffers[field_index][i] = 0;
 }
 
-void reset_login_form(FORM* form) {
+void reset_form(FORM* form) {
     form->selection_row = 0;
     form->selection_col = 0;
     for (int i = 0; i < form->n_buffer; i++)
         clear_field_buffers(form, i);
 }
 
-void cleanup_login_form(FORM* form) {
-    reset_login_form(form);
+void cleanup_form(FORM* form) {
+    reset_form(form);
     wclear(form->window);
     wrefresh(form->window);
-    free_login_form(form);
+    free_form(form);
 }
