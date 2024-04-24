@@ -5,13 +5,14 @@
 
 #define MIN_DAY_SCHEDULES 4
 
-schedule_t* create_schedule(char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, int n_seats) {
+schedule_t* create_schedule(char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, dt_time_t eta, int n_seats) {
     schedule_t* schedule = malloc(sizeof (schedule_t));
 
     strncpy(schedule->train_id, train_id, 4);
     strncpy(schedule->from_station_id, from_station_id, 4);
     strncpy(schedule->to_station_id, to_station_id, 4);
     schedule->departure_time = time;
+    schedule->eta = eta;
     schedule->n_seats = n_seats;
 
     return schedule;
@@ -107,17 +108,20 @@ bool is_schedule_same(schedule_t* schedule_1, schedule_t* schedule_2) {
     if (!is_time_same(schedule_1->departure_time, schedule_2->departure_time))
         return false;
 
+    if (!is_time_same(schedule_1->eta, schedule_2->eta))
+        return false;
+
     return true;
 }
 
 int save_daily_schedule(schedule_vector_t* schedules, FILE* fp) {
     for (int i = 0; i < schedules->n_elements; i++)
-        fprintf(fp, "%4s, %3s, %3s, %02d:%02d:%02d, %d\n",
+        fprintf(fp, "%4s, %3s, %3s, %02d:%02d:%02d, %02d:%02d:%02d, %d\n",
                 schedules->array[i]->train_id,
                 schedules->array[i]->from_station_id,
                 schedules->array[i]->to_station_id,
-                schedules->array[i]->departure_time.tm_hour, schedules->array[i]->departure_time.tm_min,
-                schedules->array[i]->departure_time.tm_sec,
+                schedules->array[i]->departure_time.tm_hour, schedules->array[i]->departure_time.tm_min, schedules->array[i]->departure_time.tm_sec,
+                schedules->array[i]->eta.tm_hour, schedules->array[i]->eta.tm_min, schedules->array[i]->eta.tm_sec,
                 schedules->array[i]->n_seats
         );
     return EXIT_SUCCESS;
@@ -144,25 +148,26 @@ int load_weekly_schedule(weekly_schedule_t* weekly_schedule, const char* filepat
     if (fp == NULL)
         return EXIT_FAILURE;
 
-    char line_buff[40];
+    char line_buff[50];
     char train_id[5], from_station_id[4], to_station_id[4];
-    dt_time_t time;
+    dt_time_t time, eta;
     int n_seats;
     for (int i = 0; i < 7; i++)
         while (1) {
-            fgets(line_buff, 40, fp);
+            fgets(line_buff, 50, fp);
             if (strcmp(line_buff, "\n") == 0)
                 break;
 
-            if (sscanf(line_buff, "%4s, %3s, %3s, %d:%d:%d, %d",
+            if (sscanf(line_buff, "%4s, %3s, %3s, %d:%d:%d, %d:%d:%d, %d",
                    train_id,
                    from_station_id,
                    to_station_id,
                    &time.tm_hour, &time.tm_min, &time.tm_sec,
-                   &n_seats) != 7)
+                   &eta.tm_hour, &eta.tm_min, &eta.tm_sec,
+                   &n_seats) != 10)
                 break;
 
-            weekly_add_schedule(weekly_schedule, train_id, from_station_id, to_station_id, time, n_seats, i);
+            weekly_add_schedule(weekly_schedule, train_id, from_station_id, to_station_id, time, eta, n_seats, i);
         }
 
     fclose(fp);
@@ -180,8 +185,8 @@ void free_weekly_schedules(weekly_schedule_t* weekly_schedule) {
         free_schedules(weekly_schedule->days + i);
 }
 
-int weekly_add_schedule(weekly_schedule_t* weekly_schedule, char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, int n_seats, int tm_wday) {
-    schedule_t* schedule = create_schedule(train_id, from_station_id, to_station_id, time, n_seats);
+int weekly_add_schedule(weekly_schedule_t* weekly_schedule, char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, dt_time_t eta, int n_seats, int tm_wday) {
+    schedule_t* schedule = create_schedule(train_id, from_station_id, to_station_id, time, eta, n_seats);
 
     add_schedule(weekly_schedule->days + tm_wday, schedule);
 
