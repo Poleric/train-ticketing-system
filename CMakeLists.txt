@@ -15,7 +15,7 @@ endif ()
 
 set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils.c
-#    ${CMAKE_SOURCE_DIR}/src/staff.c
+    ${CMAKE_SOURCE_DIR}/src/staff.c
     ${CMAKE_SOURCE_DIR}/src/member.c
 
     ${CMAKE_SOURCE_DIR}/src/schedule/stations.c
@@ -26,6 +26,7 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/staff_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/tui_utils.c
     ${CMAKE_SOURCE_DIR}/src/tui/tui_last_pos.c
+    ${CMAKE_SOURCE_DIR}/src/tui/menu_utils.c
     ${CMAKE_SOURCE_DIR}/src/tui/template/form.c
     ${CMAKE_SOURCE_DIR}/src/tui/template/login_form.c
 
