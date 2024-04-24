@@ -6,7 +6,7 @@
 
 #define BASE_STAFF_LENGTH 4
 
-int load_staff() {
+int login_staff() {
 	FILE* staffFP;
 	staff_t currentStaff;
 
@@ -30,12 +30,17 @@ int load_staff() {
 	return 0;
 }
 
-int account() {
+staff_t* login_as(staff_vector_t* staff_v, const char* username, const char* password) {
+	int i = find_staff_index(staff_v, username);
 
-}
+	if (i == -1)
+		return NULL;
 
-int schedule() {
+	staff_t* staff = staff_v->array[i];
+	if (compare_hash(password, staff->hashed_password) == 0)
+		return staff;
 
+	return NULL;
 }
 
 int manageAcc() {
