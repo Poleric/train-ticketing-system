@@ -6,10 +6,6 @@ FORM* create_login_form(WINDOW* form_window) {
     if (login_form == NULL)
         return NULL;
 
-    print_login_form(login_form);
-
-    wrefresh(login_form->window);
-
     return login_form;
 }
 
