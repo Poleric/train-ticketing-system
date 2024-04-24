@@ -32,7 +32,7 @@ void start_menu() {
                 current_menu = member_login_menu(stdscr);
                 break;
             case STAFF_MENU:
-                current_menu = staff_menu(stdscr);
+                current_menu = staff_login_menu(stdscr);
                 break;
             default:
                 break;
