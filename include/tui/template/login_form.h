@@ -2,6 +2,7 @@
 #define TRAINTICKETINGSYSTEM_LOGIN_FORM_H
 
 #include <tui/template/form.h>
+#include <string.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #define MAX(a,b) __max(a,b)
@@ -19,7 +20,6 @@
 
 FORM* create_login_form(WINDOW* form_window);
 void print_login_fields(FORM* login_form, bool underline);
-void clear_login_field(FORM* login_form, int field_index);
 void print_form(FORM* login_form);
 char* get_username(FORM* login_form);
 char* get_password(FORM* login_form);

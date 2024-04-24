@@ -1,11 +1,12 @@
-#include <tui/template/login_form.h>
+#include <tui/template/form.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <utils.h>
+#include <assert.h>
 
 
-FORM* init_form(WINDOW* form_window, int n_buffer) {
+FORM* init_form(WINDOW* form_window, int n_buffer, int label_field_length) {
     FORM* form = malloc(sizeof (FORM));
 
     if (form == NULL)
@@ -14,7 +15,8 @@ FORM* init_form(WINDOW* form_window, int n_buffer) {
     form->window = form_window;
     getmaxyx(form_window, form->LOGIN_FORM_LINES, form->LOGIN_FORM_COLS);
     form->selection_col = form->selection_row = 0;
-    form->buffer_length = form->LOGIN_FORM_COLS - LOGIN_LABEL_FIELD_LENGTH - LOGIN_FIELD_GAP;
+    form->buffer_length = form->LOGIN_FORM_COLS - label_field_length;
+    form->field_start_x = label_field_length;
     form->n_buffer = n_buffer;
     form->field_buffers = calloc(sizeof(char), form->n_buffer);
     for (int i = 0; i < form->n_buffer; i++)
@@ -30,7 +32,7 @@ void move_cursor_to_input_field(FORM* form, int field_n, int pos) {
     int y, x;
 
     y = field_n;
-    x = LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP + pos;
+    x = form->field_start_x + pos;
 
     wmove(form->window, y, x);
 }
@@ -45,7 +47,7 @@ void print_input_field_buffer(FORM* form, int field_n) {
     int y, x;
 
     y = field_n;
-    x = LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP;
+    x = form->field_start_x;
 
     wmove(form->window, y, x); wclrtoeol(form->window);
     mvwprintw(form->window, y, x, "%s", form->field_buffers[field_n]);
@@ -151,11 +153,17 @@ void free_login_form(FORM* form) {
     free(form);
 }
 
+void clear_field_buffers(FORM* login_form, int field_index) {
+    assert(field_index < login_form->n_buffer);
+    for (int i = 0; i < login_form->buffer_length; i++)
+        login_form->field_buffers[field_index][i] = 0;
+}
+
 void reset_login_form(FORM* form) {
     form->selection_row = 0;
     form->selection_col = 0;
     for (int i = 0; i < form->n_buffer; i++)
-        clear_login_field(form, i);
+        clear_field_buffers(form, i);
 }
 
 void cleanup_login_form(FORM* form) {

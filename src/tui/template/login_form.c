@@ -1,9 +1,7 @@
 #include <tui/template/login_form.h>
-#include <assert.h>
 
 FORM* create_login_form(WINDOW* form_window) {
-
-    FORM* login_form = init_form(form_window, 2);
+    FORM* login_form = init_form(form_window, 2, LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP);
 
     if (login_form == NULL)
         return NULL;
@@ -33,12 +31,6 @@ void print_login_fields(FORM* login_form, bool underline) {
         wadd_chars(login_form->window, ' ', LOGIN_FIELD_GAP);
         wchgat(login_form->window, -1, A_UNDERLINE, 0, 0);
     }
-}
-
-void clear_login_field(FORM* login_form, int field_index) {
-    assert(field_index < login_form->n_buffer);
-    for (int i = 0; i < login_form->buffer_length; i++)
-        login_form->field_buffers[field_index][i] = 0;
 }
 
 void print_form(FORM* login_form) {
