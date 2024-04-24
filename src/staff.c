@@ -16,7 +16,7 @@ int load_staff() {
 	}
 
 	fscanf(staffFP, "%[^|] | %[^|] | %s | %d | %[^|] | %d | %lf",
-	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contactNo, currentStaff.position, currentStaff.permissions, scurrentStaff.salary);
+	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contact_no, currentStaff.position, currentStaff.permissions, currentStaff.salary);
 
 	char username_buffer[255], password_buffer[255];
 	char retry;
