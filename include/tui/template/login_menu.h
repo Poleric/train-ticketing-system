@@ -29,30 +29,31 @@ typedef enum LoginFormAction {
     REGISTER_ACTION = 5
 } login_form_action_t;
 
-typedef struct LoginForm {
+typedef struct Form {
     WINDOW* window;
-
+    int LOGIN_FORM_LINES, LOGIN_FORM_COLS;
+    int selection_row, selection_col;
     size_t n_buffer;
     size_t buffer_length;
     char** field_buffers;
-} LOGIN_FORM;
+} FORM;
 
-LOGIN_FORM* init_login_form(WINDOW* form_window);
-void print_login_fields(LOGIN_FORM* login_form, bool underline);
-void clear_login_field(LOGIN_FORM* login_form, int field_index);
-void move_cursor_to_input_field(LOGIN_FORM* login_form, int field_n, int pos);
-int move_cursor_to_end_of_input_field(LOGIN_FORM* login_form, int field_n);
-void print_input_field_buffer(LOGIN_FORM* login_form, int field_n);
-login_form_action_t form_driver(LOGIN_FORM* login_form, int ch);
-void free_login_form(LOGIN_FORM* login_form);
-void reset_login_form(LOGIN_FORM* login_form);
-void cleanup_login_form(LOGIN_FORM* login_form);
+FORM* init_form(WINDOW* form_window, int n_buffer);
+void move_cursor_to_input_field(FORM* form, int field_n, int pos);
+int move_cursor_to_end_of_input_field(FORM* form, int field_n);
+void print_input_field_buffer(FORM* form, int field_n);
+login_form_action_t form_driver(FORM* form, int ch);
+void free_login_form(FORM* form);
+void reset_login_form(FORM* form);
+void cleanup_login_form(FORM* login_form);
 
 // helpers
 
-LOGIN_FORM* create_login_form(WINDOW* form_window);
-void print_form(LOGIN_FORM* login_form);
-char* get_username(LOGIN_FORM* login_form);
-char* get_password(LOGIN_FORM* login_form);
+FORM* create_login_form(WINDOW* form_window);
+void print_login_fields(FORM* login_form, bool underline);
+void clear_login_field(FORM* login_form, int field_index);
+void print_form(FORM* login_form);
+char* get_username(FORM* login_form);
+char* get_password(FORM* login_form);
 
 #endif //TRAINTICKETINGSYSTEM_LOGIN_MENU_H
