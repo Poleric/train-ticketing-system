@@ -1,5 +1,5 @@
 #include <tui/member_menu.h>
-#include <tui/template/login_menu.h>
+#include <tui/template/login_form.h>
 #include <member.h>
 
 // member_login -> member_menu   --┐
@@ -13,7 +13,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             get_centered_x_start(stdscr, 50));
     keypad(login_window, TRUE);
 
-    LOGIN_FORM* login_form = create_login_form(login_window);
+    FORM* login_form = create_login_form(login_window);
 
     current_menu_t current_menu = MEMBER_MENU;
 
