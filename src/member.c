@@ -32,7 +32,7 @@ member_vector_t* init_members_vector() {
     return members;
 }
 
-int create_member_record(member_vector_t *members, const char *name, const char *password) {
+int create_member_record(member_vector_t *members, char *name, char *password, char gender, char* email, char* contact_no, enum Membership membership) {
     if (is_member_exists(members, name))
         return EXIT_FAILURE;
 
@@ -41,6 +41,10 @@ int create_member_record(member_vector_t *members, const char *name, const char 
     newMember->username = strdup(name);
     newMember->hashed_password = malloc(65);
     hash_message(password, newMember->hashed_password);
+    newMember->gender = gender;
+    newMember->email = strdup(email);
+    newMember->contact_no = strdup(contact_no);
+    newMember->membership = membership;
 
     add_member(members, newMember);
     return EXIT_SUCCESS;
