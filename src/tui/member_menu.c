@@ -1,6 +1,12 @@
 #include <tui/member_menu.h>
 #include <tui/template/login_form.h>
-#include <member.h>
+#include <tui/menu_utils.h>
+
+void reload_members(member_vector_t* members) {
+    for (int i = 0; i < members->num_of_members; i++)
+        free_member(members->array[i]);
+    load_members(members);
+}
 
 // member_login -> member_menu   --┐
 //   / \        -> register_menu --|
@@ -10,17 +16,20 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             10,
             50,
             1,
-            get_centered_x_start(stdscr, 50));
+            get_centered_x_start(menu_window, 50));
+
     keypad(login_window, TRUE);
 
     FORM* login_form = create_login_form(login_window);
 
-    current_menu_t current_menu = MEMBER_MENU;
+    print_login_menu("Member menu", menu_window, login_form);
 
     member_vector_t* members = init_members_vector();
     load_members(members);
 
     member_t* current_member;
+
+    current_menu_t current_menu = MEMBER_MENU;
     while (current_menu == MEMBER_MENU) {
         int ch = wgetch(login_window);
 
@@ -28,14 +37,11 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             case SUBMIT_ACTION:
                 current_member = login_as(members, get_username(login_form), get_password(login_form));
                 if (current_member) {
-
-                    reset_login_form(login_form);
-                    wclear(login_window);
+                    clear_current_menu(menu_window, login_form);
 
                     current_menu = member_menu(menu_window, current_member);
 
-                    print_form(login_form);
-                    wrefresh(login_window);
+                    print_login_menu("Menu member", menu_window, login_form);
                 }
                 else {
                     store_last_pos(login_window);
@@ -45,6 +51,8 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 break;
 
             case SWITCH_MENU_ACTION:
+                clear_current_menu(menu_window, login_form);
+
                 current_menu = STAFF_MENU;
                 break;
 
@@ -53,9 +61,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 break;
 
             case RELOAD_ACTION:
-                for (int i = 0; i < members->num_of_members; i++)
-                    free_member(members->array[i]);
-                load_members(members);
+                reload_members(members);
                 break;
 
             default:
@@ -63,9 +69,9 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
         }
     }
 
-    cleanup_login_form(login_form);
+    cleanup_form(login_form);
     free_members_vector(members);
-    delwin(menu_window);
+    delwin(login_window);
 
     return current_menu;
 }
