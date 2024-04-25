@@ -124,13 +124,13 @@ int main() {
     //THURSDAY
     weekly_add_schedule(&weekly_schedule, "T002", "COF", "RMH", (dt_time_t) { 13, 30 }, (dt_time_t) { 10, 30 }, 140, 4);
     weekly_add_schedule(&weekly_schedule, "T004", "MON", "LIY", (dt_time_t) { 16 }, (dt_time_t) { 10, 30 }, 120, 4);
-    weekly_add_schedule(&weekly_schedule, "T003", "COF", "RMH", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 110, 2);
+    weekly_add_schedule(&weekly_schedule, "T003", "NAP", "PAL", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 110, 2);
     weekly_add_schedule(&weekly_schedule, "T001", "LIY", "RMH", (dt_time_t) { 12 }, (dt_time_t) { 13, 30 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T005", "COF", "RMH", (dt_time_t) { 13, 30 }, (dt_time_t) { 15, 30 }, 100, 0);
-    weekly_add_schedule(&weekly_schedule, "T006", "MON", "LIY", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
+    weekly_add_schedule(&weekly_schedule, "T006", "SIE", "URN", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T007", "LIY", "MLS", (dt_time_t) { 15 }, (dt_time_t) { 18 }, 150, 1);
     weekly_add_schedule(&weekly_schedule, "T008", "QOP", "YOI", (dt_time_t) { 14, 10 }, (dt_time_t) { 18, 55 }, 140, 1);
-    weekly_add_schedule(&weekly_schedule, "T009", "SIE", "URN", (dt_time_t) { 16 }, (dt_time_t) { 18, 30 }, 100, 0);
+    weekly_add_schedule(&weekly_schedule, "T009", "LIY", "URN", (dt_time_t) { 16 }, (dt_time_t) { 18, 30 }, 100, 0);
     weekly_add_schedule(&weekly_schedule, "T010", "LPO", "COF", (dt_time_t) { 17 }, (dt_time_t) { 19, 30 }, 130, 0);
     weekly_add_schedule(&weekly_schedule, "T012", "SAD", "WAT", (dt_time_t) { 18, 45 }, (dt_time_t) { 20, 35 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T011", "ROM", "FOC", (dt_time_t) { 20 }, (dt_time_t) { 22, 30 }, 120, 0);
@@ -142,9 +142,9 @@ int main() {
     weekly_add_schedule(&weekly_schedule, "T002", "QOP", "YOI", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 140, 2);
     weekly_add_schedule(&weekly_schedule, "T001", "LIY", "RMH", (dt_time_t) { 12 }, (dt_time_t) { 13, 30 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T005", "COF", "RMH", (dt_time_t) { 13, 30 }, (dt_time_t) { 15, 30 }, 110, 0);
-    weekly_add_schedule(&weekly_schedule, "T006", "MON", "LIY", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
+    weekly_add_schedule(&weekly_schedule, "T006", "SIE", "URN", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T007", "LIY", "MLS", (dt_time_t) { 15 }, (dt_time_t) { 18 }, 150, 1);
-    weekly_add_schedule(&weekly_schedule, "T008", "QOP", "YOI", (dt_time_t) { 14, 10 }, (dt_time_t) { 18, 55 }, 140, 1);
+    weekly_add_schedule(&weekly_schedule, "T008", "RMH", "YOI", (dt_time_t) { 14, 10 }, (dt_time_t) { 18, 55 }, 140, 1);
     weekly_add_schedule(&weekly_schedule, "T009", "SIE", "URN", (dt_time_t) { 16 }, (dt_time_t) { 18, 30 }, 100, 0);
     weekly_add_schedule(&weekly_schedule, "T010", "LPO", "COF", (dt_time_t) { 17 }, (dt_time_t) { 19, 30 }, 130, 0);
     weekly_add_schedule(&weekly_schedule, "T011", "SAD", "WAT", (dt_time_t) { 18, 45 }, (dt_time_t) { 20, 35 }, 120, 0);
@@ -153,10 +153,10 @@ int main() {
     //SATURDAY
     weekly_add_schedule(&weekly_schedule, "T003", "COF", "RMH", (dt_time_t) { 13, 30 }, (dt_time_t) { 10, 30 }, 110, 6);
     weekly_add_schedule(&weekly_schedule, "T004", "MON", "LIY", (dt_time_t) { 16 }, (dt_time_t) { 10, 30 }, 120, 6);
-    weekly_add_schedule(&weekly_schedule, "T001", "COF", "RMH", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 120, 2);
+    weekly_add_schedule(&weekly_schedule, "T001", "NAP", "PAL", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 120, 2);
     weekly_add_schedule(&weekly_schedule, "T002", "LIY", "RMH", (dt_time_t) { 12 }, (dt_time_t) { 13, 30 }, 140, 0);
-    weekly_add_schedule(&weekly_schedule, "T005", "COF", "RMH", (dt_time_t) { 13, 30 }, (dt_time_t) { 15, 30 }, 110, 0);
-    weekly_add_schedule(&weekly_schedule, "T006", "MON", "LIY", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
+    weekly_add_schedule(&weekly_schedule, "T005", "QOP", "YOI", (dt_time_t) { 13, 30 }, (dt_time_t) { 15, 30 }, 110, 0);
+    weekly_add_schedule(&weekly_schedule, "T006", "SIE", "URN", (dt_time_t) { 14 }, (dt_time_t) { 17, 30 }, 120, 0);
     weekly_add_schedule(&weekly_schedule, "T007", "LIY", "MLS", (dt_time_t) { 15 }, (dt_time_t) { 18 }, 150, 1);
     weekly_add_schedule(&weekly_schedule, "T008", "EVE", "DCS", (dt_time_t) { 11, 30 }, (dt_time_t) { 12, 30 }, 140, 2);
     weekly_add_schedule(&weekly_schedule, "T009", "CAO", "MHY", (dt_time_t) { 12 }, (dt_time_t) { 13, 30 }, 100, 0);
