@@ -1,7 +1,7 @@
 #ifndef TRAINTICKETINGSYSTEM_TUI_UTILS_H
 #define TRAINTICKETINGSYSTEM_TUI_UTILS_H
 
-#include <tui/tui_common.h>
+#include "tui_common.h"
 
 # define CONFIRMATION_WINDOW_WIDTH 30
 # define CONFIRMATION_WINDOW_HEIGHT 5

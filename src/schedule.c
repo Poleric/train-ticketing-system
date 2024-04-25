@@ -1,4 +1,4 @@
-#include <schedule/schedule.h>
+#include "schedule.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

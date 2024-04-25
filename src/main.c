@@ -5,7 +5,7 @@ int main() {
     return 0;
 }*/
 
-#include <schedule/schedule.h>
+#include "schedule.h"
 #include <stdio.h>
 #include <utils.h>
 #include <tui/scheduling_menu.h>

@@ -1,10 +1,10 @@
 #ifndef TRAINTICKETINGSYSTEM_SCHEDULING_MENU_H
 #define TRAINTICKETINGSYSTEM_SCHEDULING_MENU_H
 
-#include <tui/tui_utils.h>
-#include <tui/tui_common.h>
-#include <schedule/stations.h>
-#include <schedule/schedule.h>
+#include "tui/utils/tui_utils.h"
+#include "tui/utils/tui_common.h"
+#include "stations.h"
+#include "schedule.h"
 
 typedef struct Table table_t;
 
