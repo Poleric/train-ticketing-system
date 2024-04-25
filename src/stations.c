@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <schedule/stations.h>
+#include "stations.h"
 #include <string.h>
 
 

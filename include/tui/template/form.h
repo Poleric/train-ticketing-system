@@ -1,8 +1,8 @@
 #ifndef TRAINTICKETINGSYSTEM_FORM_H
 #define TRAINTICKETINGSYSTEM_FORM_H
 
-#include <tui/tui_common.h>
-#include <tui/tui_utils.h>
+#include "tui/utils/tui_common.h"
+#include "tui/utils/tui_utils.h"
 #include <stdlib.h>
 
 typedef struct Form {
