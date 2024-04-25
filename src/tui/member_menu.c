@@ -35,7 +35,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
         switch (form_driver(login_form, ch)) {
             case SUBMIT_ACTION:
-                current_member = login_as(members, get_username(login_form), get_password(login_form));
+                current_member = login_as_member(members, get_username(login_form), get_password(login_form));
                 if (current_member) {
                     clear_current_menu(menu_window, login_form);
 
