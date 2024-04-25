@@ -37,6 +37,8 @@ int find_member_index(member_vector_t *members, const char* username);
 #define is_member_exists(members, memberName) find_member_index(members, memberName) != -1
 int add_member(member_vector_t* members, member_t* member);
 
+void deleteAcc(member_vector_t* members, const char* username, const char* password);
+
 void free_member(member_t* member);
 void free_members_vector(member_vector_t* members);
 

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utils.h>
+#include <staff.h>
 
 #define BASE_MEMBER_LENGTH 8
 
@@ -127,6 +128,35 @@ int add_member(member_vector_t* members, member_t* member) {
 
     members->array[members->num_of_members++] = member;
     return EXIT_SUCCESS;
+}
+
+void deleteAcc(member_vector_t* members, const char* username, const char* password) {
+    int i = 0;
+    char confirm;
+
+    for (int i = 0; i < members->num_of_members; i++) {
+        if (strcmp(members->array[i]->username, username) == 0) {
+            break;
+        }
+    }
+
+    if (i < members->num_of_members) {
+        printf("Are you sure you want to delete your account? (Y/N): ");
+        scanf(" %c", &confirm);
+
+        if (toupper(confirm) == 'Y') {
+            free_member(members->array[i]);
+
+            for (int j = i; j < members->num_of_members - 1; j++) {
+                members->array[j] = members->array[j + 1];
+            }
+            (members->num_of_members)--;
+            printf("Account deleted successfully !\n");
+        }
+        else {
+            printf("Account not found, Please try again.\n");
+        }
+    }
 }
 
 void free_members_vector(member_vector_t* members) {
