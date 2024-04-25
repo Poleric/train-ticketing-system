@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
+#include <utils.h>
 
 #define BASE_STAFF_LENGTH 4
 
@@ -30,7 +30,7 @@ int login_staff() {
 	return 0;
 }
 
-staff_t* login_as(staff_vector_t* staff_v, const char* username, const char* password) {
+staff_t* login_as_staff(staff_vector_t* staff_v, const char* username, const char* password) {
 	int i = find_staff_index(staff_v, username);
 
 	if (i == -1)
@@ -41,6 +41,13 @@ staff_t* login_as(staff_vector_t* staff_v, const char* username, const char* pas
 		return staff;
 
 	return NULL;
+}
+
+int find_staff_index(staff_vector_t * members, const char* username) {
+    for (int i = 0; i < members->num_of_staff; i++)
+        if (strcmp(members->array[i]->username, username) == 0)
+            return i;
+    return -1;
 }
 
 int manageAcc() {

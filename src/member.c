@@ -94,7 +94,7 @@ int write_members(member_vector_t* members) {
     return EXIT_SUCCESS;
 }
 
-member_t* login_as(member_vector_t* members, const char* username, const char* password) {
+member_t* login_as_member(member_vector_t* members, const char* username, const char* password) {
     int i = find_member_index(members, username);
 
     if (i == -1)

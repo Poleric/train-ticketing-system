@@ -31,7 +31,7 @@ int create_member_record(member_vector_t *members, char *name, char *password, c
 int load_members(member_vector_t* members);
 int write_members(member_vector_t* members);
 
-member_t* login_as(member_vector_t * members, const char* username, const char* password);
+member_t* login_as_member(member_vector_t * members, const char* username, const char* password);
 
 int find_member_index(member_vector_t *members, const char* username);
 #define is_member_exists(members, memberName) find_member_index(members, memberName) != -1

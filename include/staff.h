@@ -29,13 +29,13 @@ int create_staff_record(staff_vector_t* staff_v, char* name, char* password, cha
 int load_staff(staff_vector_t* staff_v);
 int write_staff(staff_vector_t* staff_v);
 
-staff_t* login_as(staff_vector_t* staff_v, const char* username, const char* password);
+staff_t* login_as_staff(staff_vector_t* staff_v, const char* username, const char* password);
 
-int find_member_index(staff_vector_t* staff_v, const char* username);
-#define is_member_exists(staff, memberName) find_member_index(staff, memberName) != -1
-int add_member(staff_vector_t* staff_v, staff_t* staff);
+int find_staff_index(staff_vector_t* staff_v, const char* username);
+#define is_staff_exists(staff, username) find_staff_index(staff, username) != -1
+int add_staff(staff_vector_t* staff_v, staff_t* staff);
 
-void free_member(staff_t* staff);
-void free_members_vector(staff_vector_t* staff_v);
+void free_staff(staff_t* staff);
+void free_staff_vector(staff_vector_t* staff_v);
 
 #endif //TRAINTICKETINGSYSTEM_STAFF_H
