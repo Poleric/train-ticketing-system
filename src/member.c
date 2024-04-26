@@ -206,7 +206,6 @@ void editInfo(member_vector_t* members, const char* username, const char* passwo
     } while (choice !=5);
 
     write_members(members, "memberSignup.txt");
-
     printf("Member details updated succesfully.\n");
 }
 
