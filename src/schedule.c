@@ -8,7 +8,7 @@
 schedule_t* create_schedule(char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, dt_time_t eta, int n_seats) {
     schedule_t* schedule = malloc(sizeof (schedule_t));
 
-    strncpy(schedule->train_id, train_id, 4);
+    strncpy(schedule->train_id, train_id, 5);
     strncpy(schedule->from_station_id, from_station_id, 4);
     strncpy(schedule->to_station_id, to_station_id, 4);
     schedule->departure_time = time;
