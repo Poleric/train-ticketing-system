@@ -29,7 +29,8 @@ member_vector_t* init_members_vector();
 
 int create_member_record(member_vector_t *members, char *name, char *password, char gender, char* email, char* contact_no, enum Membership membership);
 int load_members(member_vector_t* members);
-int write_members(member_vector_t* members);
+//int write_members(member_vector_t* members);
+void write_members(member_vector_t * members, char * str);
 
 member_t* login_as_member(member_vector_t * members, const char* username, const char* password);
 
