@@ -15,18 +15,20 @@ int login_staff() {
 		return EXIT_FAILURE;
 	}
 
-	fscanf(staffFP, "%[^|] | %[^|] | %s | %d | %[^|] | %d | %lf",
+	fscanf(staffFP, "%[^|] | %[^|] | %[^|] | %d | %[^|] | %d | %lf",
 	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contact_no, currentStaff.position, currentStaff.permissions, currentStaff.salary);
 
 	char username_buffer[255], password_buffer[255];
 	char retry;
 
-	if ((strcmp(username_buffer, currentStaff.username) || strcmp(password_buffer, currentStaff.hashed_password)) != 0) {
-		printf("Wrong username and password combination. Want to try again? (Y to retry) > ");
-		scanf("%c", retry);
-		return EXIT_FAILURE;
-	}
-
+	do {
+		if ((strcmp(username_buffer, currentStaff.username) || strcmp(password_buffer, currentStaff.hashed_password)) != 0) {
+			printf("Wrong username and password combination. Want to try again? (Y to retry) > ");
+			scanf("%c", retry);
+			rewind(stdin);
+			return EXIT_FAILURE;
+		}
+	} while (retry == 'Y');
 	return 0;
 }
 
@@ -48,8 +50,4 @@ int find_staff_index(staff_vector_t * members, const char* username) {
         if (strcmp(members->array[i]->username, username) == 0)
             return i;
     return -1;
-}
-
-int manageAcc() {
-
 }
