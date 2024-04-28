@@ -79,9 +79,9 @@ int load_members(member_vector_t* members) {
     return EXIT_SUCCESS;
 }
 
-int write_members(member_vector_t* members) {
+int write_members(member_vector_t* members, const char* filepath) {
     FILE* file;
-    file = fopen("memberSignup.txt", "w");
+    file = fopen(filepath, "w");
 
     if (file == NULL) {
         fprintf(stderr, "Error to open this file!\n");
