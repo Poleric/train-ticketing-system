@@ -142,6 +142,21 @@ int find_staff_index(staff_vector_t * staff_v, const char* username) {
     return -1;
 }
 
+int add_staff(staff_vector_t* staff_v, staff_t* staff) {
+    if (staff_v->num_of_staff + 1 > staff_v->max_size) {
+        staff_v->max_size *= 2;
+        staff_t** tmp = realloc(staff_v->array, sizeof(staff_t*) * staff_v->max_size);
+
+        if (tmp == NULL)
+            return EXIT_FAILURE;
+
+        staff_v->array = tmp;
+    }
+
+    staff_v->array[staff_v->num_of_staff++] = staff;
+    return EXIT_SUCCESS;
+}
+
 void deleteStaff(staff_vector_t* staff_v, const char* username, const char* password) {
     int i;
     char confirm;
