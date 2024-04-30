@@ -96,7 +96,7 @@ void deleteStaff(staff_vector_t* staff_v, const char* username, const char* pass
     }
 }
 
-void editInfo(staff_vector_t* staff_v, const char* username, const char* password, char* email, char* contact_no) {
+void editStaff(staff_vector_t* staff_v, const char* username, const char* password, char* email, char* contact_no) {
     int choice;
     int index = find_staff_index(staff_v, username);
 
