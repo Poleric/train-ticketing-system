@@ -94,6 +94,33 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
     return EXIT_SUCCESS;
 }
 
+int load_staff(staff_vector_t* staff_v) {
+    FILE* file;
+    file = fopen("Staff_List.txt", "r");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
+    }
+
+    char username_buffer[255], password_buffer[255];
+    //fix here (string username_buffer and pw_buffer might no be zero-terminated)
+    while (fscanf(file, "%254s %254s", username_buffer, password_buffer) == 2) {
+        username_buffer[254] = '\0';
+        password_buffer[254] = '\0';
+
+        staff_t* new_staff = init_staff();
+
+        new_staff->username = strdup(username_buffer);
+        new_staff->hashed_password = strdup(password_buffer);
+
+        add_staff(staff_v, new_staff);
+    }
+
+    fclose(file);
+    return EXIT_SUCCESS;
+}
+
 staff_t* login_as_staff(staff_vector_t* staff_v, const char* username, const char* password) {
 	int i = find_staff_index(staff_v, username);
 
