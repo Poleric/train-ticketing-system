@@ -62,11 +62,7 @@ int load_members(member_vector_t* members) {
 	}
 
     char username_buffer[255], password_buffer[255];
-    //fix here (string username_buffer and pw_buffer might no be zero-terminated)
     while (fscanf(file, "%254s %254s", username_buffer, password_buffer) == 2) {
-        username_buffer[254] = '\0';
-        password_buffer[254] = '\0';
-
         member_t *new_member = init_member();
 
         new_member->username = strdup(username_buffer);
