@@ -20,4 +20,8 @@ char* trim_whitespaces(char *str);
 
 bool confirmation_menu(WINDOW* window, const char* message);
 
+void move_to_next_line(WINDOW* window, int x);
+void move_to_x(WINDOW* window, int x);
+void move_offset_x(WINDOW* window, int offset_x);
+
 #endif //TRAINTICKETINGSYSTEM_TUI_UTILS_H

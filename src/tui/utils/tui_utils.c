@@ -112,3 +112,21 @@ bool confirmation_menu(WINDOW* window, const char* message) {
     curs_set(1);  // return cursor
     return !selection;
 }
+
+void move_to_next_line(WINDOW* window, int x) {
+    int y, _;
+    getyx(window, y, _);
+    wmove(window, y + 1, x);
+}
+
+void move_to_x(WINDOW* window, int x) {
+    int y, _;
+    getyx(window, y, _);
+    wmove(window, y, x);
+}
+
+void move_offset_x(WINDOW* window, int offset_x) {
+    int y, x;
+    getyx(window, y, x);
+    wmove(window, y, x + offset_x);
+}
