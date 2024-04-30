@@ -82,7 +82,7 @@ void deleteStaff(staff_vector_t* staff_v, const char* username, const char* pass
         scanf(" %c", &confirm);
 
         if (toupper(confirm) == 'Y') {
-            free_member(staff_v->array[i]);
+            free_staff(staff_v->array[i]);
 
             for (int j = i; j < staff_v->num_of_staff - 1; j++) {
                 staff_v->array[j] = staff_v->array[j + 1];
