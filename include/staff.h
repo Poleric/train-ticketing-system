@@ -27,7 +27,7 @@ staff_vector_t* init_staff_vector();
 
 int create_staff_record(staff_vector_t* staff_v, char* name, char* password, char* email, char* contact_no, char* position, enum Permissions permissions, double salary);
 int load_staff(staff_vector_t* staff_v);
-int write_staff(staff_vector_t* staff_v);
+int write_staff(staff_vector_t* staff_v, const char* filepath);
 
 staff_t* login_as_staff(staff_vector_t* staff_v, const char* username, const char* password);
 
