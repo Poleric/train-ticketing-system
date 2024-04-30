@@ -130,83 +130,21 @@ int add_member(member_vector_t* members, member_t* member) {
     return EXIT_SUCCESS;
 }
 
-void deleteAcc(member_vector_t* members, const char* username, const char* password) {
-    int i;
-    char confirm;
+int delete_member(member_vector_t* members, const char* username) {
+    int i = find_member_index(members, username);
 
-    for (i = 0; i < members->num_of_members; i++) {
-        if (strcmp(members->array[i]->username, username) == 0) {
-            break;
-        }
-    }
-    if (i < members->num_of_members) {
-        printf("Are you sure you want to delete your account? (Y/N): ");
-        scanf(" %c", &confirm);
+    if (i == -1)
+        return EXIT_FAILURE;
 
-        if (toupper(confirm) == 'Y') {
-            free_member(members->array[i]);
+    free_member(members->array[i]);
+    members->array[i] = NULL;
 
-            for (int j = i; j < members->num_of_members - 1; j++) {
-                members->array[j] = members->array[j + 1];
-            }
-            (members->num_of_members)--;
-            printf("Account deleted successfully !\n");
-        }
-        else {
-            printf("Account not found, Please try again.\n");
-        }
-    }
-}
+    // shift into empty slot
+    for (int j = i + 1; i < members->num_of_members; j++)
+        members->array[j - 1] = members->array[j];
+    members->array[--members->num_of_members] = NULL;
 
-void editInfo(member_vector_t* members, const char* username, const char* password,  char* email, char* contact_no) {
-    int choice;
-    int index = find_member_index(members,username);
-
-    if(index==-1) {
-        printf("Member not found\n");
-        return;
-    }
-
-    do {
-        printf("Edit Member Details\n");
-        printf("1. Edit username\n");
-        printf("2. Edit password\n");
-        printf("3. Edit contact number\n");
-        printf("4. Edit email\n");
-        printf("5. Exit edit member.\n");
-        scanf("%d", &choice);
-        rewind(stdin);
-        switch (choice) {
-        case 1:
-            printf("Enter new username : ");
-            scanf("%s",members->array[index]->username);
-            rewind(stdin);
-            break;
-        case 2:
-            printf("Enter new password : ");
-            scanf("%s",members->array[index]->hashed_password);
-            rewind(stdin);
-            break;
-        case 3:
-            printf("Enter new contact number : ");
-            scanf("%s",members->array[index]->contact_no);
-            rewind(stdin);
-            break;
-        case 4:
-            printf("Enter new email : ");
-            scanf("%s",members->array[index]->email);
-            rewind(stdin);
-            break;
-        case 5:
-            printf("Exiting edit member details.\n");
-            break;
-        default:
-            printf("Invalid input, please try again.\n");
-        }
-    } while (choice !=5);
-
-    write_members(members, "memberSignup.txt");
-    printf("Member details updated succesfully.\n");
+    return EXIT_SUCCESS;
 }
 
 void free_members_vector(member_vector_t* members) {

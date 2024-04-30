@@ -35,9 +35,9 @@ member_t* login_as_member(member_vector_t * members, const char* username, const
 
 int find_member_index(member_vector_t *members, const char* username);
 #define is_member_exists(members, memberName) find_member_index(members, memberName) != -1
-int add_member(member_vector_t* members, member_t* member);
 
-void deleteAcc(member_vector_t* members, const char* username, const char* password);
+int add_member(member_vector_t* members, member_t* member);
+int delete_member(member_vector_t* members, const char* username);
 
 void free_member(member_t* member);
 void free_members_vector(member_vector_t* members);
