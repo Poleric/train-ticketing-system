@@ -32,6 +32,37 @@ int login_staff() {
 	return 0;
 }
 
+staff_vector_t* init_staff_vector() {
+    staff_vector_t* staff_v = malloc(sizeof(staff_vector_t));
+    if (staff_v == NULL)
+        return NULL;
+
+    staff_v->max_size = BASE_STAFF_LENGTH;
+    staff_v->array = calloc(sizeof(staff_t*), staff_v->max_size);
+    staff_v->num_of_staff = 0;
+
+    return staff_v;
+}
+
+int create_staff_record(staff_vector_t* staff_v, char* name, char* password, char* email, char* contact_no, char* position, enum Permissions permissions, double salary) {
+    if (is_staff_exists(staff_v, name))
+        return EXIT_FAILURE;
+
+    staff_t* newStaff = init_staff();
+
+    newStaff->username = strdup(name);
+    newStaff->hashed_password = malloc(65);
+    hash_message(password, newStaff->hashed_password);
+    newStaff->email = strdup(email);
+    newStaff->contact_no = strdup(contact_no);
+    newStaff->position = strdup(position);
+    newStaff->permissions = permissions;
+    newStaff->salary = salary;
+
+    add_staff(staff_v, newStaff);
+    return EXIT_SUCCESS;
+}
+
 int write_staff(staff_vector_t* staff_v, const char* filepath) {
     FILE* file;
     file = fopen(filepath, "w");
