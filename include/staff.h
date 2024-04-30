@@ -25,7 +25,7 @@ typedef struct StaffVector {
 staff_t* init_staff();
 staff_vector_t* init_staff_vector();
 
-int create_staff_record(staff_vector_t* staff_v, char* name, char* password, char email, char* contact_no, enum Permissions permissions, double salary);
+int create_staff_record(staff_vector_t* staff_v, char* name, char* password, char* email, char* contact_no, char* position, enum Permissions permissions, double salary);
 int load_staff(staff_vector_t* staff_v);
 int write_staff(staff_vector_t* staff_v, const char* filepath);
 
@@ -33,7 +33,6 @@ staff_t* login_as_staff(staff_vector_t* staff_v, const char* username, const cha
 
 int find_staff_index(staff_vector_t* staff_v, const char* username);
 #define is_staff_exists(staff, username) find_staff_index(staff, username) != -1
-int add_staff(staff_vector_t* staff_v, staff_t* staff);
 
 void free_staff(staff_t* staff);
 void free_staff_vector(staff_vector_t* staff_v);

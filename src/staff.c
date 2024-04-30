@@ -6,6 +6,21 @@
 
 #define BASE_STAFF_LENGTH 4
 
+staff_t* init_staff() {
+    staff_t* new_staff = malloc(sizeof(staff_t));
+    //fix here (derefering NULL pointer 'new_staff')
+    if (new_staff != NULL) {
+        new_staff->username = NULL;
+        new_staff->hashed_password = NULL;
+        new_staff->email = NULL;
+        new_staff->contact_no = NULL;
+        new_staff->position = NULL;
+        new_staff->permissions = 0;
+        new_staff->salary = 0;
+    }
+    return new_staff;
+}
+
 int login_staff() {
 	FILE* staffList;
 	staff_t currentStaff;
@@ -15,7 +30,7 @@ int login_staff() {
 		return EXIT_FAILURE;
 	}
 
-	fscanf(staffList, "%[^|] | %[^|] | %[^|] | %d | %[^|] | %d | %lf",
+	fscanf(staffList, "%[^|]|%[^|]|%[^|]|%d|%[^|]|%d|%lf\n",
 	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contact_no, currentStaff.position, currentStaff.permissions, currentStaff.salary);
 
 	char username_buffer[255], password_buffer[255];
@@ -32,6 +47,37 @@ int login_staff() {
 	return 0;
 }
 
+staff_vector_t* init_staff_vector() {
+    staff_vector_t* staff_v = malloc(sizeof(staff_vector_t));
+    if (staff_v == NULL)
+        return NULL;
+
+    staff_v->max_size = BASE_STAFF_LENGTH;
+    staff_v->array = calloc(sizeof(staff_t*), staff_v->max_size);
+    staff_v->num_of_staff = 0;
+
+    return staff_v;
+}
+
+int create_staff_record(staff_vector_t* staff_v, char* name, char* password, char* email, char* contact_no, char* position, enum Permissions permissions, double salary) {
+    if (is_staff_exists(staff_v, name))
+        return EXIT_FAILURE;
+
+    staff_t* newStaff = init_staff();
+
+    newStaff->username = strdup(name);
+    newStaff->hashed_password = malloc(65);
+    hash_message(password, newStaff->hashed_password);
+    newStaff->email = strdup(email);
+    newStaff->contact_no = strdup(contact_no);
+    newStaff->position = strdup(position);
+    newStaff->permissions = permissions;
+    newStaff->salary = salary;
+
+    add_staff(staff_v, newStaff);
+    return EXIT_SUCCESS;
+}
+
 int write_staff(staff_vector_t* staff_v, const char* filepath) {
     FILE* file;
     file = fopen(filepath, "w");
@@ -43,6 +89,33 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
 
     for (int i = 0; i < staff_v->num_of_staff; i++)
         fprintf(file, "%s %s\n", staff_v->array[i]->username, staff_v->array[i]->hashed_password);
+
+    fclose(file);
+    return EXIT_SUCCESS;
+}
+
+int load_staff(staff_vector_t* staff_v) {
+    FILE* file;
+    file = fopen("Staff_List.txt", "r");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
+    }
+
+    char username_buffer[255], password_buffer[255];
+    //fix here (string username_buffer and pw_buffer might no be zero-terminated)
+    while (fscanf(file, "%254s %254s", username_buffer, password_buffer) == 2) {
+        username_buffer[254] = '\0';
+        password_buffer[254] = '\0';
+
+        staff_t* new_staff = init_staff();
+
+        new_staff->username = strdup(username_buffer);
+        new_staff->hashed_password = strdup(password_buffer);
+
+        add_staff(staff_v, new_staff);
+    }
 
     fclose(file);
     return EXIT_SUCCESS;
@@ -96,7 +169,7 @@ void deleteStaff(staff_vector_t* staff_v, const char* username, const char* pass
     }
 }
 
-void editInfo(staff_vector_t* staff_v, const char* username, const char* password, char* email, char* contact_no) {
+void editStaff(staff_vector_t* staff_v, const char* username, const char* password, char* email, char* contact_no) {
     int choice;
     int index = find_staff_index(staff_v, username);
 
