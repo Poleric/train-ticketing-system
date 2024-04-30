@@ -6,6 +6,21 @@
 
 #define BASE_STAFF_LENGTH 4
 
+staff_t* init_staff() {
+    staff_t* new_staff = malloc(sizeof(staff_t));
+    //fix here (derefering NULL pointer 'new_staff')
+    if (new_staff != NULL) {
+        new_staff->username = NULL;
+        new_staff->hashed_password = NULL;
+        new_staff->email = NULL;
+        new_staff->contact_no = NULL;
+        new_staff->position = NULL;
+        new_staff->permissions = 0;
+        new_staff->salary = 0;
+    }
+    return new_staff;
+}
+
 int login_staff() {
 	FILE* staffList;
 	staff_t currentStaff;
@@ -15,7 +30,7 @@ int login_staff() {
 		return EXIT_FAILURE;
 	}
 
-	fscanf(staffList, "%[^|] | %[^|] | %[^|] | %d | %[^|] | %d | %lf",
+	fscanf(staffList, "%[^|]|%[^|]|%[^|]|%d|%[^|]|%d|%lf\n",
 	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contact_no, currentStaff.position, currentStaff.permissions, currentStaff.salary);
 
 	char username_buffer[255], password_buffer[255];
