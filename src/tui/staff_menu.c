@@ -27,7 +27,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     );
 
     init_login_form(&login_form, login_window, "Login as Staff");
-    display_login_form(&login_form);
+    display_login_form(&login_form, COLOR_2);
 
     staffs = init_staff_vector();
     load_staff(staffs);
@@ -42,7 +42,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
 
                     current_menu = staff_menu(menu_window, current_staff);
 
-                    display_login_form(&login_form);
+                    display_login_form(&login_form, COLOR_2);
                 }
                 else {
                     store_last_pos(login_window);

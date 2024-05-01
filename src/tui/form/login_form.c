@@ -102,12 +102,12 @@ void print_login_form_message(login_form_t* login_form, const char* message, sho
     wattroff(login_form->form.window, COLOR_PAIR(color_pair));
 }
 
-void display_login_form(login_form_t* login_form) {
-    print_login_form_header(login_form, 1);
+void display_login_form(login_form_t* login_form, short color_pair) {
+    print_login_form_header(login_form, color_pair);
 
     print_login_fields(login_form);
 
-    print_login_form_footer(login_form, 1);
+    print_login_form_footer(login_form, color_pair);
 
     move_cursor_to_start_of_input_field(&login_form->form);
 

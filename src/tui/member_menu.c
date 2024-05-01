@@ -28,7 +28,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
     );
 
     init_login_form(&login_form, login_window, "Login as Member");
-    display_login_form(&login_form);
+    display_login_form(&login_form, COLOR_1);
 
     members = init_members_vector();
     load_members(members);
@@ -43,7 +43,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
                     current_menu = member_menu(menu_window, current_member);
 
-                    display_login_form(&login_form);
+                    display_login_form(&login_form, COLOR_1);
                 }
                 else {
                     store_last_pos(login_window);
