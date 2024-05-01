@@ -99,20 +99,20 @@ int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, stru
     return available_seats;
 }
 
-int main() {
-    // Sample usage
-    weekly_schedule_t weekly_schedule;
-    // Initialize weekly schedule
-    // (Assuming weekly_schedule is properly initialized)
-
-    // Example: Train ID, Time, Date
-    char train_id[] = "ABC123";
-    struct tm time = { .tm_hour = 10, .tm_min = 0, .tm_sec = 0 }; // 10:00:00
-    int tm_wday = 0; // Monday (0-indexed)
-
-    // Get the number of available seats
-    int available_seats = get_available_seats(&weekly_schedule, train_id, time, tm_wday);
-    printf("Available seats: %d\n", available_seats);
-
-    return 0;
-}
+//int main() {
+//    // Sample usage
+//    weekly_schedule_t weekly_schedule;
+//    // Initialize weekly schedule
+//    // (Assuming weekly_schedule is properly initialized)
+//
+//    // Example: Train ID, Time, Date
+//    char train_id[] = "ABC123";
+//    struct tm time = { .tm_hour = 10, .tm_min = 0, .tm_sec = 0 }; // 10:00:00
+//    int tm_wday = 0; // Monday (0-indexed)
+//
+//    // Get the number of available seats
+//    int available_seats = get_available_seats(&weekly_schedule, train_id, time, tm_wday);
+//    printf("Available seats: %d\n", available_seats);
+//
+//    return 0;
+//}
