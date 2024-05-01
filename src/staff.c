@@ -68,9 +68,9 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
     return EXIT_SUCCESS;
 }
 
-int load_staff(staff_vector_t* staff_v) {
+int load_staff(staff_vector_t* staff_v, const char* filepath) {
     FILE* file;
-    file = fopen("Staff_List.txt", "r");
+    file = fopen(filepath, "r");
 
     if (file == NULL) {
 //        fprintf(stderr, "Error to open this file!\n");
