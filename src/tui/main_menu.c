@@ -2,6 +2,7 @@
 #include <tui/member_menu.h>
 #include <tui/staff_menu.h>
 #include <tui/scheduling_menu.h>
+#include <locale.h>
 
 void init_color_pairs() {
     /* Initialize preset colors pairs
@@ -17,6 +18,7 @@ void init_color_pairs() {
 }
 
 void init_menu() {
+    setlocale(LC_ALL, "");
     initscr();
     start_color(); init_color_pairs();
     raw();  // get input by chars
