@@ -30,6 +30,7 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
     ${CMAKE_SOURCE_DIR}/src/tui/template/form.c
     ${CMAKE_SOURCE_DIR}/src/tui/template/login_form.c
+    ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
