@@ -39,9 +39,15 @@ set (SOURCES
 
 add_executable(TrainTicketingSystem ${SOURCES})
 target_include_directories(TrainTicketingSystem PRIVATE include/)
+target_compile_definitions(TrainTicketingSystem PRIVATE
+        MEMBERS_FILEPATH="members.txt"
+        STAFFS_FILEPATH="staffs.txt"
+        STATIONS_FILEPATH="stations.bin"
+        SCHEDULES_FILEPATH="schedules.txt"
+        TICKETS_FILEPATH="tickets.txt"
+)
 
 # OpenSSL
-target_include_directories(TrainTicketingSystem PRIVATE include/openssl/include/)
 find_package(OpenSSL REQUIRED)
 if (OpenSSL_FOUND)
     target_link_libraries(TrainTicketingSystem PRIVATE OpenSSL::SSL)

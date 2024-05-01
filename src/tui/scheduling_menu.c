@@ -165,7 +165,7 @@ void schedule_menu() {
     schedule_table_t schedule_table;
 
     init_weekly_schedule(&weekly_schedule);
-    load_weekly_schedule(&weekly_schedule, "schedule.txt");
+    load_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
 
     init_schedule_table(window, &schedule_table, &weekly_schedule);
 
@@ -208,6 +208,8 @@ void schedule_menu() {
         }
         wclear(schedule_table.table.window);
     } while (!exit);
+
+    save_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
 
     free_schedule_table(&schedule_table);
     free_weekly_schedules(&weekly_schedule);

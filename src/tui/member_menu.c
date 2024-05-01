@@ -6,7 +6,7 @@ void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
         free_member(members->array[i]);
     members->num_of_members = 0;
-    load_members(members);
+    load_members(members, MEMBERS_FILEPATH);
 }
 
 // member_login -> member_menu   --┐
@@ -31,7 +31,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
     display_login_form(&login_form, COLOR_1);
 
     members = init_members_vector();
-    load_members(members);
+    load_members(members, MEMBERS_FILEPATH);
 
     current_menu_t current_menu = MEMBER_MENU;
     while (current_menu == MEMBER_MENU) {
@@ -72,6 +72,8 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 break;
         }
     }
+
+    write_members(members, MEMBERS_FILEPATH);
 
     free_login_form(&login_form);
     free_members_vector(members);

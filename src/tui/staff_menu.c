@@ -5,7 +5,7 @@
 void reload_staff(staff_vector_t* staff) {
     for (int i = 0; i < staff->num_of_staff; i++)
         free_staff(staff->array[i]);
-    load_staff(staff);
+    load_staff(staff, STAFFS_FILEPATH);
 }
 
 // staff_login -> staff_menu   --┐
@@ -30,7 +30,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     display_login_form(&login_form, COLOR_2);
 
     staffs = init_staff_vector();
-    load_staff(staffs);
+    load_staff(staffs, STAFFS_FILEPATH);
 
     current_menu_t current_menu = STAFF_MENU;
     while (current_menu == STAFF_MENU) {
@@ -71,6 +71,8 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
                 break;
         }
     }
+
+    write_staff(staffs, STAFFS_FILEPATH);
 
     free_login_form(&login_form);
     free_staff_vector(staffs);
