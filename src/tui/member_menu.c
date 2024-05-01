@@ -5,6 +5,7 @@
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
         free_member(members->array[i]);
+    members->num_of_members = 0;
     load_members(members);
 }
 
@@ -12,7 +13,13 @@ void reload_members(member_vector_t* members) {
 //   / \        -> register_menu --|
 //    └----------------------------┘
 current_menu_t member_login_menu(WINDOW* menu_window) {
-    WINDOW* login_window = derwin(
+    WINDOW* login_window;
+    login_form_t login_form;
+
+    member_vector_t* members;
+    member_t* current_member;
+
+    login_window = derwin(
             menu_window,
             LINES,
             COLS,
@@ -20,40 +27,35 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             0
     );
 
-    keypad(login_window, TRUE);
+    init_login_form(&login_form, login_window, "Login as Member");
+    display_login_form(&login_form);
 
-    FORM* login_form = create_login_form(login_window);
-
-    display_login_menu("Member menu", menu_window, login_form);
-
-    member_vector_t* members = init_members_vector();
+    members = init_members_vector();
     load_members(members);
-
-    member_t* current_member;
 
     current_menu_t current_menu = MEMBER_MENU;
     while (current_menu == MEMBER_MENU) {
-        int ch = wgetch(login_window);
-
-        switch (form_driver(login_form, ch)) {
+        switch (form_driver(&login_form.form, wgetch(login_window))) {
             case SUBMIT_ACTION:
-                current_member = login_as_member(members, get_username(login_form), get_password(login_form));
+                current_member = login_as_member(members, get_username(&login_form), get_password(&login_form));
                 if (current_member) {
-                    clear_current_menu(menu_window, login_form);
+                    clear_login_menu(&login_form);
 
                     current_menu = member_menu(menu_window, current_member);
 
-                    display_login_menu("Menu member", menu_window, login_form);
+                    display_login_form(&login_form);
                 }
                 else {
                     store_last_pos(login_window);
+
                     mvwprintw(login_window, 3, 0, "Wrong username or password");
+
                     restore_last_pos(login_window);
                 }
                 break;
 
             case SWITCH_MENU_ACTION:
-                clear_current_menu(menu_window, login_form);
+                clear_login_menu(&login_form);
 
                 current_menu = STAFF_MENU;
                 break;
@@ -71,7 +73,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
         }
     }
 
-    cleanup_form(login_form);
+    free_login_form(&login_form);
     free_members_vector(members);
     delwin(login_window);
 

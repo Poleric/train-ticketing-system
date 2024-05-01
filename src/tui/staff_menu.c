@@ -2,56 +2,62 @@
 #include <tui/form/login_form.h>
 #include <tui/utils/menu_utils.h>
 
-//void reload_staff(staff_vector_t* staff) {
-//    for (int i = 0; i < staff->num_of_staff; i++)
-//        free_staff(staff->array[i]);
-//    load_staff(staff);
-//}
+#define SIDE_MARGIN_PERCENTAGE 0.1
+#define TOP_MARGIN 2
+
+void reload_staff(staff_vector_t* staff) {
+    for (int i = 0; i < staff->num_of_staff; i++)
+        free_staff(staff->array[i]);
+    load_staff(staff);
+}
 
 // staff_login -> staff_menu   --┐
 //   / \        -> register_menu --|
 //    └----------------------------┘
 current_menu_t staff_login_menu(WINDOW* menu_window) {
-    WINDOW* login_window = newwin(
-            10,
-            50,
-            1,
-            get_centered_x_start(menu_window, 50));
+    WINDOW* login_window;
+    login_form_t login_form;
 
-    keypad(login_window, TRUE);
+    staff_vector_t * staffs;
+    staff_t * current_staff;
 
-    FORM* login_form = create_login_form(login_window);
+    login_window = derwin(
+            menu_window,
+            LINES - TOP_MARGIN,
+            (int)(COLS * (1 - SIDE_MARGIN_PERCENTAGE * 2)),
+            TOP_MARGIN,
+            get_centered_x_start(menu_window, (int)(COLS * (1 - SIDE_MARGIN_PERCENTAGE * 2)))
+    );
 
-    display_login_menu("Staff menu", menu_window, login_form);
+    init_login_form(&login_form, login_window, "Login as Staff");
+    display_login_form(&login_form);
 
-//    staff_vector_t* staff = init_staff_vector();
-//    load_staff(staff);
-
-    staff_t* current_staff;
+    staffs = init_staff_vector();
+    load_staff(staffs);
 
     current_menu_t current_menu = STAFF_MENU;
     while (current_menu == STAFF_MENU) {
-        int ch = wgetch(login_window);
-
-        switch (form_driver(login_form, ch)) {
+        switch (form_driver(&login_form.form, wgetch(login_window))) {
             case SUBMIT_ACTION:
-//                current_staff = login_as(staff, get_username(login_form), get_password(login_form));
-//                if (current_staff) {
-//                    clear_current_menu(menu_window, login_form);
-//
-//                    current_menu = staff_menu(menu_window, current_staff);
-//
-//                    print_login_menu("Staff menu", menu_window, login_form);
-//                }
-//                else {
-//                    store_last_pos(login_window);
-//                    mvwprintw(login_window, 3, 0, "Wrong username or password");
-//                    restore_last_pos(login_window);
-//                }
+                current_staff = login_as_staff(staffs, get_username(&login_form), get_password(&login_form));
+                if (current_staff) {
+                    clear_login_menu(&login_form);
+
+                    current_menu = staff_menu(menu_window, current_staff);
+
+                    display_login_form(&login_form);
+                }
+                else {
+                    store_last_pos(login_window);
+
+                    mvwprintw(login_window, 3, 0, "Wrong username or password");
+
+                    restore_last_pos(login_window);
+                }
                 break;
 
             case SWITCH_MENU_ACTION:
-                clear_current_menu(menu_window, login_form);
+                clear_login_menu(&login_form);
 
                 current_menu = MEMBER_MENU;
                 break;
@@ -61,7 +67,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
                 break;
 
             case RELOAD_ACTION:
-//                reload_staff(staff);
+                reload_staff(staffs);
                 break;
 
             default:
@@ -69,15 +75,15 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
         }
     }
 
-    cleanup_form(login_form);
-//    free_staff_vector(staff);
+    free_login_form(&login_form);
+    free_staff_vector(staffs);
     delwin(login_window);
 
     return current_menu;
 }
 
 current_menu_t staff_menu(WINDOW* menu_window, staff_t* staff) {
-    current_menu_t current_menu = MEMBER_MENU;
+    current_menu_t current_menu = STAFF_MENU;
 
     wprintw(menu_window, "Welcome %s", staff->username);
     wrefresh(menu_window);
