@@ -24,6 +24,11 @@ void scale_to_screen_size(table_t* table) {
     table->max_cols = max_x;
 }
 
+void highlight_selected_row(table_t* table, int header_offset, short selected_color_pair) {
+    wmove(table->pad, table->current_line + header_offset, 0);
+    wchgat(table->pad, table->max_cols, A_STANDOUT, selected_color_pair, NULL);
+}
+
 void free_table(table_t* table) {
     free(table->headers);
     free(table->column_widths);
