@@ -1,7 +1,11 @@
 #ifndef TRAINTICKETINGSYSTEM_TUI_UTILS_H
 #define TRAINTICKETINGSYSTEM_TUI_UTILS_H
 
-#include <panel.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+#include <curses.h>
+#else
+#include <ncursesw/ncurses.h>
+#endif
 
 #define CTRL(c) ((c) & 0x1f)
 #define KEY_ESC 27
