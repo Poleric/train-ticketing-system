@@ -1,4 +1,4 @@
-#include <tui/template/login_form.h>
+#include <tui/form/login_form.h>
 
 FORM* create_login_form(WINDOW* form_window) {
     FORM* login_form = init_form(form_window, 2, LOGIN_LABEL_FIELD_LENGTH + LOGIN_FIELD_GAP);

@@ -1,4 +1,4 @@
-#include <tui/template/form.h>
+#include <tui/form/form.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>

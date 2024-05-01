@@ -26,11 +26,12 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/staff_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/scheduling_menu.c
+    ${CMAKE_SOURCE_DIR}/src/tui/ticketing_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_utils.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_last_pos.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
-    ${CMAKE_SOURCE_DIR}/src/tui/template/form.c
-    ${CMAKE_SOURCE_DIR}/src/tui/template/login_form.c
+    ${CMAKE_SOURCE_DIR}/src/tui/form/form.c
+    ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
     ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
@@ -64,4 +65,12 @@ else ()
     else ()
         message(STATUS "Curses not found!")
     endif()
+endif ()
+
+find_package(CURL REQUIRED)
+if (CURL_FOUND)
+    target_link_libraries(TrainTicketingSystem PRIVATE CURL::libcurl)
+    message(STATUS "libcurl found")
+else ()
+    message(STATUS "libcurl not found!")
 endif ()
