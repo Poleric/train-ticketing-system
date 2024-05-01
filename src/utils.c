@@ -141,3 +141,9 @@ char* to_time(dt_time_t time, char* buffer, int n) {
     return buffer;
 }
 
+int sum_d(const int* nums, int number_of_num) {
+    int sum = 0;
+    for (int i = 0; i < number_of_num; i++)
+        sum += nums[i];
+    return sum;
+}

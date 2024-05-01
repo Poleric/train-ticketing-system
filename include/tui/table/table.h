@@ -14,6 +14,10 @@ struct Table {
     int* column_widths;
     int number_of_columns;
 
+    const char **footers;
+    int* footer_widths;
+    int number_of_footers;
+
     int max_lines, max_cols;
     int current_line, current_col;
 

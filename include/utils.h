@@ -37,5 +37,6 @@ void add_char(char* buffer, char ch, int pos);
 const char* tm_mon_to_text(int tm_mon);
 const char* tm_wday_to_text(tm_wday_t tm_wday);
 char* to_time(dt_time_t time, char* buffer, int n);
+int sum_d(const int* nums, int number_of_num);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H

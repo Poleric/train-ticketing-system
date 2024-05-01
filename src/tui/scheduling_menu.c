@@ -15,6 +15,7 @@ void init_schedule_table(schedule_table_t* schedule_table, weekly_schedule_t* we
     schedule_table->table.headers[3] = "Departure Time";
     schedule_table->table.headers[4] = "Arrival Time";
     schedule_table->table.headers[5] = "Train ID";
+
     schedule_table->table.column_widths = calloc(schedule_table->table.number_of_columns, sizeof (int));
     schedule_table->table.column_widths[0] = 10;
     schedule_table->table.column_widths[1] = 13;
@@ -22,6 +23,19 @@ void init_schedule_table(schedule_table_t* schedule_table, weekly_schedule_t* we
     schedule_table->table.column_widths[3] = 15;
     schedule_table->table.column_widths[4] = 15;
     schedule_table->table.column_widths[5] = 8;
+
+    schedule_table->table.number_of_footers = 4;
+    schedule_table->table.footers = calloc(schedule_table->table.number_of_footers, sizeof(const char*));
+    schedule_table->table.footers[0] = "[q] Quit";
+    schedule_table->table.footers[1] = "[← →] Change Day";
+    schedule_table->table.footers[2] = "[↑↓] Scroll";
+    schedule_table->table.footers[3] = "[Enter] View Details";
+
+    schedule_table->table.footer_widths = calloc(schedule_table->table.number_of_footers, sizeof (int));
+    schedule_table->table.footer_widths[0] = 10;
+    schedule_table->table.footer_widths[1] = 10;
+    schedule_table->table.footer_widths[2] = 10;
+    schedule_table->table.footer_widths[3] = 10;
 
     schedule_table->weekly_schedule = weekly_schedules;
 
@@ -33,6 +47,8 @@ void init_schedule_table(schedule_table_t* schedule_table, weekly_schedule_t* we
         schedule_table->table.max_cols += schedule_table->table.column_widths[i];
     }
 
+    scale_to_screen_size(&schedule_table->table);
+
     schedule_table->table.current_line = 0;
     schedule_table->table.current_col = 0;
 
@@ -40,7 +56,8 @@ void init_schedule_table(schedule_table_t* schedule_table, weekly_schedule_t* we
 }
 
 void print_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
-    __attribute__((unused)) int selected_wday_x = 0, wday_text_len = 0, _;
+    int selected_wday_x = 0, wday_text_len = 0;
+    __attribute__((unused)) int _;
     for (int i = 0; i < 7; i++) {
         tm_wday_t tm_wday = (i + FIRST_DAY_OF_WEEK) % 7;
         const char* day_text = tm_wday_to_text(tm_wday);
@@ -115,7 +132,7 @@ void display_schedules(schedule_table_t* schedule_table) {
     move_to_next_line(schedule_table->table.pad, 0);
 
     schedule_vector_t schedule_vector = schedule_table->weekly_schedule->days[schedule_table->selected_wday];
-    for (int i = 0; i < schedule_vector.n_elements; i++) {
+    for (int i = schedule_table->table.current_line; i < schedule_vector.n_elements && i < schedule_table->table.max_lines - 2; i++) {
         print_schedule_row(schedule_table, schedule_vector.array[i]);
         move_to_next_line(schedule_table->table.pad, 0);
     }
@@ -141,7 +158,6 @@ void schedule_menu() {
     load_weekly_schedule(&weekly_schedule, "schedule.txt");
 
     init_schedule_table(&schedule_table, &weekly_schedule);
-    scale_to_screen_size(&schedule_table.table);
 
     schedule_table.selected_wday = MONDAY;
     display_schedules(&schedule_table);
