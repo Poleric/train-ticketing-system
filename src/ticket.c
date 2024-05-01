@@ -99,6 +99,9 @@ int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, stru
     return available_seats;
 }
 
+
+
+
 //int main() {
 //    // Sample usage
 //    weekly_schedule_t weekly_schedule;
