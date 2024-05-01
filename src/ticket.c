@@ -197,7 +197,17 @@ int available_seat(char trainID, char departStation, int departTime, int MAX_TRA
         return EXIT_FAILURE;
     }
 
+    while (ticketFP != EOF) {
+        fscanf(ticketFP, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%d:%d:%d|%d:%d:%d\n",
+            temp.ticketID, temp.seatNum, temp.trainID, temp.username, temp.station,
+            temp.departure_time.tm_hour, temp.departure_time.tm_min, temp.departure_time.tm_sec,
+            temp.eta.tm_hour, temp.eta.tm_min, temp.eta.tm_sec);
 
+
+    }
+
+    fclose(ticketFP);
+    return seatAvailable;
 }
 
 void cleanup(weekly_schedule_t* weekly_schedule) {
