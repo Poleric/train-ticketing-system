@@ -22,6 +22,7 @@ void scale_login_form_to_window(login_form_t* login_form);
 void print_login_fields(login_form_t* login_form);
 void print_login_form_header(login_form_t* login_form, short color_pair);
 void print_login_form_footer(login_form_t* login_form, short color_pair);
+void print_login_form_message(login_form_t* login_form, const char* message, short color_pair);
 
 void display_login_form(login_form_t* login_form);
 

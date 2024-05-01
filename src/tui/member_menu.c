@@ -48,7 +48,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 else {
                     store_last_pos(login_window);
 
-                    mvwprintw(login_window, 3, 0, "Wrong username or password");
+                    print_login_form_message(&login_form, "Incorrect username or password", ERROR);
 
                     restore_last_pos(login_window);
                 }

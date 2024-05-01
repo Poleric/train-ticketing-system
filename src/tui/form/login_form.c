@@ -92,6 +92,16 @@ void print_login_form_footer(login_form_t* login_form, short color_pair) {
     wchgat(login_form->form.window, login_form->form.width, A_STANDOUT, color_pair, NULL);
 }
 
+void print_login_form_message(login_form_t* login_form, const char* message, short color_pair) {
+    wmove(login_form->form.window, 6, 0);
+    wclrtoeol(login_form->form.window);
+
+    wmove(login_form->form.window, 6, get_centered_x_start(login_form->form.window, (int)strlen(message)));
+    wattron(login_form->form.window, COLOR_PAIR(color_pair));
+    wprintw(login_form->form.window, "%s", message);
+    wattroff(login_form->form.window, COLOR_PAIR(color_pair));
+}
+
 void display_login_form(login_form_t* login_form) {
     print_login_form_header(login_form, 1);
 
