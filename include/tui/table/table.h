@@ -20,8 +20,9 @@ struct Table {
 
     int max_lines, max_cols;
     int current_line, current_col;
+    int selected_line;
 
-    WINDOW* pad;
+    WINDOW* window;
 };
 
 void print_table_header(table_t* table, short color_pair);

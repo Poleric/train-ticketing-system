@@ -7,17 +7,17 @@
 void print_table_header(table_t* table, short color_pair) {
     int x = 0;
     for (int i = 0; i < table->number_of_columns; i++) {
-        move_to_x(table->pad, x);
-        move_offset_x(table->pad, get_offset_for_centered((int)strlen(table->headers[i]), table->column_widths[i]));
-        wprintw(table->pad,  "%s", table->headers[i]);
+        move_to_x(table->window, x);
+        move_offset_x(table->window, get_offset_for_centered((int)strlen(table->headers[i]), table->column_widths[i]));
+        wprintw(table->window, "%s", table->headers[i]);
         x += table->column_widths[i];
     }
-    move_to_x(table->pad, 0);
-    wchgat(table->pad, table->max_cols, A_STANDOUT, color_pair, NULL);
+    move_to_x(table->window, 0);
+    wchgat(table->window, table->max_cols, A_STANDOUT, color_pair, NULL);
 }
 
 void scale_to_screen_size(table_t* table) {
-    int max_x = getmaxx(table->pad);
+    int max_x = getmaxx(table->window);
 
     // scale up / down all column widths
     const int header_max = sum_d(table->column_widths, table->number_of_columns);
@@ -31,23 +31,23 @@ void scale_to_screen_size(table_t* table) {
 }
 
 void highlight_selected_row(table_t* table, int header_offset, short selected_color_pair) {
-    wmove(table->pad, table->current_line + header_offset, 0);
-    wchgat(table->pad, table->max_cols, A_STANDOUT, selected_color_pair, NULL);
+    wmove(table->window, table->selected_line + header_offset, 0);
+    wchgat(table->window, table->max_cols, A_STANDOUT, selected_color_pair, NULL);
 }
 
 void print_table_footer(table_t* table, short color_pair) {
-    wmove(table->pad, table->max_lines, 0);
+    wmove(table->window, table->max_lines, 0);
 
     int x = 0;
     for (int i = 0; i < table->number_of_footers; i++) {
-        move_to_x(table->pad, x);
-        move_offset_x(table->pad, get_offset_for_centered((int)strlen(table->footers[i]), table->footer_widths[i]));
-        wprintw(table->pad,  "%s", table->footers[i]);
+        move_to_x(table->window, x);
+        move_offset_x(table->window, get_offset_for_centered((int)strlen(table->footers[i]), table->footer_widths[i]));
+        wprintw(table->window, "%s", table->footers[i]);
         x += table->footer_widths[i];
     }
 
-    move_to_x(table->pad, 0);
-    wchgat(table->pad, table->max_cols, A_STANDOUT, color_pair, NULL);
+    move_to_x(table->window, 0);
+    wchgat(table->window, table->max_cols, A_STANDOUT, color_pair, NULL);
 }
 
 void free_table(table_t* table) {
@@ -55,5 +55,5 @@ void free_table(table_t* table) {
     free(table->column_widths);
     free(table->footers);
     free(table->footer_widths);
-    delwin(table->pad);
+    delwin(table->window);
 }
