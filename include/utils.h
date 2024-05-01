@@ -1,9 +1,9 @@
+#ifndef TRAINTICKETINGSYSTEM_UTILS_H
+#define TRAINTICKETINGSYSTEM_UTILS_H
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
-
-#ifndef TRAINTICKETINGSYSTEM_UTILS_H
-#define TRAINTICKETINGSYSTEM_UTILS_H
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #define MAX(a,b) __max(a,b)
