@@ -22,7 +22,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
 
     FORM* login_form = create_login_form(login_window);
 
-    print_login_menu("Staff menu", menu_window, login_form);
+    display_login_menu("Staff menu", menu_window, login_form);
 
 //    staff_vector_t* staff = init_staff_vector();
 //    load_staff(staff);

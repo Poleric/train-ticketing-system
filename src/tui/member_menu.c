@@ -12,17 +12,19 @@ void reload_members(member_vector_t* members) {
 //   / \        -> register_menu --|
 //    └----------------------------┘
 current_menu_t member_login_menu(WINDOW* menu_window) {
-    WINDOW* login_window = newwin(
-            10,
-            50,
-            1,
-            get_centered_x_start(menu_window, 50));
+    WINDOW* login_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
 
     keypad(login_window, TRUE);
 
     FORM* login_form = create_login_form(login_window);
 
-    print_login_menu("Member menu", menu_window, login_form);
+    display_login_menu("Member menu", menu_window, login_form);
 
     member_vector_t* members = init_members_vector();
     load_members(members);
@@ -41,7 +43,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
                     current_menu = member_menu(menu_window, current_member);
 
-                    print_login_menu("Menu member", menu_window, login_form);
+                    display_login_menu("Menu member", menu_window, login_form);
                 }
                 else {
                     store_last_pos(login_window);

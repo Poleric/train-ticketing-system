@@ -6,7 +6,7 @@ void clear_current_menu(WINDOW* menu_window, FORM* form) {
     wclear(menu_window);
 }
 
-void print_login_menu(const char* header_text, WINDOW* menu_window, FORM* login_form) {
+void display_login_menu(const char* header_text, WINDOW* menu_window, FORM* login_form) {
     // header
     mvwprintw(menu_window, 0, get_centered_x_start(menu_window, (int)strlen(header_text)), "%s", header_text);
     wrefresh(menu_window);
