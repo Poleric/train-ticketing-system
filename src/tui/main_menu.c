@@ -12,9 +12,10 @@ void init_color_pairs() {
      */
     use_default_colors();
     assume_default_colors(-1, -1);
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
-    init_pair(2, COLOR_CYAN, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(COLOR_1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(COLOR_2, COLOR_CYAN, COLOR_BLACK);
+    init_pair(SELECTED, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(ERROR, COLOR_WHITE, COLOR_RED);
 }
 
 void init_menu() {

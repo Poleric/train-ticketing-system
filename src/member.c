@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utils.h>
-#include <ctype.h>
 
 #define BASE_MEMBER_LENGTH 8
 
