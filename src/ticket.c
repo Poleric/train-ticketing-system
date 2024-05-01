@@ -179,6 +179,10 @@ int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, stru
     return available_seats;
 }
 
+int available_seat(char trainID, char departStation, int departTime, int MAX_TRAIN_SEAT) {
+
+}
+
 void cleanup(weekly_schedule_t* weekly_schedule) {
     // Iterate through each day of the week
     for (int i = 0; i < 7; i++) {
