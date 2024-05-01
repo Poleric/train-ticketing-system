@@ -33,6 +33,7 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
+        src/ticket.c
 )
 
 add_executable(TrainTicketingSystem ${SOURCES})

@@ -4,11 +4,18 @@
 #include <time.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <utils.h>
 
 typedef struct Schedule schedule_t;
 typedef struct ScheduleVector schedule_vector_t;
 typedef struct WeeklySchedule weekly_schedule_t;
+
+typedef struct datetime_time dt_time_t;
+
+struct datetime_time {
+    int tm_hour;
+    int tm_min;
+    int tm_sec;
+};
 
 struct Schedule {
     char train_id[5];
