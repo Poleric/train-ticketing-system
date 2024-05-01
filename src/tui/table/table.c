@@ -20,7 +20,7 @@ void scale_to_screen_size(table_t* table) {
 
     // scale up / down all column widths
     for (int i = 0; i < table->number_of_columns; i++)
-        table->column_widths[i] *= max_x / table->max_cols;
+        table->column_widths[i] = (int)((float)table->column_widths[i] / table->max_cols * max_x);
     table->max_cols = max_x;
 }
 
