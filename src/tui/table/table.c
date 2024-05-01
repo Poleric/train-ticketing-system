@@ -16,7 +16,7 @@ void print_table_header(table_t* table, short color_pair) {
     wchgat(table->window, table->width, A_STANDOUT, color_pair, NULL);
 }
 
-void scale_to_screen_size(table_t* table) {
+void scale_table_to_window(table_t* table) {
     int max_x = getmaxx(table->window);
 
     // scale up / down all column widths

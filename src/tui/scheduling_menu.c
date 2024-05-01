@@ -49,7 +49,7 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
         schedule_table->table.width += schedule_table->table.column_widths[i];
     }
 
-    scale_to_screen_size(&schedule_table->table);
+    scale_table_to_window(&schedule_table->table);
 
     schedule_table->table.current_line = 0;
     schedule_table->table.selected_line = 0;
@@ -57,7 +57,7 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->selected_wday = FIRST_DAY_OF_WEEK;
 }
 
-void print_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
+void print_schedule_table_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
     int selected_wday_x = 0, wday_text_len = 0, _;
     (void)_;  // supress unused warning
 
@@ -126,7 +126,7 @@ void print_schedule_row(schedule_table_t* schedule_table, schedule_t * schedule)
 }
 
 void display_schedules(schedule_table_t* schedule_table) {
-    print_day_header(schedule_table, 2, 3);
+    print_schedule_table_day_header(schedule_table, 2, 3);
 
     move_to_next_line(schedule_table->table.window, 0);
 
