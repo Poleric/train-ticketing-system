@@ -57,8 +57,9 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
 }
 
 void print_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
-    int selected_wday_x = 0, wday_text_len = 0;
-    __attribute__((unused)) int _;
+    int selected_wday_x = 0, wday_text_len = 0, _;
+    (void)_;  // supress unused warning
+
     for (int i = 0; i < 7; i++) {
         tm_wday_t tm_wday = (i + FIRST_DAY_OF_WEEK) % 7;
         const char* day_text = tm_wday_to_text(tm_wday);
