@@ -56,7 +56,7 @@ int load_members(member_vector_t* members) {
 	file = fopen("memberSignup.txt", "r");
 
 	if (file == NULL) {
-        fprintf(stderr, "Error to open this file!\n");
+//        fprintf(stderr, "Error to open this file!\n");
         return EXIT_FAILURE;
 	}
 

@@ -73,7 +73,7 @@ int load_staff(staff_vector_t* staff_v) {
     file = fopen("Staff_List.txt", "r");
 
     if (file == NULL) {
-        fprintf(stderr, "Error to open this file!\n");
+//        fprintf(stderr, "Error to open this file!\n");
         return EXIT_FAILURE;
     }
 
