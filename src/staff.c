@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <utils.h>
-#include <ctype.h>
 
 #define BASE_STAFF_LENGTH 4
 
@@ -20,32 +19,6 @@ staff_t* init_staff() {
         new_staff->salary = 0;
     }
     return new_staff;
-}
-
-int login_staff() {
-	FILE* staffList;
-	staff_t currentStaff;
-
-	if ((staffList = fopen("Staff_List.txt", "r")) == NULL) {
-		fprintf(stderr, "Error to open this file!\n");
-		return EXIT_FAILURE;
-	}
-
-	fscanf(staffList, "%[^|]|%[^|]|%[^|]|%d|%[^|]|%d|%lf\n",
-	currentStaff.username, currentStaff.hashed_password, currentStaff.email, currentStaff.contact_no, currentStaff.position, currentStaff.permissions, currentStaff.salary);
-
-	char username_buffer[255], password_buffer[255];
-	char retry;
-
-	do {
-		if ((strcmp(username_buffer, currentStaff.username) || strcmp(password_buffer, currentStaff.hashed_password)) != 0) {
-			printf("Wrong username and password combination. Want to try again? (Y to retry) > ");
-			scanf("%c", retry);
-			rewind(stdin);
-			return EXIT_FAILURE;
-		}
-	} while (retry == 'Y');
-	return 0;
 }
 
 staff_vector_t* init_staff_vector() {
@@ -157,83 +130,21 @@ int add_staff(staff_vector_t* staff_v, staff_t* staff) {
     return EXIT_SUCCESS;
 }
 
-void deleteStaff(staff_vector_t* staff_v, const char* username, const char* password) {
-    int i;
-    char confirm;
+int delete_staff(staff_vector_t* staff_v, const char* username) {
+    int i = find_staff_index(staff_v, username);
 
-    for (i = 0; i < staff_v->num_of_staff; i++) {
-        if (strcmp(staff_v->array[i]->username, username) == 0) {
-            break;
-        }
-    }
-    if (i < staff_v->num_of_staff) {
-        printf("Are you sure you want to delete your account? (Y/N): ");
-        scanf(" %c", &confirm);
+    if (i == -1)
+        return EXIT_FAILURE;
 
-        if (toupper(confirm) == 'Y') {
-            free_staff(staff_v->array[i]);
+    free_staff(staff_v->array[i]);
+    staff_v->array[i] = NULL;
 
-            for (int j = i; j < staff_v->num_of_staff - 1; j++) {
-                staff_v->array[j] = staff_v->array[j + 1];
-            }
-            (staff_v->num_of_staff)--;
-            printf("Account deleted successfully !\n");
-        }
-        else {
-            printf("Account not found, Please try again.\n");
-        }
-    }
-}
+    // shift into empty slot
+    for (int j = i + 1; i < staff_v->num_of_staff; j++)
+        staff_v->array[j - 1] = staff_v->array[j];
+    staff_v->array[--staff_v->num_of_staff] = NULL;
 
-void editStaff(staff_vector_t* staff_v, const char* username, const char* password, char* email, char* contact_no) {
-    int choice;
-    int index = find_staff_index(staff_v, username);
-
-    if (index == -1) {
-        printf("Member not found\n");
-        return;
-    }
-
-    do {
-        printf("Edit Staff Details\n");
-        printf("1. Edit username\n");
-        printf("2. Edit password\n");
-        printf("3. Edit contact number\n");
-        printf("4. Edit email\n");
-        printf("5. Exit edit staff.\n");
-        scanf("%d", &choice);
-        rewind(stdin);
-        switch (choice) {
-        case 1:
-            printf("Enter new username : ");
-            scanf("%s", staff_v->array[index]->username);
-            rewind(stdin);
-            break;
-        case 2:
-            printf("Enter new password : ");
-            scanf("%s", staff_v->array[index]->hashed_password);
-            rewind(stdin);
-            break;
-        case 3:
-            printf("Enter new contact number : ");
-            scanf("%s", staff_v->array[index]->contact_no);
-            rewind(stdin);
-            break;
-        case 4:
-            printf("Enter new email : ");
-            scanf("%s", staff_v->array[index]->email);
-            rewind(stdin);
-            break;
-        case 5:
-            printf("Exiting edit staff details.\n");
-            break;
-        default:
-            printf("Invalid input, please try again.\n");
-        }
-    } while (choice != 5);
-
-    write_staff(staff_v, "Staff_List.txt");
-    printf("Member details updated succesfully.\n");
+    return EXIT_SUCCESS;
 }
 
 void free_staff_vector(staff_vector_t* staff_v) {
@@ -248,5 +159,6 @@ void free_staff(staff_t* staff) {
     if (staff->hashed_password) free(staff->hashed_password);
     if (staff->email)           free(staff->email);
     if (staff->contact_no)      free(staff->contact_no);
+    if (staff->position)        free(staff->position);
     free(staff);
 }

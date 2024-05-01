@@ -35,6 +35,7 @@ int find_staff_index(staff_vector_t* staff_v, const char* username);
 #define is_staff_exists(staff, username) find_staff_index(staff, username) != -1
 
 int add_staff(staff_vector_t* staff_v, staff_t* staff);
+int delete_staff(staff_vector_t* staff_v, const char* username);
 
 void free_staff(staff_t* staff);
 void free_staff_vector(staff_vector_t* staff_v);
