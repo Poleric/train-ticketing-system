@@ -137,7 +137,7 @@ const char* tm_wday_to_text(tm_wday_t tm_wday) {
 }
 
 char* to_time(dt_time_t time, char* buffer, int n) {
-    snprintf(buffer, n, "%d:%02d", time.tm_hour, time.tm_min);
+    snprintf(buffer, n, "%2d:%02d", time.tm_hour, time.tm_min);
     return buffer;
 }
 
