@@ -203,7 +203,15 @@ int available_seat(char trainID, char departStation, int departTime, int MAX_TRA
             temp.departure_time.tm_hour, temp.departure_time.tm_min, temp.departure_time.tm_sec,
             temp.eta.tm_hour, temp.eta.tm_min, temp.eta.tm_sec);
 
+        int seatPlacement = temp.seatNum[3] - 48;
 
+        if ((strcmp(temp.trainID, trainID) || strcmp(temp.station, departStation) || strcmp(temp.departure_time.tm_hour, departTime)) != 0) {
+            for (int i = 0; i < MAX_TRAIN_SEAT; i++) {
+                if (seatAvailable[i] == seatPlacement) {
+                    seatAvailable[i] = 0;
+                }
+            }
+        }
     }
 
     fclose(ticketFP);
