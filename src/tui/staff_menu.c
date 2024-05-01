@@ -2,9 +2,6 @@
 #include <tui/form/login_form.h>
 #include <tui/utils/menu_utils.h>
 
-#define SIDE_MARGIN_PERCENTAGE 0.1
-#define TOP_MARGIN 2
-
 void reload_staff(staff_vector_t* staff) {
     for (int i = 0; i < staff->num_of_staff; i++)
         free_staff(staff->array[i]);
@@ -23,10 +20,10 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
 
     login_window = derwin(
             menu_window,
-            LINES - TOP_MARGIN,
-            (int)(COLS * (1 - SIDE_MARGIN_PERCENTAGE * 2)),
-            TOP_MARGIN,
-            get_centered_x_start(menu_window, (int)(COLS * (1 - SIDE_MARGIN_PERCENTAGE * 2)))
+            LINES,
+            COLS,
+            0,
+            0
     );
 
     init_login_form(&login_form, login_window, "Login as Staff");
@@ -50,7 +47,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
                 else {
                     store_last_pos(login_window);
 
-                    mvwprintw(login_window, 3, 0, "Wrong username or password");
+                    print_login_form_message(&login_form, "Incorrect username or password", ERROR);
 
                     restore_last_pos(login_window);
                 }
