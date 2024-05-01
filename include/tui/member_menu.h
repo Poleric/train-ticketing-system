@@ -1,8 +1,7 @@
 #ifndef TRAINTICKETINGSYSTEM_MEMBER_MENU_H
 #define TRAINTICKETINGSYSTEM_MEMBER_MENU_H
 
-#include "tui/utils/tui_utils.h"
-#include "tui/utils/tui_common.h"
+#include <tui/utils/menu_utils.h>
 #include <member.h>
 
 current_menu_t member_login_menu(WINDOW* menu_window);

@@ -2,6 +2,7 @@
 #define TRAINTICKETINGSYSTEM_LOGIN_FORM_H
 
 #include <tui/template/form.h>
+#include <panel.h>
 #include <string.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)

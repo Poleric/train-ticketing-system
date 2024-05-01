@@ -5,6 +5,10 @@
 #include "tui/utils/tui_common.h"
 #include "stations.h"
 #include "schedule.h"
+#include <tui/table/table.h>
+#include <stations.h>
+#include <schedule.h>
+#include <utils.h>
 
 typedef struct Table table_t;
 
