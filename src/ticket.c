@@ -162,7 +162,7 @@ bool valTicket(const char* ticketID) {
 //get ticket from userid members
 
 // Function to get the number of available seats
-int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, struct tm time, int tm_wday) {
+int get_num_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, struct tm time, int tm_wday) {
     int num_available_seats = 0;
 
     // Iterate through the schedules for the given day of the week
