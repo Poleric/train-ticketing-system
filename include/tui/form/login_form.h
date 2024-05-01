@@ -2,19 +2,32 @@
 #define TRAINTICKETINGSYSTEM_LOGIN_FORM_H
 
 #include <tui/form/form.h>
-#include <panel.h>
-#include <string.h>
-#include <utils.h>
 
-#define LOGIN_USERNAME_LABEL "Username :"
-#define LOGIN_PASSWORD_LABEL "Password :"
-#define LOGIN_LABEL_FIELD_LENGTH MAX(strlen(LOGIN_USERNAME_LABEL), strlen(LOGIN_PASSWORD_LABEL))
-#define LOGIN_FIELD_GAP 1
+typedef struct LoginForm login_form_t;
 
-FORM* create_login_form(WINDOW* form_window);
-void print_login_fields(FORM* login_form, bool underline);
-void print_login_form(FORM* login_form);
-char* get_username(FORM* login_form);
-char* get_password(FORM* login_form);
+struct LoginForm {
+    form_t form;
+
+    const char* header;
+
+    const char **footers;
+    int* footer_widths;
+    int number_of_footers;
+};
+
+void init_login_form(login_form_t* login_form, WINDOW* form_window, const char* header);
+
+void scale_login_form_to_window(login_form_t* login_form);
+
+void print_login_fields(login_form_t* login_form);
+void print_login_form_header(login_form_t* login_form, short color_pair);
+void print_login_form_footer(login_form_t* login_form, short color_pair);
+
+void display_login_form(login_form_t* login_form);
+
+void free_login_form(login_form_t* login_form);
+
+char* get_username(login_form_t* login_form);
+char* get_password(login_form_t* login_form);
 
 #endif //TRAINTICKETINGSYSTEM_LOGIN_FORM_H
