@@ -214,7 +214,7 @@ int available_seat(char trainID, char departStation, int departTime, int MAX_TRA
         }
     }
 
-
+    fclose(ticketFP);
     return seatAvailable;
 }
 
