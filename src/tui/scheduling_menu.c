@@ -122,6 +122,8 @@ void display_schedules(schedule_table_t* schedule_table) {
 
     highlight_selected_row(&schedule_table->table, 2, 2);
 
+    print_table_footer(&schedule_table->table, 1);
+
     prefresh(schedule_table->table.pad, schedule_table->table.current_line, schedule_table->table.current_col, 0, 0, LINES, COLS);
 }
 

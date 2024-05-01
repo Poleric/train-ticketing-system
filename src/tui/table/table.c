@@ -29,6 +29,29 @@ void highlight_selected_row(table_t* table, int header_offset, short selected_co
     wchgat(table->pad, table->max_cols, A_STANDOUT, selected_color_pair, NULL);
 }
 
+void print_table_footer(table_t* table, short color_pair) {
+    wmove(table->pad, table->max_lines, 0);
+
+    wprintw(table->pad, "[q] %s", "Quit");
+
+    waddch(table->pad, '[');
+    waddch(table->pad, ACS_LARROW);
+    waddch(table->pad, ACS_RARROW);
+    waddch(table->pad, ']');
+    wprintw(table->pad, " %s", "Change Day");
+
+    waddch(table->pad, '[');
+    waddch(table->pad, ACS_UARROW);
+    waddch(table->pad, ACS_DARROW);
+    waddch(table->pad, ']');
+    wprintw(table->pad, " %s", "Scroll");
+
+    wprintw(table->pad, "[Enter] %s", "View Details");
+
+    move_to_x(table->pad, 0);
+    wchgat(table->pad, table->max_cols, A_STANDOUT, color_pair, NULL);
+}
+
 void free_table(table_t* table) {
     free(table->headers);
     free(table->column_widths);
