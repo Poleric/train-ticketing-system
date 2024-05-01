@@ -51,7 +51,6 @@ void booking(Ticket *tickets, int *numTickets, Train *trains, struct datetime_ti
 
 
 
-
 bool valTicket(const char* ticketID) {
     FILE* fptr;
     fptr= fopen("valid_tickets.txt", "r");
