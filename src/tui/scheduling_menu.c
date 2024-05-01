@@ -1,113 +1,135 @@
 #include <tui/scheduling_menu.h>
+#include <tui/utils/tui_utils.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define FIRST_DAY_OF_WEEK SUNDAY
+#define SELECTED_DAY_PADDING 5
 
-void print_header(table_t* table) {
-    for (int i = 0; i < table->number_of_columns; i++) {
-        move_offset_x(table->pad, table->column_padding);
-        wprintw(table->pad, "%s", table->headers[i]);
-        move_offset_x(table->pad, table->column_padding);
+void print_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
+    __attribute__((unused)) int selected_wday_x = 0, wday_text_len = 0, _;
+    for (int i = 0; i < 7; i++) {
+        tm_wday_t tm_wday = (i + FIRST_DAY_OF_WEEK) % 7;
+        const char* day_text = tm_wday_to_text(tm_wday);
+        if (tm_wday == schedule_table->selected_wday) {
+            getyx(schedule_table->table.pad, _, selected_wday_x);
+            wprintw(schedule_table->table.pad, "%s", day_text);
+            move_offset_x(schedule_table->table.pad, SELECTED_DAY_PADDING);
+            wday_text_len = (int)strlen(day_text) + SELECTED_DAY_PADDING;
+        } else {
+            wprintw(schedule_table->table.pad, "%.3s", day_text);
+            move_offset_x(schedule_table->table.pad, 1);
+        }
     }
+    int max_x;
+    getyx(schedule_table->table.pad, _, max_x);
+
+    // highlight entire table
+    move_to_x(schedule_table->table.pad, 0);
+    wchgat(schedule_table->table.pad, max_x, A_STANDOUT, color_pair, NULL);
+
+    move_to_x(schedule_table->table.pad, selected_wday_x);
+    wchgat(schedule_table->table.pad, wday_text_len, A_STANDOUT, selected_color_pair, NULL);
 }
 
-void print_schedule_row(table_t* table, schedule_t * schedule) {
+void print_schedule_row(schedule_table_t* schedule_table, schedule_t * schedule) {
     int offset_x = 0;
     char depart_time[7], eta[7];
 
-    waddch(table->pad, ACS_VLINE);
-//    move_offset_x(table->pad, table->column_padding);
-    move_offset_x(table->pad, get_offset_for_centered((int)strlen(schedule->from_station_id), table->column_widths[0]));
-    wprintw(table->pad, "%s", schedule->from_station_id);
-    offset_x += table->column_widths[0] + 1;
+    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[0]));
+    wprintw(schedule_table->table.pad, "%s", schedule->from_station_id);
+    offset_x += schedule_table->table.column_widths[0];
 
-    move_offset_x(table->pad, get_offset_for_centered((int)strlen(schedule->from_station_id), table->column_widths[0]) - 1);
-    wprintw(table->pad, "%s", schedule->to_station_id);
-    offset_x += table->column_widths[1] + 1;
+    move_to_x(schedule_table->table.pad, offset_x);
 
-    move_to_x(table->pad, offset_x);
+    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[1]));
+    wprintw(schedule_table->table.pad, "%s", schedule->to_station_id);
+    offset_x += schedule_table->table.column_widths[1];
 
-    waddch(table->pad, ACS_VLINE);
-    move_offset_x(table->pad, table->column_padding);
-    wprintw(table->pad, "%s", to_time(schedule->departure_time, depart_time, 7));
-    offset_x += table->column_widths[2] + 1;
+    move_to_x(schedule_table->table.pad, offset_x);
 
-    move_to_x(table->pad, offset_x);
+    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[2]));
+    wprintw(schedule_table->table.pad, "%s", to_time(schedule->departure_time, depart_time, 7));
+    offset_x += schedule_table->table.column_widths[2];
 
-    waddch(table->pad, ACS_VLINE);
-    move_offset_x(table->pad, table->column_padding);
-    wprintw(table->pad, "%s", to_time(schedule->eta, eta, 7));
-    offset_x += table->column_widths[3] + 1;
+    move_to_x(schedule_table->table.pad, offset_x);
 
-    move_to_x(table->pad, offset_x);
+    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[3]));
+    wprintw(schedule_table->table.pad, "%s", to_time(schedule->eta, eta, 7));
+    offset_x += schedule_table->table.column_widths[3];
 
-    waddch(table->pad, ACS_VLINE);
-    move_offset_x(table->pad, table->column_padding);
-    wprintw(table->pad, "%s", schedule->train_id);
-    offset_x += table->column_widths[4] + 1;
+    move_to_x(schedule_table->table.pad, offset_x);
 
-    move_to_x(table->pad, offset_x);
-
-    waddch(table->pad, ACS_VLINE);
+    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[4]));
+    wprintw(schedule_table->table.pad, "%s", schedule->train_id);
 }
 
-void display_schedules(table_t* table, schedule_vector_t* schedule_vector) {
-    wmove(table->pad, 0, 0);
+void display_schedules(schedule_table_t* schedule_table, int tm_wday) {
+    print_day_header(schedule_table, 1, 2);
 
-    print_header(table);
-    move_to_x(table->pad, table->column_widths[0] + 1); waddch(table->pad, ACS_BTEE);
+    move_to_next_line(schedule_table->table.pad, 0);
 
-    move_to_next_line(table->pad, 0);
-    for (int i = 0; i < schedule_vector->n_elements; i++) {
-        print_schedule_row(table, schedule_vector->array[i]);
-        move_to_next_line(table->pad, 0);
+    print_table_header(&schedule_table->table, 2);
+
+    schedule_vector_t schedule_vector = schedule_table->weekly_schedule->days[tm_wday];
+
+    move_to_next_line(schedule_table->table.pad, 0);
+    for (int i = 0; i < schedule_vector.n_elements; i++) {
+        print_schedule_row(schedule_table, schedule_vector.array[i]);
+        move_to_next_line(schedule_table->table.pad, 0);
     }
 
-    move_to_x(table->pad, table->column_widths[0] + 1); waddch(table->pad, ACS_HLINE);
-
-    prefresh(table->pad, table->current_line, table->current_col, 0, 0, LINES, COLS);
+    prefresh(schedule_table->table.pad, schedule_table->table.current_line, schedule_table->table.current_col, 0, 0, LINES, COLS);
 }
 
-void init_schedule_table(table_t* table, int n_lines, int column_padding) {
-    table->number_of_columns = 5;
-    table->headers = calloc(table->number_of_columns, sizeof(const char*));
-    table->headers[0] = "From Station";
-    table->headers[1] = "To Station  ";
-    table->headers[2] = "Departure Time";
-    table->headers[3] = "Arrival Time  ";
-    table->headers[4] = "Train ID";
-    table->column_padding = column_padding;
 
-    table->max_lines = n_lines;
-    table->max_cols = 1;
-    table->column_widths = calloc(table->number_of_columns, sizeof (int));
-    for (int i = 0; i < table->number_of_columns; i++) {
-        table->column_widths[i] = (int) strlen(table->headers[i]) + table->column_padding * 2;
-        table->max_cols += table->column_widths[i] + 1;
+void init_schedule_table(schedule_table_t* schedule_table, weekly_schedule_t* weekly_schedules) {
+    schedule_table->table.number_of_columns = 5;
+    schedule_table->table.headers = calloc(schedule_table->table.number_of_columns, sizeof(const char*));
+    schedule_table->table.headers[0] = "From Station";
+    schedule_table->table.headers[1] = "To Station";
+    schedule_table->table.headers[2] = "Departure Time";
+    schedule_table->table.headers[3] = "Arrival Time";
+    schedule_table->table.headers[4] = "Train ID";
+    schedule_table->table.column_widths = calloc(schedule_table->table.number_of_columns, sizeof (int));
+    schedule_table->table.column_widths[0] = 15;
+    schedule_table->table.column_widths[1] = 15;
+    schedule_table->table.column_widths[2] = 13;
+    schedule_table->table.column_widths[3] = 13;
+    schedule_table->table.column_widths[4] = 8;
+
+    schedule_table->weekly_schedule = weekly_schedules;
+
+    schedule_table->table.pad = newpad(LINES, COLS);
+
+    schedule_table->table.max_lines = LINES - 2;
+    schedule_table->table.max_cols = 0;
+    for (int i = 0; i < schedule_table->table.number_of_columns; i++) {
+        schedule_table->table.max_cols += schedule_table->table.column_widths[i];
     }
 
-    table->current_line = table->current_col = 0;
+    schedule_table->table.current_line = 0;
+    schedule_table->table.current_col = 0;
 
-    table->pad = newpad(LINES, COLS);
+    schedule_table->selected_wday = FIRST_DAY_OF_WEEK;
 }
 
-void free_schedule_table(table_t* table) {
-    free(table->headers);
-    free(table->column_widths);
-    delwin(table->pad);
+void free_schedule_table(schedule_table_t* schedule_table) {
+    free_table(&schedule_table->table);
 }
 
 void schedule_menu() {
     weekly_schedule_t weekly_schedule;
-    table_t schedule_table;
+    schedule_table_t schedule_table;
 
     init_weekly_schedule(&weekly_schedule);
     load_weekly_schedule(&weekly_schedule, "schedule.txt");
 
-    init_schedule_table(&schedule_table, weekly_schedule.days[0].n_elements + 10, 3);
+    init_schedule_table(&schedule_table, &weekly_schedule);
+    scale_to_screen_size(&schedule_table.table);
 
-    display_schedules(&schedule_table, weekly_schedule.days);
-    wgetch(schedule_table.pad);
+    display_schedules(&schedule_table, MONDAY);
+    wgetch(schedule_table.table.pad);
 
     free_schedule_table(&schedule_table);
     free_weekly_schedules(&weekly_schedule);
