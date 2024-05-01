@@ -53,6 +53,8 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.current_line = 0;
     schedule_table->table.current_col = 0;
 
+    schedule_table->table.selected_line = 0;
+
     schedule_table->selected_wday = FIRST_DAY_OF_WEEK;
 }
 
