@@ -42,17 +42,16 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.window = window;
     keypad(schedule_table->table.window, true);
 
-    schedule_table->table.max_lines = LINES - 2;
-    schedule_table->table.max_cols = 0;
+    schedule_table->table.number_of_display_lines = getmaxy(window) - 3;
+
+    schedule_table->table.width = 0;
     for (int i = 0; i < schedule_table->table.number_of_columns; i++) {
-        schedule_table->table.max_cols += schedule_table->table.column_widths[i];
+        schedule_table->table.width += schedule_table->table.column_widths[i];
     }
 
     scale_to_screen_size(&schedule_table->table);
 
     schedule_table->table.current_line = 0;
-    schedule_table->table.current_col = 0;
-
     schedule_table->table.selected_line = 0;
 
     schedule_table->selected_wday = FIRST_DAY_OF_WEEK;
@@ -136,7 +135,11 @@ void display_schedules(schedule_table_t* schedule_table) {
     move_to_next_line(schedule_table->table.window, 0);
 
     schedule_vector_t schedule_vector = schedule_table->weekly_schedule->days[schedule_table->selected_wday];
-    for (int i = schedule_table->table.current_line; i < schedule_vector.n_elements && i < schedule_table->table.max_lines - 2; i++) {
+    for (
+        int i = schedule_table->table.current_line;
+        i < schedule_vector.n_elements && i < schedule_table->table.current_line + schedule_table->table.number_of_display_lines;
+        i++
+    ) {
         print_schedule_row(schedule_table, schedule_vector.array[i]);
         move_to_next_line(schedule_table->table.window, 0);
     }
@@ -185,17 +188,19 @@ void schedule_menu() {
                 schedule_table.selected_wday++;
                 schedule_table.selected_wday %= 7;
                 break;
-            case KEY_UP:
+            case KEY_UP:  // TODO: fix scrolling
+                if (schedule_table.table.current_line > 0 &&
+                    schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines + 1
+                    )
+                    schedule_table.table.current_line--;
                 if (schedule_table.table.selected_line > 0)
                     schedule_table.table.selected_line--;
-                if (schedule_table.table.selected_line < schedule_table.table.current_line)
-                    schedule_table.table.current_line--;
                 break;
             case KEY_DOWN:
+                if (schedule_table.table.current_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines)
+                    schedule_table.table.current_line++;
                 if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
                     schedule_table.table.selected_line++;
-                if (schedule_table.table.selected_line > schedule_table.table.current_line + schedule_table.table.max_lines - 3)
-                    schedule_table.table.current_line++;
                 break;
         }
         wclear(schedule_table.table.window);

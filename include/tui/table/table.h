@@ -18,9 +18,9 @@ struct Table {
     int* footer_widths;
     int number_of_footers;
 
-    int max_lines, max_cols;
-    int current_line, current_col;
-    int selected_line;
+    int width;
+    int number_of_display_lines;
+    int current_line, selected_line;
 
     WINDOW* window;
 };

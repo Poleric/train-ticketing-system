@@ -13,7 +13,7 @@ void print_table_header(table_t* table, short color_pair) {
         x += table->column_widths[i];
     }
     move_to_x(table->window, 0);
-    wchgat(table->window, table->max_cols, A_STANDOUT, color_pair, NULL);
+    wchgat(table->window, table->width, A_STANDOUT, color_pair, NULL);
 }
 
 void scale_to_screen_size(table_t* table) {
@@ -27,16 +27,16 @@ void scale_to_screen_size(table_t* table) {
     for (int i = 0; i < table->number_of_footers; i++)
         table->footer_widths[i] = (int)((float)table->footer_widths[i] / (float)footer_max * (float)max_x);
 
-    table->max_cols = max_x;
+    table->width = max_x;
 }
 
 void highlight_selected_row(table_t* table, int header_offset, short selected_color_pair) {
     wmove(table->window, table->selected_line + header_offset, 0);
-    wchgat(table->window, table->max_cols, A_STANDOUT, selected_color_pair, NULL);
+    wchgat(table->window, table->width, A_STANDOUT, selected_color_pair, NULL);
 }
 
 void print_table_footer(table_t* table, short color_pair) {
-    wmove(table->window, table->max_lines, 0);
+    wmove(table->window, getmaxy(table->window) - 1, 0);
 
     int x = 0;
     for (int i = 0; i < table->number_of_footers; i++) {
@@ -47,7 +47,7 @@ void print_table_footer(table_t* table, short color_pair) {
     }
 
     move_to_x(table->window, 0);
-    wchgat(table->window, table->max_cols, A_STANDOUT, color_pair, NULL);
+    wchgat(table->window, table->width, A_STANDOUT, color_pair, NULL);
 }
 
 void free_table(table_t* table) {
