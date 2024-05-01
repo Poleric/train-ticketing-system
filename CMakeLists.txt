@@ -20,6 +20,7 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/member.c
     ${CMAKE_SOURCE_DIR}/src/stations.c
     ${CMAKE_SOURCE_DIR}/src/schedule.c
+    ${CMAKE_SOURCE_DIR}/src/ticket.c
 
     ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
@@ -33,7 +34,6 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
-        src/ticket.c
 )
 
 add_executable(TrainTicketingSystem ${SOURCES})
