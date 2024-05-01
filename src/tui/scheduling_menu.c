@@ -29,7 +29,7 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.footers[0] = "[q] Quit";
     schedule_table->table.footers[1] = "[← →] Change Day";
     schedule_table->table.footers[2] = "[↑↓] Scroll";
-    schedule_table->table.footers[3] = "[Enter] View Details";
+    schedule_table->table.footers[3] = "[Enter] Book Ticket";
 
     schedule_table->table.footer_widths = calloc(schedule_table->table.number_of_footers, sizeof (int));
     schedule_table->table.footer_widths[0] = 1;
@@ -201,6 +201,9 @@ void schedule_menu() {
                     schedule_table.table.current_line++;
                 if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
                     schedule_table.table.selected_line++;
+                break;
+            case KEY_ENTER:
+
                 break;
         }
         wclear(schedule_table.table.window);
