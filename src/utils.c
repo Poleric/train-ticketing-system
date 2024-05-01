@@ -123,7 +123,7 @@ const char* tm_mon_to_text(int tm_mon) {
     }
 }
 
-const char* tm_wday_to_text(int tm_wday) {
+const char* tm_wday_to_text(tm_wday_t tm_wday) {
     switch (tm_wday) {
         case 0: return "Sunday";
         case 1: return "Monday";
