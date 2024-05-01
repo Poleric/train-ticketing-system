@@ -163,7 +163,7 @@ bool valTicket(const char* ticketID) {
 
 // Function to get the number of available seats
 int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, struct tm time, int tm_wday) {
-    int available_seats = 0;
+    int num_available_seats = 0;
 
     // Iterate through the schedules for the given day of the week
     for (int i = 0; i < weekly_schedule->days[tm_wday].n_elements; i++) {
@@ -172,14 +172,14 @@ int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, stru
         // Check if the train ID and departure time match
         if (strcmp(schedule->train_id, train_id) == 0 && is_time_same(schedule->departure_time, (dt_time_t){time.tm_hour, time.tm_min, time.tm_sec})) {
             // Calculate available seats
-            available_seats += schedule->n_seats;
+            num_available_seats += schedule->n_seats;
         }
     }
 
-    return available_seats;
+    return num_available_seats;
 }
 
-int available_seat(char trainID, char departStation, int departTime, int MAX_TRAIN_SEAT) {
+int available_seats(char trainID, char departStation, int departTime, int MAX_TRAIN_SEAT) {
     FILE* ticketFP;
     Ticket temp;
     int seatCount;
@@ -203,11 +203,11 @@ int available_seat(char trainID, char departStation, int departTime, int MAX_TRA
             temp.departure_time.tm_hour, temp.departure_time.tm_min, temp.departure_time.tm_sec,
             temp.eta.tm_hour, temp.eta.tm_min, temp.eta.tm_sec);
 
-        int seatPlacement = temp.seatNum[3] - 48;
+        int tempSeatNumber = temp.seatNum[3] - 48;
 
         if ((strcmp(temp.trainID, trainID) || strcmp(temp.station, departStation) || strcmp(temp.departure_time.tm_hour, departTime)) != 0) {
             for (int i = 0; i < MAX_TRAIN_SEAT; i++) {
-                if (seatAvailable[i] == seatPlacement) {
+                if (seatAvailable[i] == tempSeatNumber) {
                     seatAvailable[i] = 0;
                 }
             }
