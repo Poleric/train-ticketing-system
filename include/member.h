@@ -1,34 +1,37 @@
 #ifndef TRAINTICKETINGSYSTEM_MEMBER_H
 #define TRAINTICKETINGSYSTEM_MEMBER_H
 
+typedef enum Membership membership_t;
+typedef struct Member member_t;
+typedef struct MemberVector member_vector_t;
 
 enum Membership {
-    SILVER = 0x1,
-    GOLD = 0x10,
-    PLATINUM = 0x100
+    SILVER = 1,
+    GOLD = 2,
+    PLATINUM = 3
 };
 
-typedef struct Member {
-    char *id;
+struct Member {
     char *username;
     char *hashed_password;
     char gender;
     char *email;
     char *contact_no;
-    enum Membership membership;
-} member_t;
+    membership_t membership;
+};
 
-typedef struct MemberVector {
+struct MemberVector {
     int max_size;
     member_t** array;
     int num_of_members;
-} member_vector_t;
+};
 
 member_t* init_member();
 member_vector_t* init_members_vector();
 
 int create_member_record(member_vector_t *members, char *name, char *password, char gender, char* email, char* contact_no, enum Membership membership);
-int load_members(member_vector_t* members);
+
+int load_members(member_vector_t* members, const char* filepath);
 int write_members(member_vector_t * members, const char* filepath);
 
 member_t* login_as_member(member_vector_t * members, const char* username, const char* password);

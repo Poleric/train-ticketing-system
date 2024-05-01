@@ -10,7 +10,6 @@ member_t* init_member() {
     member_t* new_member = malloc(sizeof(member_t));
     //fix here (derefering NULL pointer 'new_member')
     if (new_member != NULL) {
-        new_member->id = NULL;
         new_member->username = NULL;
         new_member->hashed_password = NULL;
         new_member->gender = 0;
@@ -51,23 +50,25 @@ int create_member_record(member_vector_t *members, char *name, char *password, c
     return EXIT_SUCCESS;
 }
 
-int load_members(member_vector_t* members) {
+int load_members(member_vector_t* members, const char* filepath) {
 	FILE* file;
-	file = fopen("memberSignup.txt", "r");
+	file = fopen(filepath, "r");
 
 	if (file == NULL) {
 //        fprintf(stderr, "Error to open this file!\n");
         return EXIT_FAILURE;
 	}
 
-    char username_buffer[255], password_buffer[255];
-    while (fscanf(file, "%254s %254s", username_buffer, password_buffer) == 2) {
-        member_t *new_member = init_member();
-
-        new_member->username = strdup(username_buffer);
-        new_member->hashed_password = strdup(password_buffer);
-
-        add_member(members, new_member);
+    char username[255], password[65], gender, email[255], contact_no[20];
+    membership_t membership;
+    while (fscanf(file, "%254s\t%64s\t%c\t%254s\t%19s\t%d\n",
+                  username,
+                  password,
+                  &gender,
+                  email,
+                  contact_no,
+                  &membership) == 6) {
+        create_member_record(members, username, password, gender, email, contact_no, membership);
     }
 
     fclose(file);
@@ -84,7 +85,13 @@ int write_members(member_vector_t* members, const char* filepath) {
     }
 
     for (int i = 0; i < members->num_of_members; i++)
-        fprintf(file, "%s %s\n", members->array[i]->username, members->array[i]->hashed_password);
+        fprintf(file, "%254s\t%64s\t%c\t%254s\t%19s\t%d\n",
+                members->array[i]->username,
+                members->array[i]->hashed_password,
+                members->array[i]->gender,
+                members->array[i]->email,
+                members->array[i]->contact_no,
+                members->array[i]->membership);
 
     fclose(file);
     return EXIT_SUCCESS;
@@ -150,7 +157,6 @@ void free_members_vector(member_vector_t* members) {
 }
 
 void free_member(member_t* member) {
-    if (member->id)              free(member->id);
     if (member->username)        free(member->username);
     if (member->hashed_password) free(member->hashed_password);
     if (member->email)           free(member->email);
