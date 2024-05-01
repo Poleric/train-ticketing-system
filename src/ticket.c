@@ -180,6 +180,23 @@ int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, stru
 }
 
 int available_seat(char trainID, char departStation, int departTime, int MAX_TRAIN_SEAT) {
+    FILE* ticketFP;
+    Ticket temp;
+    int seatCount;
+
+    int seatAvailable[300];
+
+    for (int i = 0; i < MAX_TRAIN_SEAT; i++) {
+        seatAvailable[i] = i + 1;
+    }
+
+    ticketFP = fopen("MemberBooking.txt", "r");
+
+    if (!ticketFP) {
+        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
+    }
+
 
 }
 
