@@ -35,9 +35,15 @@ void booking(Ticket *tickets, int *numTickets, Train *trains, struct datetime_ti
     char seat[10];
     char choice;
 
+    //show schedule
+
+    //user see schedule and choose train
+
+    //show schedule details
+
+    //user choose seat
+
     do {
-        printf("Booking Ticket\n");
-        printf("==============\n");
         printf("Select Train ID : \n");
         scanf("%s",&trainID);
         printf("Select Your Time : \n");
@@ -77,3 +83,69 @@ bool valTicket(const char* ticketID) {
 //book ticket
 //ticket record
 //get ticket from userid members
+
+
+
+typedef struct Schedule schedule_t;
+typedef struct ScheduleVector schedule_vector_t;
+typedef struct WeeklySchedule weekly_schedule_t;
+typedef struct datetime_time dt_time_t;
+
+typedef struct {
+    char train_id[20];
+    char from_station_id[5];
+    char to_station_id[5];
+    struct tm departure_time;
+    struct tm eta;
+    int n_seats;
+} schedule_t;
+
+typedef struct {
+    schedule_t** array;
+    int n_elements;
+    int max_size;
+} schedule_vector_t;
+
+typedef struct {
+    schedule_vector_t days[7];
+} weekly_schedule_t;
+
+bool is_time_same(struct tm time_1, struct tm time_2) {
+    return (time_1.tm_hour == time_2.tm_hour && time_1.tm_min == time_2.tm_min && time_1.tm_sec == time_2.tm_sec);
+}
+
+// Function to get the number of available seats
+int get_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, struct tm time, int tm_wday) {
+    int available_seats = 0;
+
+    // Iterate through the schedules for the given day of the week
+    for (int i = 0; i < weekly_schedule->days[tm_wday].n_elements; i++) {
+        schedule_t* schedule = weekly_schedule->days[tm_wday].array[i];
+
+        // Check if the train ID and departure time match
+        if (strcmp(schedule->train_id, train_id) == 0 && is_time_same(schedule->departure_time, time)) {
+            // Calculate available seats
+            available_seats += schedule->n_seats;
+        }
+    }
+
+    return available_seats;
+}
+
+int main() {
+    // Sample usage
+    weekly_schedule_t weekly_schedule;
+    // Initialize weekly schedule
+    // (Assuming weekly_schedule is properly initialized)
+
+    // Example: Train ID, Time, Date
+    char train_id[] = "ABC123";
+    struct tm time = { .tm_hour = 10, .tm_min = 0, .tm_sec = 0 }; // 10:00:00
+    int tm_wday = 0; // Monday (0-indexed)
+
+    // Get the number of available seats
+    int available_seats = get_available_seats(&weekly_schedule, train_id, time, tm_wday);
+    printf("Available seats: %d\n", available_seats);
+
+    return 0;
+}
