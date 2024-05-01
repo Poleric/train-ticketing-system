@@ -28,7 +28,7 @@ void init_menu() {
 void start_menu() {
     init_menu();
 
-    current_menu_t current_menu = 100;
+    current_menu_t current_menu = MEMBER_MENU;
     while (current_menu != EXIT_MENU) {
         switch (current_menu) {
             case MEMBER_MENU:
@@ -38,8 +38,6 @@ void start_menu() {
                 current_menu = staff_login_menu(stdscr);
                 break;
             default:
-                schedule_menu();
-                current_menu = EXIT_MENU;
                 break;
         }
     }
