@@ -96,7 +96,7 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
      * Save and update ticket details based on the array of tickets given. Matches row by ticket_id
      */
     FILE* fptr;
-    fptr = fopen(filepath, "wb");
+    fptr = fopen(filepath, "rb+");
 
     if (fptr == NULL) {
         fprintf(stderr, "Error to open this file!\n");
@@ -119,11 +119,14 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
                     tmp_array[j - 1] = tmp_array[j];
                 tmp_array[--number_of_tickets] = NULL;
             }
+    for (int i = 0; i < number_of_tickets; i++)
+        fwrite(tmp_array[i], sizeof(train_ticket_t), 1, fptr);
 
 
     free(tmp_array);
-
     fclose(fptr);
+
+    assert(number_of_tickets == 0);
     return EXIT_SUCCESS;
 }
 
