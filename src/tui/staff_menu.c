@@ -27,6 +27,11 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     );
 
     init_login_form(&login_form, login_window, "Train Ticketing", "Login as Staff");
+
+    // remove register and forgot password
+    login_form.footers[1] = "";
+    login_form.footers[2] = "";
+
     display_login_form(&login_form, COLOR_2);
 
     staffs = init_staff_vector();
