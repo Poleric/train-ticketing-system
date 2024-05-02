@@ -4,6 +4,7 @@
 #include <tui/table/table.h>
 #include <stations.h>
 #include <schedule.h>
+#include <ticket.h>
 #include <utils.h>
 
 typedef struct ScheduleTable schedule_table_t;
@@ -13,10 +14,12 @@ struct ScheduleTable {
     table_t table;
     weekly_schedule_t *weekly_schedule;
     tm_wday_t selected_wday;
+    dt_date_t selected_date;
 };
 
 void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekly_schedule_t* weekly_schedules);
 void print_schedule_table_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair);
+void print_schedule_table_date_header(schedule_table_t* schedule_table);
 void print_schedule_row(schedule_table_t* table, schedule_t* schedule);
 void display_schedules(schedule_table_t* schedule_table);
 void free_schedule_table(schedule_table_t* schedule_table);

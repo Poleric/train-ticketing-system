@@ -54,7 +54,7 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.current_line = 0;
     schedule_table->table.selected_line = 0;
 
-    schedule_table->selected_wday = FIRST_DAY_OF_WEEK;
+    split_tm(tm_now(), &schedule_table->selected_date, NULL, (int *)&schedule_table->selected_wday);
 }
 
 void print_schedule_table_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
@@ -85,7 +85,17 @@ void print_schedule_table_day_header(schedule_table_t* schedule_table, short col
     wchgat(schedule_table->table.window, wday_text_len, A_STANDOUT, selected_color_pair, NULL);
 }
 
-void print_schedule_row(schedule_table_t* schedule_table, schedule_t * schedule) {
+void print_schedule_table_date_header(schedule_table_t* schedule_table) {
+    const int date_text_len = 11;
+
+    wmove(schedule_table->table.window, 0, schedule_table->table.width - date_text_len);
+    wprintw(schedule_table->table.window, "%04d-%02d-%02d",
+            schedule_table->selected_date.tm_year,
+            schedule_table->selected_date.tm_mon,
+            schedule_table->selected_date.tm_mday);
+}
+
+void print_schedule_row(schedule_table_t* schedule_table, schedule_t* schedule) {
     int offset_x = 0;
     char depart_time[7], eta[7];
 
@@ -115,8 +125,9 @@ void print_schedule_row(schedule_table_t* schedule_table, schedule_t * schedule)
 
     move_to_x(schedule_table->table.window, offset_x);
 
-//    move_offset_x(schedule_table->table.pad, get_offset_for_centered((int)strlen(schedule->from_station_id), schedule_table->table.column_widths[4]));
-//    wprintw(schedule_table->table.pad, "%d", get_number_of_available_seats);
+    int free_seats = schedule->n_seats - get_number_of_booked_seats(TICKETS_FILEPATH, schedule_table->selected_date, schedule);
+    move_offset_x(schedule_table->table.window, get_offset_for_centered(get_number_of_digits_d(free_seats), schedule_table->table.column_widths[4]));
+    wprintw(schedule_table->table.window, "%d", free_seats);
     offset_x += schedule_table->table.column_widths[4];
 
     move_to_x(schedule_table->table.window, offset_x);
@@ -127,6 +138,8 @@ void print_schedule_row(schedule_table_t* schedule_table, schedule_t * schedule)
 
 void display_schedules(schedule_table_t* schedule_table) {
     print_schedule_table_day_header(schedule_table, 2, 3);
+
+    print_schedule_table_date_header(schedule_table);
 
     move_to_next_line(schedule_table->table.window, 0);
 
@@ -169,12 +182,12 @@ void schedule_menu() {
 
     init_schedule_table(window, &schedule_table, &weekly_schedule);
 
-    schedule_table.selected_wday = FIRST_DAY_OF_WEEK;
     bool exit = false;
     do {
         display_schedules(&schedule_table);
         switch (wgetch(schedule_table.table.window)) {
             case 'q':
+            case CTRL('C'):
                 exit = true;
                 break;
             case KEY_LEFT:
