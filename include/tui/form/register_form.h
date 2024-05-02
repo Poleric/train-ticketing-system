@@ -16,10 +16,15 @@ struct RegisterForm {
 
     int form_message_y;
 
+    const char **footers;
+    int* footer_widths;
+    int number_of_footers;
     int footer_y;
 };
 
 void init_register_form(register_form_t* register_form, WINDOW* form_window, const char* header, const char* form_header);
+
+void scale_register_form_to_window(register_form_t* register_form);
 
 void print_register_fields(register_form_t* register_form);
 void print_register_form_header(register_form_t* register_form, short color_pair);

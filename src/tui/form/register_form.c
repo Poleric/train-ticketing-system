@@ -61,9 +61,35 @@ void init_register_form(register_form_t* register_form, WINDOW* form_window, con
     register_form->form.fields[5].offset_x = FIELD_LABEL_WIDTH + REGISTER_FIELD_GAP;
     register_form->form.fields[5].x = get_centered_x_start(register_form->form.window, register_form->form.fields[1].offset_x + (int)register_form->form.buffer_length);
 
+    register_form->number_of_footers = 5;
+    register_form->footers = calloc(register_form->number_of_footers, sizeof(const char*));
+    register_form->footers[0] = "[Ctrl + C] Quit";
+    register_form->footers[1] = "";
+    register_form->footers[2] = "";
+    register_form->footers[3] = "";
+    register_form->footers[4] = "";
+
+    register_form->footer_widths = calloc(register_form->number_of_footers, sizeof(int));
+    register_form->footer_widths[0] = 1;
+    register_form->footer_widths[1] = 1;
+    register_form->footer_widths[2] = 1;
+    register_form->footer_widths[3] = 1;
+    register_form->footer_widths[4] = 1;
+
     register_form->form_message_y = register_form->form_header_y + 11;
 
     register_form->footer_y = getmaxy(form_window) - 1;
+
+    scale_register_form_to_window(register_form);
+}
+
+void scale_register_form_to_window(register_form_t* register_form) {
+    int max_x = getmaxx(register_form->form.window);
+
+    // scale up / down all column widths
+    const int footer_max = sum_d(register_form->footer_widths, register_form->number_of_footers);
+    for (int i = 0; i < register_form->number_of_footers; i++)
+        register_form->footer_widths[i] = (int)((float)register_form->footer_widths[i] / (float)footer_max * (float)max_x);
 }
 
 void print_register_fields(register_form_t* register_form) {
@@ -96,6 +122,16 @@ void print_register_form_form_header(register_form_t* register_form, short color
 
 void print_register_form_footer(register_form_t* register_form, short color_pair) {
     wmove(register_form->form.window, register_form->footer_y, 0);
+
+    int x = 0;
+    for (int i = 0; i < register_form->number_of_footers; i++) {
+        move_to_x(register_form->form.window, x);
+        move_offset_x(register_form->form.window, get_offset_for_centered((int)strlen(register_form->footers[i]), register_form->footer_widths[i]));
+        wprintw(register_form->form.window, "%s", register_form->footers[i]);
+        x += register_form->footer_widths[i];
+    }
+
+    move_to_x(register_form->form.window, 0);
     wchgat(register_form->form.window, register_form->form.width, A_STANDOUT, color_pair, NULL);
 }
 
@@ -149,5 +185,9 @@ char get_register_gender(register_form_t* register_form) {
 
 char* get_register_contact_no(register_form_t* register_form) {
     return register_form->form.fields[5].buffer;
+}
+
+bool validate_email(register_form_t* register_form) {
+
 }
 
