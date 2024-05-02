@@ -12,7 +12,8 @@ Development requires the following:
 
 - [Git](https://git-scm.com/)
 - OpenSSL
-- ncurses
+- curses
+- libcurl
 
 Read [Installing dependencies](#installing-dependencies) on instruction how to install.
 
@@ -41,8 +42,7 @@ bootstrap-vcpkg.bat
 #### Installing required dependencies
 
 ```cmd
-vcpkg search ssl
-vcpkg install openssl-windows:x64-windows pdcurses:x64-windows
+vcpkg install openssl-windows:x64-windows pdcurses:x64-windows curl:x64-windows
 ```
 
 In order to use vcpkg with Visual Studio,
