@@ -159,10 +159,16 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
                 exit = true;
                 break;
 
-
             case EXIT_FORM_ACTION:
                 exit = true;
                 break;
+
+            // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(register_form.form.window, "Exit menu?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
 
             case REFRESH_SCREEN_ACTION:
                 display_register_form(&register_form, COLOR_1);
