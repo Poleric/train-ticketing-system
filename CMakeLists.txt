@@ -44,7 +44,7 @@ target_compile_definitions(TrainTicketingSystem PRIVATE
         STAFFS_FILEPATH="staffs.txt"
         STATIONS_FILEPATH="stations.bin"
         SCHEDULES_FILEPATH="schedules.txt"
-        TICKETS_FILEPATH="tickets.txt"
+        TICKETS_FILEPATH="tickets.bin"
 )
 
 # OpenSSL
