@@ -38,7 +38,8 @@ enum FormAction {
     SUBMIT_ACTION,
     RELOAD_ACTION,
     REGISTER_ACTION,
-    FORGOT_PASSWORD_ACTION
+    FORGOT_PASSWORD_ACTION,
+    REFRESH_SCREEN_ACTION
 };
 
 void init_form(form_t* form, WINDOW* form_window, int n_buffer, int buffer_length);

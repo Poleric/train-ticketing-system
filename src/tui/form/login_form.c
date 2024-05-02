@@ -131,7 +131,7 @@ void display_login_form(login_form_t* login_form, short color_pair) {
 
     print_login_form_footer(login_form, color_pair);
 
-    move_cursor_to_start_of_input_field(&login_form->form);
+    move_cursor_to_input_field(&login_form->form);
 
     wrefresh(login_form->form.window);
 }

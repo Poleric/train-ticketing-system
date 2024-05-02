@@ -72,6 +72,10 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 reload_members(members);
                 break;
 
+            case REFRESH_SCREEN_ACTION:
+                display_login_form(&login_form, COLOR_1);
+                break;
+
             default:
                 break;
         }

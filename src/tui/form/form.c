@@ -114,12 +114,9 @@ form_action_t form_driver(form_t* form, int ch) {
 
         case KEY_ESC:
         case CTRL('C'):
-            store_last_pos(form->window);
             if (confirmation_menu(form->window, "Exit Menu?") == EXIT_SUCCESS)
                 return EXIT_FORM_ACTION;
-
-            restore_last_pos(form->window);
-            break;
+            return REFRESH_SCREEN_ACTION;
 
         case CTRL('R'):
             return REGISTER_ACTION;

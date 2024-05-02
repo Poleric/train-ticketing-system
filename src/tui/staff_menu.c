@@ -67,6 +67,10 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
                 reload_staff(staffs);
                 break;
 
+            case REFRESH_SCREEN_ACTION:
+                display_login_form(&login_form, COLOR_2);
+                break;
+
             default:
                 break;
         }
