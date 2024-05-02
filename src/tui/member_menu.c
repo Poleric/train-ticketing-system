@@ -1,6 +1,9 @@
 #include <tui/member_menu.h>
 #include <tui/form/login_form.h>
+#include <tui/form/register_form.h>
 #include <tui/utils/menu_utils.h>
+#include <string.h>
+#include <ctype.h>
 
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
@@ -61,7 +64,11 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 break;
 
             case REGISTER_ACTION:
+                clear_login_menu(&login_form);
+
                 member_registration_menu(menu_window, members);
+
+                display_login_form(&login_form, COLOR_1);
                 break;
 
             case EXIT_FORM_ACTION:
@@ -105,5 +112,70 @@ current_menu_t member_menu(WINDOW* menu_window, member_t* member) {
 }
 
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
+    register_form_t register_form;
+    WINDOW* register_window;
 
+    register_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_register_form(&register_form, register_window, "Train Ticketing", "Registration");
+    display_register_form(&register_form, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&register_form.form, wgetch(register_window))) {
+            case SUBMIT_ACTION:
+                if (is_member_exists(members, get_register_username(&register_form))) {
+                    print_register_form_message(&register_form, "Username is taken", ERROR);
+                    break;
+                }
+
+                if (strcmp(get_register_password(&register_form), get_register_confirm_password(&register_form)) != 0) {
+                    print_register_form_message(&register_form, "Password does not match", ERROR);
+                    break;
+                }
+
+                if (toupper(get_register_gender(&register_form)) != 'M' &&
+                    toupper(get_register_gender(&register_form)) != 'F') {
+                    print_register_form_message(&register_form, "Invalid gender", ERROR);
+                    break;
+                }
+                create_member_record(
+                        members,
+                        get_register_username(&register_form),
+                        get_register_password(&register_form),
+                        get_register_gender(&register_form),
+                        get_register_email(&register_form),
+                        get_register_contact_no(&register_form),
+                        NONE
+                        );
+
+                print_register_form_message(&register_form, "Successfully registered", GOOD);
+                exit = true;
+                break;
+
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+            case REFRESH_SCREEN_ACTION:
+                display_register_form(&register_form, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    write_members(members, MEMBERS_FILEPATH);
+
+    free_register_form(&register_form);
+
+    delwin(register_window);
 }
