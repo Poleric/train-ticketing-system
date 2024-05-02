@@ -48,6 +48,9 @@ target_compile_definitions(TrainTicketingSystem PRIVATE
         TICKETS_FILEPATH="tickets.bin"
 )
 
+# math.h
+target_link_libraries(TrainTicketingSystem PRIVATE m)
+
 # OpenSSL
 find_package(OpenSSL REQUIRED)
 if (OpenSSL_FOUND)
