@@ -16,6 +16,7 @@ struct Schedule {
     dt_time_t departure_time;
     dt_time_t eta;
     int n_seats;
+    double price;
 };
 
 struct ScheduleVector {
@@ -28,7 +29,7 @@ struct WeeklySchedule {
     schedule_vector_t days[7];  // 0 - Sunday
 };
 
-schedule_t* create_schedule(char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, dt_time_t eta, int n_seats);
+schedule_t* create_schedule(char* train_id, char* from_station_id, char* to_station_id, dt_time_t time, dt_time_t eta, int n_seats, double price);
 int init_schedules(schedule_vector_t* schedules);
 int init_weekly_schedule(weekly_schedule_t* weekly_schedule);
 
@@ -54,6 +55,7 @@ int weekly_add_schedule(
         dt_time_t time,
         dt_time_t eta,
         int n_seats,
+        double price,
         int tm_wday);
 
 #endif //TRAINTICKETINGSYSTEM_SCHEDULE_H
