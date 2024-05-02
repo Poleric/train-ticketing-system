@@ -1,9 +1,7 @@
 #include <ticket.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <utils.h>
-#include <tui/scheduling_menu.h>
 #include <assert.h>
 
 #define BASE_TRAIN_TICKETS_LENGTH 8
