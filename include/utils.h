@@ -22,6 +22,7 @@
 
 #define SHA256_HASH_LENGTH 64
 
+typedef struct datetime_date dt_date_t;
 typedef struct datetime_time dt_time_t;
 typedef enum tm_wday tm_wday_t;
 
@@ -33,6 +34,12 @@ enum tm_wday {
     THURSDAY = 4,
     FRIDAY = 5,
     SATURDAY = 6
+};
+
+struct datetime_date {
+    int tm_year;
+    int tm_mon;
+    int tm_mday;
 };
 
 struct datetime_time {
@@ -54,11 +61,15 @@ void add_char(char* buffer, char ch, int pos);
 
 int sum_d(const int* nums, int number_of_num);
 
+int get_number_of_digits_d(int n);
+
 const char* tm_mon_to_text(int tm_mon);
 const char* tm_wday_to_text(tm_wday_t tm_wday);
 char* to_time(dt_time_t time, char* buffer, int n);
 bool is_time_same(dt_time_t time_1, dt_time_t time_2);
-int diff_tm(struct tm* tm_1, struct tm* tm_2);
 time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, int second);
+time_t time_t_from_dt(dt_date_t date, dt_time_t time);
+void split_tm(struct tm tm, dt_date_t* date, dt_time_t* time, int *tm_wday);
+struct tm tm_now();
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H

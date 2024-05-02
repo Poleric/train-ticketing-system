@@ -1,6 +1,7 @@
 #include <openssl/evp.h>
 #include <utils.h>
 #include <string.h>
+#include <math.h>
 
 int digest_message(const unsigned char *message, size_t message_len, unsigned char **digest, unsigned int *digest_len) {
     // https://wiki.openssl.org/index.php/EVP_Message_Digests
@@ -148,17 +149,20 @@ int sum_d(const int* nums, int number_of_num) {
     return sum;
 }
 
+int get_number_of_digits_d(int n) {
+    n = abs(n);
+
+    if (n <= 1)
+        return 1;
+
+    return (int)ceil(log10(n));
+}
+
 bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
     return
             time_1.tm_hour == time_2.tm_hour &&
             time_1.tm_min == time_2.tm_min &&
             time_1.tm_sec == time_2.tm_sec;
-}
-
-int diff_tm(struct tm* tm_1, struct tm* tm_2) {
-    time_t t1 = mktime(tm_1);
-    time_t t2 = mktime(tm_2);
-    return (int)difftime(t1, t2);
 }
 
 time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, int second) {
@@ -175,5 +179,33 @@ time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, 
     return mktime(&tm);
 }
 
+time_t time_t_from_dt(dt_date_t date, dt_time_t time) {
+    return time_t_from_datetime(
+            date.tm_year,
+            date.tm_mon,
+            date.tm_mday,
+            time.tm_hour,
+            time.tm_min,
+            time.tm_sec
+            );
+}
 
+void split_tm(struct tm tm, dt_date_t* date, dt_time_t* time, int *tm_wday) {
+    if (date != NULL) {
+        date->tm_year = tm.tm_year + 1900;
+        date->tm_mon = tm.tm_mon + 1;
+        date->tm_mday = tm.tm_mday;
+    }
+    if (time != NULL) {
+        time->tm_hour = tm.tm_hour;
+        time->tm_min = tm.tm_min;
+        time->tm_sec = tm.tm_sec;
+    }
+    if (tm_wday != NULL)
+        *tm_wday = tm.tm_wday;
+}
 
+struct tm tm_now() {
+    time_t t = time(NULL);
+    return *localtime(&t);
+}
