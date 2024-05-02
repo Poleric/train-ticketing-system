@@ -15,6 +15,7 @@ void init_color_pairs() {
     init_pair(COLOR_2, COLOR_CYAN, COLOR_BLACK);
     init_pair(SELECTED, COLOR_YELLOW, COLOR_BLACK);
     init_pair(ERROR, COLOR_WHITE, COLOR_RED);
+    init_pair(GOOD, COLOR_WHITE, COLOR_GREEN);
 }
 
 void init_menu() {
