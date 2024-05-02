@@ -6,6 +6,7 @@ typedef struct Member member_t;
 typedef struct MemberVector member_vector_t;
 
 enum Membership {
+    NONE = 0,
     SILVER = 1,
     GOLD = 2,
     PLATINUM = 3
