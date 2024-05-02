@@ -147,3 +147,19 @@ int sum_d(const int* nums, int number_of_num) {
         sum += nums[i];
     return sum;
 }
+
+bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
+    return
+            time_1.tm_hour == time_2.tm_hour &&
+            time_1.tm_min == time_2.tm_min &&
+            time_1.tm_sec == time_2.tm_sec;
+}
+
+int diff_tm(struct tm* tm_1, struct tm* tm_2) {
+    time_t t1 = mktime(tm_1);
+    time_t t2 = mktime(tm_2);
+    return (int)difftime(t1, t2);
+}
+
+
+

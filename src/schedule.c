@@ -85,13 +85,6 @@ int delete_schedule_by_train_time(schedule_vector_t* schedules, char* train_id, 
     return EXIT_FAILURE;
 }
 
-bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
-    return
-            time_1.tm_hour == time_2.tm_hour &&
-            time_1.tm_min == time_2.tm_min &&
-            time_1.tm_sec == time_2.tm_sec;
-}
-
 bool is_schedule_same(schedule_t* schedule_1, schedule_t* schedule_2) {
     if (schedule_1 == schedule_2)
         return true;

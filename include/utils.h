@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
 #define MAX(a,b) __max(a,b)
@@ -44,13 +45,19 @@ int digest_message(const unsigned char *message, size_t message_len, unsigned ch
 int decode_digest(const unsigned char* digest, size_t digest_size, char* buff, size_t buff_size);
 int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]);
 int compare_hash(const char* not_hashed, const char* hashed);
+
 int input(const char* prompt, char* buffer, size_t buffer_size);
 void flush(FILE* stream);
+
 void delete_char(char* buffer, int pos);
 void add_char(char* buffer, char ch, int pos);
+
+int sum_d(const int* nums, int number_of_num);
+
 const char* tm_mon_to_text(int tm_mon);
 const char* tm_wday_to_text(tm_wday_t tm_wday);
 char* to_time(dt_time_t time, char* buffer, int n);
-int sum_d(const int* nums, int number_of_num);
+bool is_time_same(dt_time_t time_1, dt_time_t time_2);
+int diff_tm(struct tm* tm_1, struct tm* tm_2);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H

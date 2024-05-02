@@ -36,7 +36,6 @@ int add_schedule(schedule_vector_t* schedules, schedule_t* schedule);
 int delete_schedule_by_info(schedule_vector_t* schedules, schedule_t* schedule);
 int delete_schedule_by_train_time(schedule_vector_t* schedules, char* train_id, dt_time_t time);
 
-bool is_time_same(dt_time_t time_1, dt_time_t time_2);
 bool is_schedule_same(schedule_t* schedule_1, schedule_t* schedule_2);
 
 int save_daily_schedule(schedule_vector_t* schedules, FILE* fp);
