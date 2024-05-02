@@ -122,7 +122,7 @@ form_action_t form_driver(form_t* form, int ch) {
             return REGISTER_ACTION;
 
         case KEY_DOWN:
-            if (form->selection_row < 1) {
+            if (form->selection_row < form->number_of_fields - 1) {
                 form->selection_row++;
                 move_cursor_to_input_field(form);
             }
@@ -152,7 +152,7 @@ form_action_t form_driver(form_t* form, int ch) {
         case KEY_ENTER:
         case '\n':
         case '\r':
-            if (form->selection_row < 1) {  // same as key down
+            if (form->selection_row < form->number_of_fields - 1) {  // same as key down
                 form->selection_row++;
                 move_cursor_to_end_of_input_field(form);
             }
