@@ -104,6 +104,9 @@ form_action_t form_driver(form_t* form, int ch) {
             return SWITCH_MENU_ACTION;
 
         case KEY_F(2):
+            return REGISTER_ACTION;
+
+        case KEY_F(3):
             return FORGOT_PASSWORD_ACTION;
 
         case KEY_F(10):

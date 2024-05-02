@@ -60,6 +60,10 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 current_menu = STAFF_MENU;
                 break;
 
+            case REGISTER_ACTION:
+                member_registration_menu(menu_window, members);
+                break;
+
             case EXIT_FORM_ACTION:
                 current_menu = EXIT_MENU;
                 break;
@@ -94,4 +98,8 @@ current_menu_t member_menu(WINDOW* menu_window, member_t* member) {
     wclear(menu_window);
     wrefresh(menu_window);
     return current_menu;
+}
+
+void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
+
 }
