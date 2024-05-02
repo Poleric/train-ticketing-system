@@ -1,4 +1,4 @@
-#include <tui/form/member_register_form.h>
+#include <tui/form/register_form.h>
 #include <string.h>
 #include <utils.h>
 
@@ -6,16 +6,16 @@
 #define REGISTER_EMAIL_LABEL            "Email address    :"
 #define REGISTER_PASSWORD_LABEL         "Password         :"
 #define REGISTER_CONFIRM_PASSWORD_LABEL "Confirm Password :"
+#define REGISTER_GENDER_LABEL           "Gender (M / F)   :"
 #define REGISTER_CONTACT_NO_LABEL       "Contact No       :"
-#define REGISTER_GENDER_LABEL           "Gender           :"
 
 #define REGISTER_LABEL_FIELD_LENGTH strlen(REGISTER_USERNAME_LABEL)
 #define REGISTER_FIELD_GAP 1
 
 #define REGISTER_FORM_SIDE_MARGIN_PERCENTAGE 0.1
-#define REGISTER_FORM_TOP_MARGIN_PERCENTAGE 0.4
+#define REGISTER_FORM_TOP_MARGIN_PERCENTAGE 0.1
 
-void init_login_form(register_form_t* register_form, WINDOW* form_window, const char* header, const char* form_header) {
+void init_register_form(register_form_t* register_form, WINDOW* form_window, const char* header, const char* form_header) {
     const int FIELD_LABEL_WIDTH = REGISTER_LABEL_FIELD_LENGTH;
 
     init_form(
@@ -41,7 +41,7 @@ void init_login_form(register_form_t* register_form, WINDOW* form_window, const 
     register_form->form.fields[0].offset_x = FIELD_LABEL_WIDTH + REGISTER_FIELD_GAP;
     register_form->form.fields[0].x = get_centered_x_start(register_form->form.window, register_form->form.fields[0].offset_x + (int)register_form->form.buffer_length);
     register_form->form.fields[1].label = REGISTER_EMAIL_LABEL;
-    register_form->form.fields[1].y = register_form->form_header_y + 4;
+    register_form->form.fields[1].y = register_form->form_header_y + 3;
     register_form->form.fields[1].offset_x = FIELD_LABEL_WIDTH + REGISTER_FIELD_GAP;
     register_form->form.fields[1].x = get_centered_x_start(register_form->form.window, register_form->form.fields[1].offset_x + (int)register_form->form.buffer_length);
     register_form->form.fields[2].label = REGISTER_PASSWORD_LABEL;
@@ -92,6 +92,11 @@ void print_register_form_form_header(register_form_t* register_form, short color
     wchgat(register_form->form.window, width, A_STANDOUT, color_pair, NULL);
 }
 
+void print_register_form_footer(register_form_t* register_form, short color_pair) {
+    wmove(register_form->form.window, register_form->footer_y, 0);
+    wchgat(register_form->form.window, register_form->form.width, A_STANDOUT, color_pair, NULL);
+}
+
 void print_register_form_message(register_form_t* register_form, const char* message, short color_pair) {
     wmove(register_form->form.window, register_form->form_message_y, 0);
     wclrtoeol(register_form->form.window);
@@ -109,6 +114,8 @@ void display_register_form(register_form_t* register_form, short color_pair) {
 
     print_register_fields(register_form);
 
+    print_register_form_footer(register_form, color_pair);
+
     move_cursor_to_input_field(&register_form->form);
 
     wrefresh(register_form->form.window);
@@ -116,5 +123,29 @@ void display_register_form(register_form_t* register_form, short color_pair) {
 
 void free_register_form(register_form_t* register_form) {
     cleanup_form(&register_form->form);
+}
+
+char* get_register_username(register_form_t* register_form) {
+    return register_form->form.fields[0].buffer;
+}
+
+char* get_register_email(register_form_t* register_form) {
+    return register_form->form.fields[1].buffer;
+}
+
+char* get_register_password(register_form_t* register_form) {
+    return register_form->form.fields[2].buffer;
+}
+
+char* get_register_confirm_password(register_form_t* register_form) {
+    return register_form->form.fields[3].buffer;
+}
+
+char get_register_gender(register_form_t* register_form) {
+    return register_form->form.fields[4].buffer[0];
+}
+
+char* get_register_contact_no(register_form_t* register_form) {
+    return register_form->form.fields[5].buffer;
 }
 
