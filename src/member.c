@@ -142,7 +142,7 @@ int delete_member(member_vector_t* members, const char* username) {
     members->array[i] = NULL;
 
     // shift into empty slot
-    for (int j = i + 1; i < members->num_of_members; j++)
+    for (int j = i + 1; j < members->num_of_members; j++)
         members->array[j - 1] = members->array[j];
     members->array[--members->num_of_members] = NULL;
 
