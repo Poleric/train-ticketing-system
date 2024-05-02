@@ -31,6 +31,7 @@ member_t* init_member();
 member_vector_t* init_members_vector();
 
 int create_member_record(member_vector_t *members, char *name, char *password, char gender, char* email, char* contact_no, enum Membership membership);
+int create_member_record_with_hashed_password(member_vector_t *members, char *name, char *hashed_password, char gender, char* email, char* contact_no, enum Membership membership);
 
 int load_members(member_vector_t* members, const char* filepath);
 int write_members(member_vector_t * members, const char* filepath);

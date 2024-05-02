@@ -50,6 +50,23 @@ int create_member_record(member_vector_t *members, char *name, char *password, c
     return EXIT_SUCCESS;
 }
 
+int create_member_record_with_hashed_password(member_vector_t *members, char *name, char *hashed_password, char gender, char* email, char* contact_no, enum Membership membership) {
+    if (is_member_exists(members, name))
+        return EXIT_FAILURE;
+
+    member_t* newMember = init_member();
+
+    newMember->username = strdup(name);
+    newMember->hashed_password = strdup(hashed_password);
+    newMember->gender = gender;
+    newMember->email = strdup(email);
+    newMember->contact_no = strdup(contact_no);
+    newMember->membership = membership;
+
+    add_member(members, newMember);
+    return EXIT_SUCCESS;
+}
+
 int load_members(member_vector_t* members, const char* filepath) {
 	FILE* file;
 	file = fopen(filepath, "r");
@@ -67,9 +84,8 @@ int load_members(member_vector_t* members, const char* filepath) {
                   &gender,
                   email,
                   contact_no,
-                  &membership) == 6) {
-        create_member_record(members, username, password, gender, email, contact_no, membership);
-    }
+                  &membership) == 6)
+        create_member_record_with_hashed_password(members, username, password, gender, email, contact_no, membership);
 
     fclose(file);
     return EXIT_SUCCESS;
@@ -85,7 +101,7 @@ int write_members(member_vector_t* members, const char* filepath) {
     }
 
     for (int i = 0; i < members->num_of_members; i++)
-        fprintf(file, "%254s\t%64s\t%c\t%254s\t%19s\t%d\n",
+        fprintf(file, "%.254s\t%.64s\t%c\t%.254s\t%.19s\t%d\n",
                 members->array[i]->username,
                 members->array[i]->hashed_password,
                 members->array[i]->gender,
