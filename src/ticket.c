@@ -139,7 +139,7 @@ int add_train_ticket(train_ticket_vector_t* train_tickets, train_ticket_t* train
     return EXIT_SUCCESS;
 }
 
-int get_number_of_booked_seats(const char* filepath, const char* train_id, time_t timestamp) {
+int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t* schedule) {
     int n = 0;
 
     FILE* fptr;
@@ -147,19 +147,28 @@ int get_number_of_booked_seats(const char* filepath, const char* train_id, time_
 
     if (fptr == NULL) {
 //        fprintf(stderr, "Error to open this file!\n");
-        return -1;
+        return 0;
     }
 
-    fseek(fptr, sizeof(int), SEEK_SET);
+
+    time_t timestamp = time_t_from_dt(date, schedule->departure_time);
 
     train_ticket_t buffer;
+    fseek(fptr, sizeof(int), SEEK_SET);
     while (fread(&buffer, sizeof(train_ticket_t), 1, fptr) != 0)
-        if (strcmp(buffer.train_id, train_id) == 0 && buffer.timestamp == timestamp)
+        if (strcmp(buffer.train_id, schedule->train_id) == 0 && buffer.timestamp == timestamp)
             n++;
 
     fclose(fptr);
 
     return n;
+}
+
+int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, int seat) {
+    train_ticket_t ticket;
+
+    time_t timestamp = time_t_from_dt(date, schedule->departure_time);
+    create_ticket(&ticket, schedule->train_id, username, timestamp, seat);
 }
 
 void free_train_ticket_vector(train_ticket_vector_t * members) {
