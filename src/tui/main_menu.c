@@ -1,7 +1,6 @@
 #include <tui/main_menu.h>
 #include <tui/member_menu.h>
 #include <tui/staff_menu.h>
-#include <tui/scheduling_menu.h>
 #include <locale.h>
 
 void init_color_pairs() {
