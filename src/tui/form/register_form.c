@@ -67,12 +67,14 @@ void init_register_form(register_form_t* register_form, WINDOW* form_window, con
 }
 
 void print_register_fields(register_form_t* register_form) {
+    int old_row = register_form->form.selection_row;
+    register_form->form.selection_row = 0;
     for (int i = 0; i < register_form->form.number_of_fields; i++) {
         print_current_field_label(&register_form->form);
         print_current_field_buffer(&register_form->form);
         register_form->form.selection_row++;
     }
-    register_form->form.selection_row = 0;
+    register_form->form.selection_row = old_row;
 }
 
 void print_register_form_header(register_form_t* register_form, short color_pair) {

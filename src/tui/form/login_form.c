@@ -72,12 +72,14 @@ void scale_login_form_to_window(login_form_t* login_form) {
 }
 
 void print_login_fields(login_form_t* login_form) {
+    int old_row = login_form->form.selection_row;
+    login_form->form.selection_row = 0;
     for (int i = 0; i < login_form->form.number_of_fields; i++) {
         print_current_field_label(&login_form->form);
         print_current_field_buffer(&login_form->form);
         login_form->form.selection_row++;
     }
-    login_form->form.selection_row = 0;
+    login_form->form.selection_row = old_row;
 }
 
 void print_login_form_header(login_form_t* login_form, short color_pair) {
