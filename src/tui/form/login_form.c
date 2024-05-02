@@ -43,9 +43,9 @@ void init_login_form(login_form_t* login_form, WINDOW* form_window, const char* 
     login_form->number_of_footers = 5;
     login_form->footers = calloc(login_form->number_of_footers, sizeof(const char*));
     login_form->footers[0] = "[Ctrl + C] Quit";
-    login_form->footers[1] = "[F1] Change Menu";
-    login_form->footers[2] = "[F2] Register";
-    login_form->footers[3] = "[F3] Forgot Password";
+    login_form->footers[1] = "[F1] Register";
+    login_form->footers[2] = "[F2] Forgot Password";
+    login_form->footers[3] = "[F3] Change Menu";
     login_form->footers[4] = "[F10] Refresh Menu";
 
     login_form->footer_widths = calloc(login_form->number_of_footers, sizeof(int));

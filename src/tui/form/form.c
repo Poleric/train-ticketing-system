@@ -101,13 +101,13 @@ void add_action_field(form_t* form, int ch) {
 form_action_t form_driver(form_t* form, int ch) {
     switch (ch) {
         case KEY_F(1):
-            return SWITCH_MENU_ACTION;
-
-        case KEY_F(2):
             return REGISTER_ACTION;
 
-        case KEY_F(3):
+        case KEY_F(2):
             return FORGOT_PASSWORD_ACTION;
+
+        case KEY_F(3):
+            return SWITCH_MENU_ACTION;
 
         case KEY_F(10):
             return RELOAD_ACTION;
