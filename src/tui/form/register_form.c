@@ -13,7 +13,7 @@
 #define REGISTER_FIELD_GAP 1
 
 #define REGISTER_FORM_SIDE_MARGIN_PERCENTAGE 0.1
-#define REGISTER_FORM_TOP_MARGIN_PERCENTAGE 0.1
+#define REGISTER_FORM_TOP_MARGIN_PERCENTAGE 0.2
 
 void init_register_form(register_form_t* register_form, WINDOW* form_window, const char* header, const char* form_header) {
     const int FIELD_LABEL_WIDTH = REGISTER_LABEL_FIELD_LENGTH;
