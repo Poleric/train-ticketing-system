@@ -59,5 +59,6 @@ const char* tm_wday_to_text(tm_wday_t tm_wday);
 char* to_time(dt_time_t time, char* buffer, int n);
 bool is_time_same(dt_time_t time_1, dt_time_t time_2);
 int diff_tm(struct tm* tm_1, struct tm* tm_2);
+time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, int second);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H

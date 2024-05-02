@@ -161,5 +161,19 @@ int diff_tm(struct tm* tm_1, struct tm* tm_2) {
     return (int)difftime(t1, t2);
 }
 
+time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, int second) {
+    struct tm tm;
+
+    tm.tm_year = year - 1900;
+    tm.tm_mon = month - 1;
+    tm.tm_mday = day;
+    tm.tm_hour = hour;
+    tm.tm_min = minute;
+    tm.tm_sec = second;
+    tm.tm_isdst = -1;
+
+    return mktime(&tm);
+}
+
 
 
