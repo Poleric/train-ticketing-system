@@ -1,252 +1,167 @@
-#include <schedule.h>
+#include <ticket.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <curses.h>
 #include <utils.h>
 #include <tui/scheduling_menu.h>
+#include <assert.h>
 
-int main_menu();
-void displaySchedule(weekly_schedule_t* weekly_schedule);
-void booking(weekly_schedule_t* weekly_schedule);
-void cleanup(weekly_schedule_t* weekly_schedule);
-void viewSchedule(weekly_schedule_t* weekly_schedule);
+#define BASE_TRAIN_TICKETS_LENGTH 8
 
-//ticket
-typedef struct {
-    char ticketID[10];  //TK001
-    char seatNum[10];   //A001, B001
-    char trainID[10];   //T001
-    char username[10];  //Abu
-    char station[10];   //Romah
-    dt_time_t departure_time;
-    dt_time_t eta;
-}Ticket;
+unsigned long generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat) {
+    unsigned long hash = 5381;
+    int c;
 
-//train
-typedef struct {
-    char trainID[6];  // Unique identifier for the train (e.g., T001)
-    char departureTime[10];  // Departure time of the train
-    char arrivalTime[10];  // Arrival time of the train
-    int numSeatsAvailable;  // Number of seats available on the train
-    // Other relevant details about the train...
-} Train;
+    while ((c = (unsigned char)*train_id++))
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    while ((c = (unsigned char)*username++))
+        hash = ((hash << 5) + hash) + c;
 
-int main() {
-    main_menu();
-    return 0;
+    hash = ((hash << 5) + hash) + timestamp;
+    hash = ((hash << 5) + hash) + seat;
+
+    return hash;
 }
 
-int main_menu() {
-    weekly_schedule_t weekly_schedule;
-    init_weekly_schedule(&weekly_schedule);
-    booking(&weekly_schedule);
-    displaySchedule(&weekly_schedule);
-    cleanup(&weekly_schedule);
-    char choice;
-
-    do {
-        printf("Main Menu\n");
-        printf("1. Book Ticket\n");
-        printf("2. View Schedule\n");
-        printf("3. Exit\n");
-        printf("Enter your choice: ");
-        scanf(" %c", &choice);
-        switch (choice) {
-            case '1':
-                booking(&weekly_schedule);
-                break;
-            case '2':
-                displaySchedule(&weekly_schedule);
-                break;
-            case '3':
-                printf("Exiting the system.\n");
-                cleanup(&weekly_schedule);
-                return 0;
-            default:
-                printf("Invalid choice. Please try agian, Thank You.\n");
-                break;
-        }
-    }while(1);
-
+int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp, int seat) {
+    ticket->ticket_id = generate_ticket_id(train_id, username, timestamp, seat);
+    strncpy(ticket->train_id, train_id, 5);
+    strncpy(ticket->username, username, 255);
+    ticket->timestamp = timestamp;
+    ticket->seat = seat;
+    return EXIT_SUCCESS;
 }
 
-//1
-void displaySchedule(weekly_schedule_t* weekly_schedule) {
-    for(int i=0; i<7; i++) {
-        printf("SUN ='0', MON ='1', TUE ='2', WED ='3', THU ='4', FRI ='5', SAT ='6'");
-        printf("Choose the day of schedule : %d \n",i);
+train_ticket_vector_t * init_train_ticket_vector() {
+    train_ticket_vector_t * train_tickets = malloc(sizeof(train_ticket_vector_t));
+    if (train_tickets == NULL)
+        return NULL;
 
-        for(int j=0;j<weekly_schedule->days[i].n_elements;j++) {
-            schedule_t* schedule = weekly_schedule->days[i].array[j];
-            printf("Train ID : %s \n",schedule->train_id);
-            printf("From Station : %s \n",schedule->from_station_id);
-            printf("To Station : %s \n",schedule->to_station_id);
-            printf("Departure Time : %02d:%02d:%02d \n", schedule->departure_time.tm_hour, schedule->departure_time.tm_min, schedule->departure_time.tm_sec);
-            printf("ETA : %02d:%02d:%02d \n", schedule->eta.tm_hour, schedule->eta.tm_min, schedule->eta.tm_sec);
-            printf("Number of Seat Available : %d\n",schedule->n_seats);
-            printf("\n\n");
+    train_tickets->max_size = BASE_TRAIN_TICKETS_LENGTH;
+    train_tickets->array = calloc(sizeof(train_ticket_t *), train_tickets->max_size);
+    train_tickets->num_of_tickets = 0;
 
-        }
-    }
-}
-//2
-void booking(weekly_schedule_t* weekly_schedule) {
-    char trainID[10];
-    char seat[10];
-    char choice;
-
-    do {
-        printf("Select Train ID : \n");
-        scanf("%s",&trainID);
-        printf("Select Your Seat : \n");
-        scanf("%s",&seat);
-        printf("Do you want to book another ticket? (Y/N) : ");
-        scanf("%c",&choice);
-        choice = toupper(choice);
-
-    }while(choice == 'Y');
-
-    do {
-        printf("Booking successful! Your ticket details:\n");
-        schedule_vector_t* last_day_schedule = &(weekly_schedule->days[6]);
-        schedule_t* last_ticket = last_day_schedule->array[last_day_schedule->n_elements - 1];
-        //maybe most buy ticket same destination
-        printf("Train ID: %s\n", last_ticket->train_id);
-        printf("From Station: %s\n", last_ticket->from_station_id);
-        printf("To Station: %s\n", last_ticket->to_station_id);
-        printf("Departure Time: %02d:%02d:%02d\n", last_ticket->departure_time.tm_hour,
-               last_ticket->departure_time.tm_min, last_ticket->departure_time.tm_sec);
-        printf("ETA: %02d:%02d:%02d\n", last_ticket->eta.tm_hour, last_ticket->eta.tm_min,
-               last_ticket->eta.tm_sec);
-        printf("Number of Seats Available: %d\n", last_ticket->n_seats);
-
-        printf("Return to main menu? (Y/N) : ");
-        scanf("%c",choice);
-        choice=toupper(choice);
-    }while(choice == 'Y');
+    return train_tickets;
 }
 
-void viewSchedule(weekly_schedule_t* weekly_schedule) {
-    // Call the displaySchedule function to show the schedule
-    displaySchedule(weekly_schedule);
+int resize_train_ticket_vector(train_ticket_vector_t* train_tickets, int size) {
+    assert(size > train_tickets->num_of_tickets);
+
+    train_ticket_t *tmp = realloc(train_tickets->array, sizeof (train_ticket_t) * size);
+
+    if (tmp == NULL)
+        return EXIT_FAILURE;
+
+    train_tickets->max_size = size;
+    train_tickets->array = tmp;
+    return EXIT_SUCCESS;
 }
 
-
-
-
-bool valTicket(const char* ticketID) {
+int get_ticket_history(train_ticket_vector_t* train_tickets, const char* filepath, const char* username) {
     FILE* fptr;
-    fptr= fopen("valid_tickets.txt", "r");
+    fptr = fopen(filepath, "rb");
+
     if (fptr == NULL) {
-        printf("Error opening file");
-        return false;
+//        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
     }
 
-    char line[100];
-    while (fgets(line, sizeof(line), fptr) != NULL) {
-        // Remove newline character from the end of the line
-        line[strcspn(line, "\n")] = '\0';
-        if (strcmp(line, ticketID) == 0) {
-            fclose(fptr);
-            return true; // Ticket ID is valid
-        }
-    }
+    train_ticket_t buffer;
+    while (fread(&buffer, sizeof(train_ticket_t), 1, fptr) != 0)
+        if (strcmp(buffer.username, username) == 0)
+            add_train_ticket(train_tickets, &buffer);
+
     fclose(fptr);
-    return false;
+    return EXIT_SUCCESS;
 }
 
-//check ticket
-//book ticket
-//ticket record
-//get ticket from userid members
+int get_tickets_from_details(train_ticket_vector_t* train_tickets, const char* filepath, const char* train_id, time_t timestamp) {
+    FILE* fptr;
+    fptr = fopen(filepath, "rb");
 
-// Function to get the number of available seats
-int get_num_available_seats(weekly_schedule_t* weekly_schedule, char* train_id, struct tm time, int tm_wday) {
-    int num_available_seats = 0;
-
-    // Iterate through the schedules for the given day of the week
-    for (int i = 0; i < weekly_schedule->days[tm_wday].n_elements; i++) {
-        schedule_t* schedule = weekly_schedule->days[tm_wday].array[i];
-
-        // Check if the train ID and departure time match
-        if (strcmp(schedule->train_id, train_id) == 0 && is_time_same(schedule->departure_time, (dt_time_t){time.tm_hour, time.tm_min, time.tm_sec})) {
-            // Calculate available seats
-            num_available_seats += schedule->n_seats;
-        }
+    if (fptr == NULL) {
+//        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
     }
 
-    return num_available_seats;
+    train_ticket_t buffer;
+    while (fread(&buffer, sizeof(train_ticket_t), 1, fptr) != 0)
+        if (strcmp(buffer.train_id, train_id) == 0 && buffer.timestamp == timestamp)
+            add_train_ticket(train_tickets, &buffer);
+
+    fclose(fptr);
+    return EXIT_SUCCESS;
 }
 
-int available_seats(char trainID, char departStation, int departTime, int MAX_TRAIN_SEAT) {
-    FILE* ticketFP;
-    Ticket temp;
-    int seatCount;
+int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepath) {
+    /*
+     * Save and update ticket details based on the array of tickets given. Matches row by ticket_id
+     */
+    FILE* fptr;
+    fptr = fopen(filepath, "wb");
 
-    int seatAvailable[300];
-
-    for (int i = 0; i < MAX_TRAIN_SEAT; i++) {
-        seatAvailable[i] = i + 1;
-    }
-
-    ticketFP = fopen("MemberBooking.txt", "r");
-
-    if (!ticketFP) {
+    if (fptr == NULL) {
         fprintf(stderr, "Error to open this file!\n");
         return EXIT_FAILURE;
     }
 
-    while (ticketFP != EOF) {
-        fscanf(ticketFP, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%d:%d:%d|%d:%d:%d\n",
-            temp.ticketID, temp.seatNum, temp.trainID, temp.username, temp.station,
-            temp.departure_time.tm_hour, temp.departure_time.tm_min, temp.departure_time.tm_sec,
-            temp.eta.tm_hour, temp.eta.tm_min, temp.eta.tm_sec);
+    int number_of_tickets = train_tickets->num_of_tickets;
+    train_ticket_t** tmp_array = calloc(number_of_tickets, sizeof(train_ticket_t*));
 
-        int tempSeatNumber = temp.seatNum[3] - 48;
+    train_ticket_t buffer;
+    // gg O(n^2)
+    while (fread(&buffer, sizeof(train_ticket_t), 1, fptr) != 0)
+        for (int i = 0; i < number_of_tickets; i++)
+            if (buffer.train_id == tmp_array[i]->train_id) {
+                fseek(fptr, (long) -sizeof(train_ticket_t), SEEK_CUR);
+                fwrite(tmp_array[i], sizeof(train_ticket_t), 1, fptr);
 
-        if ((strcmp(temp.trainID, trainID) || strcmp(temp.station, departStation) || strcmp(temp.departure_time.tm_hour, departTime)) != 0) {
-            for (int i = 0; i < MAX_TRAIN_SEAT; i++) {
-                if (seatAvailable[i] == tempSeatNumber) {
-                    seatAvailable[i] = 0;
-                }
+                // delete from tmp
+                for (int j = i + 1; j < number_of_tickets; j++)
+                    tmp_array[j - 1] = tmp_array[j];
+                tmp_array[--number_of_tickets] = NULL;
             }
-        }
-    }
 
-    fclose(ticketFP);
-    return seatAvailable;
+
+    free(tmp_array);
+
+    fclose(fptr);
+    return EXIT_SUCCESS;
 }
 
-void cleanup(weekly_schedule_t* weekly_schedule) {
-    // Iterate through each day of the week
-    for (int i = 0; i < 7; i++) {
-        schedule_vector_t* day_schedule = &(weekly_schedule->days[i]);
+int add_train_ticket(train_ticket_vector_t* train_tickets, train_ticket_t* train_ticket) {
+    if (train_tickets->num_of_tickets + 1 > train_tickets->max_size)
+        if (resize_train_ticket_vector(train_tickets, train_tickets->max_size * 2) == EXIT_FAILURE)
+            return EXIT_FAILURE;
 
-        // Iterate through the schedules for the current day
-        for (int j = 0; j < day_schedule->n_elements; j++) {
-            free(day_schedule->array[j]); // Free memory for individual schedule
-        }
-
-        // Free memory for the array of schedules
-        free(day_schedule->array);
-    }
+    train_tickets->array[train_tickets->num_of_tickets++] = *train_ticket;
+    return EXIT_SUCCESS;
 }
 
-//int main() {
-//    // Sample usage
-//    weekly_schedule_t weekly_schedule;
-//    // Initialize weekly schedule
-//    // (Assuming weekly_schedule is properly initialized)
-//
-//    // Example: Train ID, Time, Date
-//    char train_id[] = "ABC123";
-//    struct tm time = { .tm_hour = 10, .tm_min = 0, .tm_sec = 0 }; // 10:00:00
-//    int tm_wday = 0; // Monday (0-indexed)
-//
-//    // Get the number of available seats
-//    int available_seats = get_available_seats(&weekly_schedule, train_id, time, tm_wday);
-//    printf("Available seats: %d\n", available_seats);
-//
-//    return 0;
-//}
+int get_number_of_booked_seats(const char* filepath, const char* train_id, time_t timestamp) {
+    int n = 0;
+
+    FILE* fptr;
+    fptr = fopen(filepath, "rb");
+
+    if (fptr == NULL) {
+//        fprintf(stderr, "Error to open this file!\n");
+        return -1;
+    }
+
+    fseek(fptr, sizeof(int), SEEK_SET);
+
+    train_ticket_t buffer;
+    while (fread(&buffer, sizeof(train_ticket_t), 1, fptr) != 0)
+        if (strcmp(buffer.train_id, train_id) == 0 && buffer.timestamp == timestamp)
+            n++;
+
+    fclose(fptr);
+
+    return n;
+}
+
+void free_train_ticket_vector(train_ticket_vector_t * members) {
+    free(members->array);
+    free(members);
+}
