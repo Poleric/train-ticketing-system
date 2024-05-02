@@ -143,16 +143,18 @@ int load_weekly_schedule(weekly_schedule_t* weekly_schedule, const char* filepat
     if (fp == NULL)
         return EXIT_FAILURE;
 
-    char line_buff[50];
+    char line_buff[55];
     char train_id[5], from_station_id[4], to_station_id[4];
     dt_time_t time, eta;
     int n_seats;
     double price;
     for (int i = 0; i < 7; i++)
         while (1) {
-            fgets(line_buff, 50, fp);
-            if (strcmp(line_buff, "\n") == 0)
+            fgets(line_buff, 55, fp);
+            if (line_buff[0] == '\n')
                 break;
+
+            printf("%s", line_buff);
 
             if (sscanf(line_buff, "%4s, %3s, %3s, %d:%d:%d, %d:%d:%d, %d, %lf",
                    train_id,
@@ -161,8 +163,9 @@ int load_weekly_schedule(weekly_schedule_t* weekly_schedule, const char* filepat
                    &time.tm_hour, &time.tm_min, &time.tm_sec,
                    &eta.tm_hour, &eta.tm_min, &eta.tm_sec,
                    &n_seats,
-                   &price) != 10)
+                   &price) != 11)
                 break;
+            line_buff[0] = 0;
 
             weekly_add_schedule(weekly_schedule, train_id, from_station_id, to_station_id, time, eta, n_seats, price, i);
         }
