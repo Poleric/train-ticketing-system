@@ -26,7 +26,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
             0
     );
 
-    init_login_form(&login_form, login_window, "Login as Staff");
+    init_login_form(&login_form, login_window, "Train Ticketing", "Login as Staff");
     display_login_form(&login_form, COLOR_2);
 
     staffs = init_staff_vector();

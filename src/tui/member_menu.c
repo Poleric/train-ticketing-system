@@ -27,7 +27,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             0
     );
 
-    init_login_form(&login_form, login_window, "Login as Member");
+    init_login_form(&login_form, login_window, "Train Ticketing", "Login as Member");
     display_login_form(&login_form, COLOR_1);
 
     members = init_members_vector();
