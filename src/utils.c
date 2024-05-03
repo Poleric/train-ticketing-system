@@ -216,5 +216,15 @@ struct tm tm_add_days(struct tm tm, const int days) {
     // Seconds since start of epoch --> 01/01/1970 at 00:00hrs
     time_t date_seconds = mktime(&tm) + (days * SECONDS_PER_DAY);
 
-    return  *localtime(&date_seconds);
+    return *localtime(&date_seconds);
+}
+
+dt_date_t date_add_days(dt_date_t date, const int days) {
+    const time_t SECONDS_PER_DAY = 24 * 60 * 60;
+
+    // Seconds since start of epoch --> 01/01/1970 at 00:00hrs
+    time_t date_seconds = time_t_from_dt(date, (dt_time_t){0, 0, 0}) + (days * SECONDS_PER_DAY);
+
+    split_tm(*localtime(&date_seconds), &date, NULL, NULL);
+    return date;
 }
