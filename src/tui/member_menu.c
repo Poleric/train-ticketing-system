@@ -95,18 +95,20 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
     return current_menu;
 }
 
-current_menu_t member_menu(WINDOW* menu_window, member_t* member) {
-    current_menu_t current_menu = MEMBER_MENU;
+void member_menu(WINDOW* menu_window, member_t* member) {
+    WINDOW* member_window;
 
-    wprintw(menu_window, "Welcome %s", member->username);
-    wrefresh(menu_window);
+    member_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
 
-    if (wgetch(menu_window) == KEY_ESC)
-        current_menu = EXIT_MENU;
 
-    wclear(menu_window);
-    wrefresh(menu_window);
-    return current_menu;
+
+    delwin(member_window);
 }
 
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
