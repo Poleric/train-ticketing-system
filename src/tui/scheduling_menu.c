@@ -195,10 +195,12 @@ void schedule_menu() {
                     schedule_table.selected_wday = 6;
                 else
                     schedule_table.selected_wday--;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, -1);
                 schedule_table.selected_wday %= 7;
                 break;
             case KEY_RIGHT:
                 schedule_table.selected_wday++;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, 1);
                 schedule_table.selected_wday %= 7;
                 break;
             case KEY_UP:  // TODO: fix scrolling

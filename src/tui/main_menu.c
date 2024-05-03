@@ -1,6 +1,7 @@
 #include <tui/main_menu.h>
 #include <tui/member_menu.h>
 #include <tui/staff_menu.h>
+#include <tui/scheduling_menu.h>
 #include <locale.h>
 
 void init_color_pairs() {
@@ -29,19 +30,20 @@ void init_menu() {
 void start_menu() {
     init_menu();
 
-    current_menu_t current_menu = MEMBER_MENU;
-    while (current_menu != EXIT_MENU) {
-        switch (current_menu) {
-            case MEMBER_MENU:
-                current_menu = member_login_menu(stdscr);
-                break;
-            case STAFF_MENU:
-                current_menu = staff_login_menu(stdscr);
-                break;
-            default:
-                break;
-        }
-    }
+//    current_menu_t current_menu = MEMBER_MENU;
+//    while (current_menu != EXIT_MENU) {
+//        switch (current_menu) {
+//            case MEMBER_MENU:
+//                current_menu = member_login_menu(stdscr);
+//                break;
+//            case STAFF_MENU:
+//                current_menu = staff_login_menu(stdscr);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+    schedule_menu();
 
     endwin();
 }
