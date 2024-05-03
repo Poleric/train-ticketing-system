@@ -1,4 +1,4 @@
-#include <tui/main_menu.h>
+#include <tui/start_menu.h>
 
 int main() {
     start_menu();
