@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-int digest_message(const unsigned char *message, size_t message_len, unsigned char **digest, unsigned int *digest_len) {
+int digest_message(const unsigned char *message, const size_t message_len, unsigned char **digest, unsigned int *digest_len) {
     // https://wiki.openssl.org/index.php/EVP_Message_Digests
     EVP_MD_CTX *mdctx;
 
@@ -26,7 +26,7 @@ int digest_message(const unsigned char *message, size_t message_len, unsigned ch
     return EXIT_SUCCESS;
 }
 
-int decode_digest(const unsigned char* digest, size_t digest_size, char* buff, size_t buff_size) {
+int decode_digest(const unsigned char* digest, const size_t digest_size, char* buff, const size_t buff_size) {
     if (buff_size < digest_size * 2) {
         fprintf(stderr, "Buffer size `%zu` is not large enough to fit the digest of length `%zu`\n", buff_size, digest_size);
         return EXIT_FAILURE;
@@ -45,8 +45,8 @@ int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]) {
 
     digest_message((const unsigned char*)message, strlen(message), &digest, &digest_size);
 
-    decode_digest(digest, (size_t) digest_size, buff, SHA256_HASH_LENGTH);
-    free(digest);
+    decode_digest(digest, digest_size, buff, SHA256_HASH_LENGTH);
+    // free(digest);
     return EXIT_SUCCESS;
 }
 
