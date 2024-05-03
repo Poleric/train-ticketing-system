@@ -1,14 +1,10 @@
-#ifndef TRAINTICKETINGSYSTEM_SCHEDULING_MENU_H
-#define TRAINTICKETINGSYSTEM_SCHEDULING_MENU_H
+#ifndef TRAINTICKETINGSYSTEM_SCHEDULE_TABLE_H
+#define TRAINTICKETINGSYSTEM_SCHEDULE_TABLE_H
 
 #include <tui/table/table.h>
-#include <stations.h>
 #include <schedule.h>
-#include <ticket.h>
-#include <utils.h>
 
 typedef struct ScheduleTable schedule_table_t;
-
 
 struct ScheduleTable {
     table_t table;
@@ -24,6 +20,4 @@ void print_schedule_row(schedule_table_t* table, schedule_t* schedule);
 void display_schedules(schedule_table_t* schedule_table);
 void free_schedule_table(schedule_table_t* schedule_table);
 
-void schedule_menu();
-
-#endif //TRAINTICKETINGSYSTEM_SCHEDULING_MENU_H
+#endif //TRAINTICKETINGSYSTEM_SCHEDULE_TABLE_H

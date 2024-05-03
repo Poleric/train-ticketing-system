@@ -1,7 +1,7 @@
-#include <tui/scheduling_menu.h>
+#include <tui/table/schedule_table.h>
 #include <tui/utils/tui_utils.h>
-#include <stdlib.h>
 #include <string.h>
+#include <ticket.h>
 
 #define FIRST_DAY_OF_WEEK SUNDAY
 #define SELECTED_DAY_PADDING 5
@@ -40,7 +40,6 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->weekly_schedule = weekly_schedules;
 
     schedule_table->table.window = window;
-    keypad(schedule_table->table.window, true);
 
     schedule_table->table.number_of_display_lines = getmaxy(window) - 3;
 
@@ -55,6 +54,9 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.selected_line = 0;
 
     split_tm(tm_now(), &schedule_table->selected_date, NULL, (int *)&schedule_table->selected_wday);
+
+    keypad(schedule_table->table.window, true);
+    curs_set(0);
 }
 
 void print_schedule_table_day_header(schedule_table_t* schedule_table, short color_pair, short selected_color_pair) {
@@ -149,10 +151,10 @@ void display_schedules(schedule_table_t* schedule_table) {
 
     schedule_vector_t schedule_vector = schedule_table->weekly_schedule->days[schedule_table->selected_wday];
     for (
-        int i = schedule_table->table.current_line;
-        i < schedule_vector.n_elements && i < schedule_table->table.current_line + schedule_table->table.number_of_display_lines;
-        i++
-    ) {
+            int i = schedule_table->table.current_line;
+            i < schedule_vector.n_elements && i < schedule_table->table.current_line + schedule_table->table.number_of_display_lines;
+            i++
+            ) {
         print_schedule_row(schedule_table, schedule_vector.array[i]);
         move_to_next_line(schedule_table->table.window, 0);
     }
@@ -167,67 +169,8 @@ void display_schedules(schedule_table_t* schedule_table) {
 void free_schedule_table(schedule_table_t* schedule_table) {
     keypad(schedule_table->table.window, false);
     free_table(&schedule_table->table);
-}
-
-void schedule_menu() {
-    curs_set(0);
-
-    WINDOW* window = newwin(LINES, COLS, 0, 0);
-
-    weekly_schedule_t weekly_schedule;
-    schedule_table_t schedule_table;
-
-    init_weekly_schedule(&weekly_schedule);
-    load_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
-
-    init_schedule_table(window, &schedule_table, &weekly_schedule);
-
-    bool exit = false;
-    do {
-        display_schedules(&schedule_table);
-        switch (wgetch(schedule_table.table.window)) {
-            case 'q':
-            case CTRL('C'):
-                exit = true;
-                break;
-            case KEY_LEFT:
-                if (schedule_table.selected_wday == 0)
-                    schedule_table.selected_wday = 6;
-                else
-                    schedule_table.selected_wday--;
-                schedule_table.selected_date = date_add_days(schedule_table.selected_date, -1);
-                schedule_table.selected_wday %= 7;
-                break;
-            case KEY_RIGHT:
-                schedule_table.selected_wday++;
-                schedule_table.selected_date = date_add_days(schedule_table.selected_date, 1);
-                schedule_table.selected_wday %= 7;
-                break;
-            case KEY_UP:  // TODO: fix scrolling
-                if (schedule_table.table.current_line > 0 &&
-                    schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines + 1
-                    )
-                    schedule_table.table.current_line--;
-                if (schedule_table.table.selected_line > 0)
-                    schedule_table.table.selected_line--;
-                break;
-            case KEY_DOWN:
-                if (schedule_table.table.current_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines)
-                    schedule_table.table.current_line++;
-                if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
-                    schedule_table.table.selected_line++;
-                break;
-            case KEY_ENTER:
-
-                break;
-        }
-        wclear(schedule_table.table.window);
-    } while (!exit);
-
-    save_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
-
-    free_schedule_table(&schedule_table);
-    free_weekly_schedules(&weekly_schedule);
 
     curs_set(1);
+    keypad(schedule_table->table.window, false);
 }
+

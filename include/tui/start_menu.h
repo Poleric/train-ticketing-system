@@ -20,5 +20,7 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members);
 current_menu_t staff_login_menu(WINDOW* menu_window);
 current_menu_t staff_menu(WINDOW* menu_window, staff_t* current_staff);
 
+void schedule_menu();
+
 
 #endif //TRAINTICKETINGSYSTEM_TUI_H

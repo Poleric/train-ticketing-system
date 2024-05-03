@@ -1,6 +1,7 @@
 #include <tui/start_menu.h>
 #include <tui/form/register_form.h>
 #include <tui/form/login_form.h>
+#include <tui/table/schedule_table.h>
 #include <locale.h>
 #include <stdlib.h>
 
@@ -19,18 +20,25 @@ void init_color_pairs() {
     init_pair(GOOD, COLOR_WHITE, COLOR_GREEN);
 }
 
-void init_menu() {
-    setlocale(LC_ALL, "");
-    initscr();
-    start_color(); init_color_pairs();
-    raw();  // get input by chars
-    noecho();  // don't display input
+void reload_members(member_vector_t* members) {
+    for (int i = 0; i < members->num_of_members; i++)
+        free_member(members->array[i]);
+    members->num_of_members = 0;
+    load_members(members, MEMBERS_FILEPATH);
 }
 
 void reload_staff(staff_vector_t* staff) {
     for (int i = 0; i < staff->num_of_staff; i++)
         free_staff(staff->array[i]);
     load_staff(staff, STAFFS_FILEPATH);
+}
+
+void init_menu() {
+    setlocale(LC_ALL, "");
+    initscr();
+    start_color(); init_color_pairs();
+    raw();  // get input by chars
+    noecho();  // don't display input
 }
 
 void start_menu() {
@@ -51,14 +59,6 @@ void start_menu() {
     }
 
     endwin();
-}
-
-
-void reload_members(member_vector_t* members) {
-    for (int i = 0; i < members->num_of_members; i++)
-        free_member(members->array[i]);
-    members->num_of_members = 0;
-    load_members(members, MEMBERS_FILEPATH);
 }
 
 // member_login -> member_menu   --┐
@@ -344,6 +344,65 @@ current_menu_t staff_menu(WINDOW* menu_window, staff_t* staff) {
     return current_menu;
 }
 
+
+void schedule_menu() {
+    WINDOW* window = newwin(LINES, COLS, 0, 0);
+
+    weekly_schedule_t weekly_schedule;
+    schedule_table_t schedule_table;
+
+    init_weekly_schedule(&weekly_schedule);
+    load_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
+
+    init_schedule_table(window, &schedule_table, &weekly_schedule);
+
+    bool exit = false;
+    do {
+        display_schedules(&schedule_table);
+        switch (wgetch(schedule_table.table.window)) {
+            case 'q':
+            case CTRL('C'):
+                exit = true;
+                break;
+            case KEY_LEFT:
+                if (schedule_table.selected_wday == 0)
+                    schedule_table.selected_wday = 6;
+                else
+                    schedule_table.selected_wday--;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, -1);
+                schedule_table.selected_wday %= 7;
+                break;
+            case KEY_RIGHT:
+                schedule_table.selected_wday++;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, 1);
+                schedule_table.selected_wday %= 7;
+                break;
+            case KEY_UP:  // TODO: fix scrolling
+                if (schedule_table.table.current_line > 0 &&
+                    schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines + 1
+                        )
+                    schedule_table.table.current_line--;
+                if (schedule_table.table.selected_line > 0)
+                    schedule_table.table.selected_line--;
+                break;
+            case KEY_DOWN:
+                if (schedule_table.table.current_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines)
+                    schedule_table.table.current_line++;
+                if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
+                    schedule_table.table.selected_line++;
+                break;
+            case KEY_ENTER:
+
+                break;
+        }
+        wclear(schedule_table.table.window);
+    } while (!exit);
+
+    save_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
+
+    free_schedule_table(&schedule_table);
+    free_weekly_schedules(&weekly_schedule);
+}
 
 
 
