@@ -1,6 +1,7 @@
 #include <tui/form/register_form.h>
 #include <string.h>
 #include <utils.h>
+#include <ctype.h>
 
 #define REGISTER_USERNAME_LABEL         "Username         :"
 #define REGISTER_EMAIL_LABEL            "Email address    :"
@@ -188,6 +189,24 @@ char* get_register_contact_no(register_form_t* register_form) {
 }
 
 bool validate_email(register_form_t* register_form) {
-
+    // contains @
+    char* p = get_register_email(register_form);
+    while (p++)
+        if (*p == '@') return true;
+    return false;
 }
 
+bool validate_same_password(register_form_t* register_form) {
+    return strcmp(get_register_password(register_form), get_register_confirm_password(register_form)) == 0;
+}
+
+bool validate_gender(register_form_t* register_form) {
+    return get_register_gender(register_form) == 'M' || get_register_gender(register_form) == 'F';
+}
+
+bool validate_contact_no(register_form_t* register_form) {
+    char* p = get_register_contact_no(register_form);
+    while (p++)
+        if (isalpha(*p)) return false;
+    return true;
+}

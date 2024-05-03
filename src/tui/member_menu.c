@@ -2,8 +2,6 @@
 #include <tui/form/login_form.h>
 #include <tui/form/register_form.h>
 #include <tui/utils/menu_utils.h>
-#include <string.h>
-#include <ctype.h>
 
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
@@ -135,16 +133,26 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
                     break;
                 }
 
-                if (strcmp(get_register_password(&register_form), get_register_confirm_password(&register_form)) != 0) {
+                if (!validate_email(&register_form)) {
+                    print_register_form_message(&register_form, "Email is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_same_password(&register_form)) {
                     print_register_form_message(&register_form, "Password does not match", ERROR);
                     break;
                 }
 
-                if (toupper(get_register_gender(&register_form)) != 'M' &&
-                    toupper(get_register_gender(&register_form)) != 'F') {
+                if (!validate_gender(&register_form)) {
                     print_register_form_message(&register_form, "Invalid gender", ERROR);
                     break;
                 }
+
+                if (!validate_contact_no(&register_form)) {
+                    print_register_form_message(&register_form, "Invalid contact no", ERROR);
+                    break;
+                }
+
                 create_member_record(
                         members,
                         get_register_username(&register_form),
@@ -157,6 +165,8 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
 
                 print_register_form_message(&register_form, "Successfully registered", GOOD);
                 exit = true;
+
+                wgetch(register_form.form.window);
                 break;
 
             case EXIT_FORM_ACTION:
@@ -165,7 +175,7 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
 
             // refresh even if not change screen
             case REGISTER_ACTION:
-                if (confirmation_menu(register_form.form.window, "Exit menu?") == EXIT_SUCCESS) {
+                if (confirmation_menu(register_form.form.window, "Exit registration ?") == EXIT_SUCCESS) {
                     exit = true;
                     break;
                 }

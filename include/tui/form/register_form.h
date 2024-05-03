@@ -43,4 +43,9 @@ char* get_register_confirm_password(register_form_t* register_form);
 char get_register_gender(register_form_t* register_form);
 char* get_register_contact_no(register_form_t* register_form);
 
+bool validate_email(register_form_t* register_form);;
+bool validate_same_password(register_form_t* register_form);;
+bool validate_gender(register_form_t* register_form);;
+bool validate_contact_no(register_form_t* register_form);;
+
 #endif //TRAINTICKETINGSYSTEM_REGISTER_FORM_H
