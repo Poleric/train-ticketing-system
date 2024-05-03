@@ -39,9 +39,10 @@ set (SOURCES
 
     ${CMAKE_SOURCE_DIR}/src/staff.c
     ${CMAKE_SOURCE_DIR}/src/member.c
-    ${CMAKE_SOURCE_DIR}/src/stations.c
     ${CMAKE_SOURCE_DIR}/src/schedule.c
     ${CMAKE_SOURCE_DIR}/src/ticket.c
+    ${CMAKE_SOURCE_DIR}/src/stations.c
+    ${CMAKE_SOURCE_DIR}/src/recovery_mail.c
 
     ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
@@ -58,6 +59,10 @@ set (SOURCES
 
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
 
 add_executable(TrainTicketingSystem ${SOURCES})
 target_include_directories(TrainTicketingSystem PRIVATE include/)
@@ -91,7 +96,7 @@ else ()
 endif ()
 
 # libcurl
-if (RECOVERY_FEATURE)
+if (EMAIL_RECOVERY_FEATURE)
     find_package(CURL REQUIRED)
     if (CURL_FOUND)
         target_link_libraries(TrainTicketingSystem PRIVATE CURL::libcurl)
