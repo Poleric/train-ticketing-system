@@ -26,8 +26,8 @@ if (DEFINED ENV{RECOVERY_EMAIL_FROM} AND DEFINED ENV{RECOVERY_APP_PASSWORD})
     set(EMAIL_RECOVERY_FEATURE ON)
     add_compile_definitions(
         "EMAIL_RECOVERY_FEATURE"
-        FROM_MAIL=$ENV{RECOVERY_EMAIL_FROM}
-        APP_PASSWORD=${RECOVERY_APP_PASSWORD}
+        FROM_MAIL="$ENV{RECOVERY_EMAIL_FROM}"
+        APP_PASSWORD="${RECOVERY_APP_PASSWORD}"
     )
 else ()
     message(STATUS "Optional feature: \"Email recovery\" is disabled.")
