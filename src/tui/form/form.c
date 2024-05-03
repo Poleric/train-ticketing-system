@@ -121,13 +121,6 @@ form_action_t form_driver(form_t* form, int ch) {
                 return EXIT_FORM_ACTION;
             return REFRESH_SCREEN_ACTION;
 
-        case KEY_DOWN:
-            if (form->selection_row < form->number_of_fields - 1) {
-                form->selection_row++;
-                move_cursor_to_input_field(form);
-            }
-            break;
-
         case KEY_UP:
             if (form->selection_row > 0) {
                 form->selection_row--;
@@ -135,9 +128,9 @@ form_action_t form_driver(form_t* form, int ch) {
             }
             break;
 
-        case KEY_RIGHT:
-            if (form->fields[form->selection_row].pos < strlen(form->fields[form->selection_row].buffer)) {
-                form->fields[form->selection_row].pos++;
+        case KEY_DOWN:
+            if (form->selection_row < form->number_of_fields - 1) {
+                form->selection_row++;
                 move_cursor_to_input_field(form);
             }
             break;
@@ -145,6 +138,13 @@ form_action_t form_driver(form_t* form, int ch) {
         case KEY_LEFT:
             if (form->fields[form->selection_row].pos > 0) {
                 form->fields[form->selection_row].pos--;
+                move_cursor_to_input_field(form);
+            }
+            break;
+
+        case KEY_RIGHT:
+            if (form->fields[form->selection_row].pos < strlen(form->fields[form->selection_row].buffer)) {
+                form->fields[form->selection_row].pos++;
                 move_cursor_to_input_field(form);
             }
             break;
