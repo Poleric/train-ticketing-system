@@ -210,11 +210,11 @@ struct tm tm_now() {
     return *localtime(&t);
 }
 
-void tm_add_days(struct tm* tm, const int days) {
+struct tm tm_add_days(struct tm tm, const int days) {
     const time_t SECONDS_PER_DAY = 24 * 60 * 60;
 
     // Seconds since start of epoch --> 01/01/1970 at 00:00hrs
-    time_t date_seconds = mktime(tm) + (days * SECONDS_PER_DAY);
+    time_t date_seconds = mktime(&tm) + (days * SECONDS_PER_DAY);
 
-    *tm = *localtime(&date_seconds);
+    return  *localtime(&date_seconds);
 }

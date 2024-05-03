@@ -71,6 +71,6 @@ time_t time_t_from_datetime(int year, int month, int day, int hour, int minute, 
 time_t time_t_from_dt(dt_date_t date, dt_time_t time);
 void split_tm(struct tm tm, dt_date_t* date, dt_time_t* time, int *tm_wday);
 struct tm tm_now();
-void tm_add_days(struct tm* tm, int days);
+struct tm tm_add_days(struct tm tm, int days);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H
