@@ -6,11 +6,10 @@
 #include <member.h>
 #include <staff.h>
 
-void init_color_pairs();
-
+void reload_members(member_vector_t* members);
 void reload_staff(staff_vector_t* staff);
 
-void init_menu();
+void init_color_pairs();
 void start_menu();
 
 current_menu_t member_login_menu(WINDOW* menu_window);

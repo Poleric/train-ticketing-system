@@ -5,6 +5,19 @@
 #include <locale.h>
 #include <stdlib.h>
 
+void reload_members(member_vector_t* members) {
+    for (int i = 0; i < members->num_of_members; i++)
+        free_member(members->array[i]);
+    members->num_of_members = 0;
+    load_members(members, MEMBERS_FILEPATH);
+}
+
+void reload_staff(staff_vector_t* staff) {
+    for (int i = 0; i < staff->num_of_staff; i++)
+        free_staff(staff->array[i]);
+    load_staff(staff, STAFFS_FILEPATH);
+}
+
 void init_color_pairs() {
     /* Initialize preset colors pairs
      * 1 - Green background
@@ -20,29 +33,13 @@ void init_color_pairs() {
     init_pair(GOOD, COLOR_WHITE, COLOR_GREEN);
 }
 
-void reload_members(member_vector_t* members) {
-    for (int i = 0; i < members->num_of_members; i++)
-        free_member(members->array[i]);
-    members->num_of_members = 0;
-    load_members(members, MEMBERS_FILEPATH);
-}
-
-void reload_staff(staff_vector_t* staff) {
-    for (int i = 0; i < staff->num_of_staff; i++)
-        free_staff(staff->array[i]);
-    load_staff(staff, STAFFS_FILEPATH);
-}
-
-void init_menu() {
+void start_menu() {
+    // init
     setlocale(LC_ALL, "");
     initscr();
     start_color(); init_color_pairs();
     raw();  // get input by chars
     noecho();  // don't display input
-}
-
-void start_menu() {
-    init_menu();
 
     current_menu_t current_menu = MEMBER_MENU;
     while (current_menu != EXIT_MENU) {
