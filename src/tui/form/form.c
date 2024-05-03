@@ -101,6 +101,7 @@ void add_action_field(form_t* form, int ch) {
 form_action_t form_driver(form_t* form, int ch) {
     switch (ch) {
         case KEY_F(1):
+        case CTRL('R'):
             return REGISTER_ACTION;
 
         #ifdef EMAIL_RECOVERY_FEATURE
@@ -119,9 +120,6 @@ form_action_t form_driver(form_t* form, int ch) {
             if (confirmation_menu(form->window, "Exit Menu?") == EXIT_SUCCESS)
                 return EXIT_FORM_ACTION;
             return REFRESH_SCREEN_ACTION;
-
-        case CTRL('R'):
-            return REGISTER_ACTION;
 
         case KEY_DOWN:
             if (form->selection_row < form->number_of_fields - 1) {
