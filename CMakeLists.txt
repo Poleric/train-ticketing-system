@@ -44,10 +44,7 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/stations.c
     ${CMAKE_SOURCE_DIR}/src/recovery_mail.c
 
-    ${CMAKE_SOURCE_DIR}/src/tui/main_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/member_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/staff_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/scheduling_menu.c
+    ${CMAKE_SOURCE_DIR}/src/tui/start_menu.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_utils.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_last_pos.c
     ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
@@ -55,6 +52,8 @@ set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
     ${CMAKE_SOURCE_DIR}/src/tui/form/register_form.c
     ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
+    ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
+    ${CMAKE_SOURCE_DIR}/src/tui/menu/menu.c
 
     ${CMAKE_SOURCE_DIR}/src/main.c
 )
