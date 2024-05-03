@@ -5,6 +5,11 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#define TITLE "Hambalang Star Rail"
+#define MEMBER_LOGIN_HEADER "Login as Member"
+#define MEMBER_REGISTRATION_HEADER "Registration"
+#define STAFF_LOGIN_HEADER "Login as Staff"
+
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
         free_member(members->array[i]);
@@ -76,7 +81,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
             0
     );
 
-    init_login_form(&login_form, login_window, "Train Ticketing", "Login as Member");
+    init_login_form(&login_form, login_window, TITLE, MEMBER_LOGIN_HEADER);
     display_login_form(&login_form, COLOR_1);
 
     members = init_members_vector();
@@ -169,7 +174,7 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
             0
     );
 
-    init_register_form(&register_form, register_window, "Train Ticketing", "Registration");
+    init_register_form(&register_form, register_window, TITLE, MEMBER_REGISTRATION_HEADER);
     display_register_form(&register_form, COLOR_1);
 
     bool exit = false;
@@ -263,7 +268,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
             0
     );
 
-    init_login_form(&login_form, login_window, "Train Ticketing", "Login as Staff");
+    init_login_form(&login_form, login_window, TITLE, STAFF_LOGIN_HEADER);
 
     // remove register and forgot password
     login_form.footers[1] = "";
@@ -400,7 +405,3 @@ void schedule_menu() {
     free_schedule_table(&schedule_table);
     free_weekly_schedules(&weekly_schedule);
 }
-
-
-
-
