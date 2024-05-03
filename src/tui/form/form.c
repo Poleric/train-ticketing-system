@@ -103,8 +103,10 @@ form_action_t form_driver(form_t* form, int ch) {
         case KEY_F(1):
             return REGISTER_ACTION;
 
+        #ifdef EMAIL_RECOVERY_FEATURE
         case KEY_F(2):
             return FORGOT_PASSWORD_ACTION;
+        #endif
 
         case KEY_F(3):
             return SWITCH_MENU_ACTION;

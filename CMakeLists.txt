@@ -13,6 +13,27 @@ if (WIN32 OR MSVC)
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif ()
 
+add_compile_definitions(
+        MEMBERS_FILEPATH="members.txt"
+        STAFFS_FILEPATH="staffs.txt"
+        STATIONS_FILEPATH="stations.bin"
+        SCHEDULES_FILEPATH="schedules.txt"
+        TICKETS_FILEPATH="tickets.bin"
+)
+
+if (DEFINED ENV{RECOVERY_EMAIL_FROM} AND DEFINED ENV{RECOVERY_APP_PASSWORD})
+    message(STATUS "Optional feature: \"Email recovery\" is enabled.")
+    set(EMAIL_RECOVERY_FEATURE ON)
+    add_compile_definitions(
+        "EMAIL_RECOVERY_FEATURE"
+        FROM_MAIL=$ENV{RECOVERY_EMAIL_FROM}
+        APP_PASSWORD=${RECOVERY_APP_PASSWORD}
+    )
+else ()
+    message(STATUS "Optional feature: \"Email recovery\" is disabled.")
+    set(EMAIL_RECOVERY_FEATURE OFF)
+endif ()
+
 set (SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils.c
 
@@ -40,14 +61,6 @@ set (SOURCES
 
 add_executable(TrainTicketingSystem ${SOURCES})
 target_include_directories(TrainTicketingSystem PRIVATE include/)
-target_compile_definitions(TrainTicketingSystem PRIVATE
-        MEMBERS_FILEPATH="members.txt"
-        STAFFS_FILEPATH="staffs.txt"
-        STATIONS_FILEPATH="stations.bin"
-        SCHEDULES_FILEPATH="schedules.txt"
-        TICKETS_FILEPATH="tickets.bin"
-)
-
 # math.h
 target_link_libraries(TrainTicketingSystem PRIVATE m)
 
@@ -77,10 +90,13 @@ else ()
     endif()
 endif ()
 
-find_package(CURL REQUIRED)
-if (CURL_FOUND)
-    target_link_libraries(TrainTicketingSystem PRIVATE CURL::libcurl)
-    message(STATUS "libcurl found")
-else ()
-    message(STATUS "libcurl not found!")
+# libcurl
+if (RECOVERY_FEATURE)
+    find_package(CURL REQUIRED)
+    if (CURL_FOUND)
+        target_link_libraries(TrainTicketingSystem PRIVATE CURL::libcurl)
+        message(STATUS "libcurl found")
+    else ()
+        message(STATUS "libcurl not found!")
+    endif ()
 endif ()
