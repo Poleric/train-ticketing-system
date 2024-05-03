@@ -152,10 +152,10 @@ int sum_d(const int* nums, int number_of_num) {
 int get_number_of_digits_d(int n) {
     n = abs(n);
 
-    if (n <= 1)
+    if (n == 0)
         return 1;
 
-    return (int)ceil(log10(n));
+    return (int)ceil(log10(n + 1));
 }
 
 bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
