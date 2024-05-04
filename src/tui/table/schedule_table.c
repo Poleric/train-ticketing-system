@@ -172,6 +172,5 @@ void free_schedule_table(schedule_table_t* schedule_table) {
     free_table(&schedule_table->table);
 
     curs_set(1);
-    keypad(schedule_table->table.window, false);
 }
 
