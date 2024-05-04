@@ -228,3 +228,7 @@ dt_date_t date_add_days(dt_date_t date, const int days) {
     split_tm(*localtime(&date_seconds), &date, NULL, NULL);
     return date;
 }
+
+time_t diff_date(dt_date_t date1, dt_date_t date2) {
+    return time_t_from_dt(date1, (dt_time_t){0 , 0, 0}) - time_t_from_dt(date2, (dt_time_t){0 , 0, 0});
+}

@@ -73,5 +73,6 @@ void split_tm(struct tm tm, dt_date_t* date, dt_time_t* time, int *tm_wday);
 struct tm tm_now();
 struct tm tm_add_days(struct tm tm, int days);
 dt_date_t date_add_days(dt_date_t date, int days);
+time_t diff_date(dt_date_t date1, dt_date_t date2);
 
 #endif //TRAINTICKETINGSYSTEM_UTILS_H
