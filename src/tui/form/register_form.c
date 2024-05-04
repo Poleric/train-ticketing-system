@@ -191,8 +191,10 @@ char* get_register_contact_no(register_form_t* register_form) {
 bool validate_email(register_form_t* register_form) {
     // contains @
     char* p = get_register_email(register_form);
-    while (p++)
+    while (*p) {
         if (*p == '@') return true;
+        p++;
+    }
     return false;
 }
 
@@ -206,7 +208,9 @@ bool validate_gender(register_form_t* register_form) {
 
 bool validate_contact_no(register_form_t* register_form) {
     char* p = get_register_contact_no(register_form);
-    while (p++)
+    while (*p) {
         if (isalpha(*p)) return false;
+        p++;
+    }
     return true;
 }
