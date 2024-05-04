@@ -6,6 +6,8 @@
 
 #define BASE_MEMBER_LENGTH 8
 
+
+
 member_t* init_member() {
     member_t* new_member = malloc(sizeof(member_t));
     //fix here (derefering NULL pointer 'new_member')
@@ -163,6 +165,48 @@ int delete_member(member_vector_t* members, const char* username) {
     members->array[--members->num_of_members] = NULL;
 
     return EXIT_SUCCESS;
+}
+
+//feedback
+void feedback(const member_t* member, feedback_type_t type, const char* message) {
+    FILE *fptr;
+    fptr = fopen("feedback.txt", "a");
+
+    if (fptr == NULL) {
+        fprintf(stderr, "Error: Unable to open file for writing feedback\n");
+        return;
+    }
+
+    char type_str[50];
+    switch (type) {
+        case SUGGESTION:
+            strcpy(type_str, "Suggestion");
+        break;
+        case COMPLAINT:
+            strcpy(type_str, "Complaint");
+        break;
+    }
+    fprintf(fptr, "%s\t%s\t%s\t%s\n", member->username, member->email, type_str, message);
+    fclose(fptr);
+
+    feedback_t* feedback = malloc(sizeof(feedback_t));
+    if (feedback == NULL) {
+        fprintf(stderr, "Error: Unable to allocate memory for feedback\n");
+        return;
+    }
+    feedback->member_name = strdup(member->username);
+    feedback->member_email = strdup(member->email);
+    feedback->type = type;
+    feedback->message = strdup(message);
+
+    printf("Feedback received from %s <%s>\n", member->username, member->email);
+    printf("Type: %s\n", type_str);
+    printf("Message: %s\n", message);
+
+    free(feedback->member_name);
+    free(feedback->member_email);
+    free(feedback->message);
+    free(feedback);
 }
 
 void free_members_vector(member_vector_t* members) {
