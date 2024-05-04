@@ -21,43 +21,46 @@ add_compile_definitions(
         TICKETS_FILEPATH="tickets.bin"
 )
 
+set (SOURCES
+        ${CMAKE_SOURCE_DIR}/src/utils.c
+
+        ${CMAKE_SOURCE_DIR}/src/staff.c
+        ${CMAKE_SOURCE_DIR}/src/member.c
+        ${CMAKE_SOURCE_DIR}/src/schedule.c
+        ${CMAKE_SOURCE_DIR}/src/ticket.c
+        ${CMAKE_SOURCE_DIR}/src/stations.c
+
+        ${CMAKE_SOURCE_DIR}/src/tui/start_menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_utils.c
+        ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_last_pos.c
+        ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/register_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
+        ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
+        ${CMAKE_SOURCE_DIR}/src/tui/menu/menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/menu/member_menu.c
+
+        ${CMAKE_SOURCE_DIR}/src/main.c
+)
+
 if (DEFINED ENV{RECOVERY_EMAIL_FROM} AND DEFINED ENV{RECOVERY_APP_PASSWORD})
     message(STATUS "Optional feature: \"Email recovery\" is enabled.")
     set(EMAIL_RECOVERY_FEATURE ON)
     add_compile_definitions(
         "EMAIL_RECOVERY_FEATURE"
         FROM_MAIL="$ENV{RECOVERY_EMAIL_FROM}"
-        APP_PASSWORD="${RECOVERY_APP_PASSWORD}"
+        APP_PASSWORD="$ENV{RECOVERY_APP_PASSWORD}"
+    )
+    list(APPEND SOURCES
+            ${CMAKE_SOURCE_DIR}/src/recovery_mail.c
+            ${CMAKE_SOURCE_DIR}/src/tui/form/forgot_password_form.c
     )
 else ()
     message(STATUS "Optional feature: \"Email recovery\" is disabled.")
     set(EMAIL_RECOVERY_FEATURE OFF)
 endif ()
-
-set (SOURCES
-    ${CMAKE_SOURCE_DIR}/src/utils.c
-
-    ${CMAKE_SOURCE_DIR}/src/staff.c
-    ${CMAKE_SOURCE_DIR}/src/member.c
-    ${CMAKE_SOURCE_DIR}/src/schedule.c
-    ${CMAKE_SOURCE_DIR}/src/ticket.c
-    ${CMAKE_SOURCE_DIR}/src/stations.c
-    ${CMAKE_SOURCE_DIR}/src/recovery_mail.c
-
-    ${CMAKE_SOURCE_DIR}/src/tui/start_menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_utils.c
-    ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_last_pos.c
-    ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
-    ${CMAKE_SOURCE_DIR}/src/tui/form/form.c
-    ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
-    ${CMAKE_SOURCE_DIR}/src/tui/form/register_form.c
-    ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
-    ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
-    ${CMAKE_SOURCE_DIR}/src/tui/menu/menu.c
-    ${CMAKE_SOURCE_DIR}/src/tui/menu/member_menu.c
-
-    ${CMAKE_SOURCE_DIR}/src/main.c
-)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
