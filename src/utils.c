@@ -46,7 +46,9 @@ int hash_message(const char* message, char buff[SHA256_HASH_LENGTH]) {
     digest_message((const unsigned char*)message, strlen(message), &digest, &digest_size);
 
     decode_digest(digest, digest_size, buff, SHA256_HASH_LENGTH);
-    // free(digest);
+    #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)  // problem on windows for some reason
+    free(digest);
+    #endif
     return EXIT_SUCCESS;
 }
 
