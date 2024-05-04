@@ -436,6 +436,9 @@ void schedule_menu(WINDOW* menu_window, member_t* member) {
                 exit = true;
                 break;
             case KEY_LEFT:
+                if (diff_date(schedule_table.selected_date, schedule_table.today_date) <= 0)
+                    break;
+
                 if (schedule_table.selected_wday == 0)
                     schedule_table.selected_wday = 6;
                 else

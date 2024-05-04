@@ -11,6 +11,7 @@ struct ScheduleTable {
     weekly_schedule_t *weekly_schedule;
     tm_wday_t selected_wday;
     dt_date_t selected_date;
+    dt_date_t today_date;
 };
 
 void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekly_schedule_t* weekly_schedules);

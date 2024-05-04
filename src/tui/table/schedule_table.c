@@ -54,7 +54,9 @@ void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekl
     schedule_table->table.current_line = 0;
     schedule_table->table.selected_line = 0;
 
-    split_tm(tm_now(), &schedule_table->selected_date, NULL, (int *)&schedule_table->selected_wday);
+    split_tm(tm_now(), &schedule_table->today_date, NULL, (int *)&schedule_table->selected_wday);
+
+    schedule_table->selected_date = schedule_table->today_date;
 
     keypad(schedule_table->table.window, true);
     curs_set(0);
