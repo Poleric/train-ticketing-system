@@ -158,6 +158,13 @@ int get_number_of_digits_d(int n) {
     return (int)ceil(log10(n + 1));
 }
 
+int get_number_of_digits_ul(unsigned int n) {
+    if (n == 0)
+        return 1;
+
+    return (int)ceil(log10(n + 1));
+}
+
 bool is_time_same(dt_time_t time_1, dt_time_t time_2) {
     return
             time_1.tm_hour == time_2.tm_hour &&

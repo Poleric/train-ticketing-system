@@ -62,6 +62,7 @@ void add_char(char* buffer, char ch, int pos);
 int sum_d(const int* nums, int number_of_num);
 
 int get_number_of_digits_d(int n);
+int get_number_of_digits_ul(unsigned int n);
 
 const char* tm_mon_to_text(int tm_mon);
 const char* tm_wday_to_text(tm_wday_t tm_wday);
