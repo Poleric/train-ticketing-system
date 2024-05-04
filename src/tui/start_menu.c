@@ -2,6 +2,7 @@
 #include <tui/form/register_form.h>
 #include <tui/form/login_form.h>
 #include <tui/form/forgot_password_form.h>
+#include <tui/form/feedback_form.h>
 #include <tui/table/schedule_table.h>
 #include <tui/table/member_ticket_table.h>
 #include <tui/menu/member_menu.h>
@@ -16,6 +17,7 @@
 #define MEMBER_LOGIN_HEADER "Login as Member"
 #define MEMBER_REGISTRATION_HEADER "Registration"
 #define STAFF_LOGIN_HEADER "Login as Staff"
+#define FEEDBACK_FORM_HEADER "Send a feedback"
 
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
@@ -430,7 +432,50 @@ void member_forgot_password(WINDOW* menu_window, member_vector_t* members) {
 #endif
 
 void member_feedback_form(WINDOW* menu_window, member_t* member) {
+    WINDOW* feedback_window;
+    feedback_form_t feedback_form;
 
+    feedback_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_feedback_form(&feedback_form, feedback_window, TITLE, FEEDBACK_FORM_HEADER);
+    display_feedback_form(&feedback_form, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&feedback_form.form, wgetch(feedback_window))) {
+            case SUBMIT_ACTION:
+                if (strlen(get_feedback_type(&feedback_form)) == 0) {
+                    print_feedback_form_message(&feedback_form, "Please specify the type of feedback", ERROR);
+                    break;
+                }
+
+                if (strlen(get_feedback_content(&feedback_form)) == 0) {
+                    print_feedback_form_message(&feedback_form, "Please describe your feedback", ERROR);
+                    break;
+                }
+                save_feedback(&feedback_form, FEEDBACKS_FILEPATH, member->username);
+                exit = true;
+                print_feedback_form_message(&feedback_form, "Feedback received. Press any key", GOOD);
+                wgetch(feedback_window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    free_feedback_form(&feedback_form);
+    delwin(feedback_window);
 }
 
 // staff_login -> staff_menu   --┐

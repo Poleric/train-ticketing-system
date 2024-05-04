@@ -19,6 +19,7 @@ add_compile_definitions(
         STATIONS_FILEPATH="stations.bin"
         SCHEDULES_FILEPATH="schedules.txt"
         TICKETS_FILEPATH="tickets.bin"
+        FEEDBACKS_FILEPATH="feedbacks.txt"
 )
 
 set (SOURCES
@@ -37,6 +38,7 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/tui/form/form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/register_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/feedback_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/member_ticket_table.c
