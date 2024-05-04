@@ -5,8 +5,8 @@
 #include <string.h>
 
 #define NUMBER_OF_OPTIONS 5
-#define OPTION_1 "Book Ticket"
-#define OPTION_2 "My Ticket"
+#define OPTION_1 "Book Ticket(s)"
+#define OPTION_2 "My Tickets"
 #define OPTION_3 "My Details"
 #define OPTION_4 "Send Feedback"
 #define OPTION_5 "Logout"
