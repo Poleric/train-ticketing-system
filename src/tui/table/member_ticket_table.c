@@ -116,7 +116,7 @@ void display_tickets(member_ticket_table_t* member_ticket_table) {
 void free_member_ticket_table(member_ticket_table_t* member_ticket_table) {
     keypad(member_ticket_table->table.window, false);
     free_table(&member_ticket_table->table);
-    free(member_ticket_table->tickets);
+    free_train_ticket_vector(member_ticket_table->tickets);
 
     curs_set(1);
 }
