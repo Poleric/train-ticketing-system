@@ -192,6 +192,10 @@ void member_menu(WINDOW* menu_window, member_t* member) {
                         break;
                 }
 
+                // uh cleanup somehow affect member_menu_window
+                keypad(member_menu_window, true);
+                curs_set(0);
+
                 if (!exit) display_member_menu(&member_menu, COLOR_1);
                 break;
 
