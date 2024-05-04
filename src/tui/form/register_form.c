@@ -62,20 +62,14 @@ void init_register_form(register_form_t* register_form, WINDOW* form_window, con
     register_form->form.fields[5].offset_x = FIELD_LABEL_WIDTH + REGISTER_FIELD_GAP;
     register_form->form.fields[5].x = get_centered_x_start(register_form->form.window, register_form->form.fields[1].offset_x + (int)register_form->form.buffer_length);
 
-    register_form->number_of_footers = 5;
+    register_form->number_of_footers = 2;
     register_form->footers = calloc(register_form->number_of_footers, sizeof(const char*));
     register_form->footers[0] = "[Ctrl + C] Quit";
     register_form->footers[1] = "";
-    register_form->footers[2] = "";
-    register_form->footers[3] = "";
-    register_form->footers[4] = "";
 
     register_form->footer_widths = calloc(register_form->number_of_footers, sizeof(int));
     register_form->footer_widths[0] = 1;
-    register_form->footer_widths[1] = 1;
-    register_form->footer_widths[2] = 1;
-    register_form->footer_widths[3] = 1;
-    register_form->footer_widths[4] = 1;
+    register_form->footer_widths[1] = 4;
 
     register_form->form_message_y = register_form->form_header_y + 11;
 
