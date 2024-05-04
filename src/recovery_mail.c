@@ -1,7 +1,9 @@
 #ifdef EMAIL_RECOVERY_FEATURE
 
+#include <recovery_mail.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <curl/curl.h>
 
 #define PAYLOAD_TEXT                                                 \
@@ -13,10 +15,11 @@
         "\r\n"                                                       \
         "If you haven't made this request, please ignore it.\r\n"
 
-struct upload_status {
-    char content[1024];
-    size_t bytes_read;
-};
+
+int get_random_code(int lower, int upper) {
+    srand(time(NULL));
+    return (rand() % (upper - lower + 1)) + lower;
+}
 
 static size_t payload_source(char *ptr, size_t size, size_t nmemb, void *userp)
 {
@@ -70,9 +73,9 @@ int send_recovery(const char* to_mail, int code)
         curl_easy_setopt(curl, CURLOPT_READDATA, &upload_ctx);
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
-#ifndef DEBUG
+        #ifndef DEBUG
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-#endif
+        #endif
 
         res = curl_easy_perform(curl);
 
