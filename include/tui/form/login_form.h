@@ -20,6 +20,8 @@ struct LoginForm {
     int* footer_widths;
     int number_of_footers;
     int footer_y;
+
+    WINDOW* logo_window;
 };
 
 void init_login_form(login_form_t* login_form, WINDOW* form_window, const char* header, const char* form_header);

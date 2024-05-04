@@ -1,4 +1,5 @@
 #include <tui/form/login_form.h>
+#include <tui/utils/menu_utils.h>
 #include <utils.h>
 #include <string.h>
 
@@ -8,7 +9,7 @@
 #define LOGIN_FIELD_GAP 1
 
 #define LOGIN_FORM_SIDE_MARGIN_PERCENTAGE 0.1
-#define LOGIN_FORM_TOP_MARGIN_PERCENTAGE 0.4
+//#define LOGIN_FORM_TOP_MARGIN_PERCENTAGE 0.4
 
 void init_login_form(login_form_t* login_form, WINDOW* form_window, const char* header, const char* form_header) {
     const int FIELD_LABEL_WIDTH = LOGIN_LABEL_FIELD_LENGTH;
@@ -23,13 +24,21 @@ void init_login_form(login_form_t* login_form, WINDOW* form_window, const char* 
                     )
             );
 
+
+    login_form->logo_window = derwin(
+            form_window,
+            LOGO_HEIGHT,
+            LOGO_WIDTH + 1,
+            2,
+            get_centered_x_start(form_window, LOGO_WIDTH + 1));
+
     login_form->form.field_label_width = FIELD_LABEL_WIDTH;
 
     login_form->header = header;
     login_form->header_y = 0;
 
     login_form->form_header = form_header;
-    login_form->form_header_y = (int)(getmaxy(form_window) * LOGIN_FORM_TOP_MARGIN_PERCENTAGE);
+    login_form->form_header_y = LOGO_HEIGHT + 3;
 
     login_form->form.fields[0].label = LOGIN_USERNAME_LABEL;
     login_form->form.fields[0].y = login_form->form_header_y + 2;
@@ -131,6 +140,8 @@ void print_login_form_message(login_form_t* login_form, const char* message, sho
 void display_login_form(login_form_t* login_form, short color_pair) {
     print_login_form_header(login_form, color_pair);
 
+    wprintw(login_form->logo_window, "%s", LOGO);
+
     print_login_form_form_header(login_form, color_pair);
 
     print_login_fields(login_form);
@@ -139,6 +150,7 @@ void display_login_form(login_form_t* login_form, short color_pair) {
 
     move_cursor_to_input_field(&login_form->form);
 
+    wrefresh(login_form->logo_window);
     wrefresh(login_form->form.window);
 }
 
@@ -147,6 +159,8 @@ void free_login_form(login_form_t* login_form) {
 
     free(login_form->footers);
     free(login_form->footer_widths);
+
+    delwin(login_form->logo_window);
 }
 
 char* get_username(login_form_t* login_form) {
