@@ -2,6 +2,7 @@
 #include <tui/form/register_form.h>
 #include <tui/form/login_form.h>
 #include <tui/form/forgot_password_form.h>
+#include <tui/form/member_details_form.h>
 #include <tui/form/feedback_form.h>
 #include <tui/table/schedule_table.h>
 #include <tui/table/member_ticket_table.h>
@@ -105,7 +106,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
                 if (current_member) {
                     clear_login_menu(&login_form);
 
-                    member_menu(menu_window, current_member);
+                    member_menu(menu_window, members, current_member);
 
                     display_login_form(&login_form, COLOR_1);
                 }
@@ -168,7 +169,7 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
     return current_menu;
 }
 
-void member_menu(WINDOW* menu_window, member_t* member) {
+void member_menu(WINDOW* menu_window, member_vector_t* members, member_t* member) {
     WINDOW* member_menu_window;
     member_menu_t member_menu;
 
@@ -200,7 +201,7 @@ void member_menu(WINDOW* menu_window, member_t* member) {
                         view_ticket_menu(menu_window, member);
                         break;
                     case 2:  // view own details
-                        view_member_details_menu(menu_window, member);
+                        view_member_details_menu(menu_window, members, member);
                         break;
                     case 3:  // send feedback
                         member_feedback_form(menu_window, member);
@@ -235,8 +236,100 @@ void member_menu(WINDOW* menu_window, member_t* member) {
     delwin(member_menu_window);
 }
 
-void view_member_details_menu(WINDOW* menu_window, member_t* member) {
+void view_member_details_menu(WINDOW* menu_window, member_vector_t* members, member_t* member) {
+    member_details_form_t member_details_form;
+    WINDOW* member_details_window;
 
+    member_details_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_member_details_form(&member_details_form, member_details_window, TITLE, MEMBER_REGISTRATION_HEADER, member);
+    display_member_details_form(&member_details_form, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&member_details_form.form, wgetch(member_details_window))) {
+            case SUBMIT_ACTION:
+                if (is_member_exists(members, get_member_details_username(&member_details_form)) &&
+                    strcmp(member->username, get_member_details_username(&member_details_form)) != 0) {
+                    print_member_details_form_message(&member_details_form, "Username is taken", ERROR);
+                    break;
+                }
+
+                if (!validate_member_details_email(&member_details_form)) {
+                    print_member_details_form_message(&member_details_form, "Email is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_member_details_same_password(&member_details_form) &&
+                    strlen(get_member_details_password(&member_details_form))) {
+                    print_member_details_form_message(&member_details_form, "Password does not match", ERROR);
+                    break;
+                }
+
+                if (!validate_member_details_gender(&member_details_form)) {
+                    print_member_details_form_message(&member_details_form, "Invalid gender", ERROR);
+                    break;
+                }
+
+                if (!validate_member_details_contact_no(&member_details_form)) {
+                    print_member_details_form_message(&member_details_form, "Invalid contact no", ERROR);
+                    break;
+                }
+
+                // saving
+                if (strcmp(member->username, get_member_details_username(&member_details_form)) != 0) {
+                    free(member->username);
+                    member->username = strdup(get_member_details_username(&member_details_form));
+                }
+                if (strcmp(member->email, get_member_details_username(&member_details_form)) != 0) {
+                    free(member->email);
+                    member->email = strdup(get_member_details_email(&member_details_form));
+                }
+                if (strlen(get_member_details_password(&member_details_form)) > 0) {
+                    hash_message(get_member_details_password(&member_details_form), member->hashed_password);
+                }
+                member->gender = get_member_details_gender(&member_details_form);
+                if (strcmp(member->contact_no, get_member_details_contact_no(&member_details_form)) != 0) {
+                    free(member->contact_no);
+                    member->contact_no = strdup(get_member_details_contact_no(&member_details_form));
+                }
+
+                exit = true;
+                print_member_details_form_message(&member_details_form, "Details saved. Press any key", GOOD);
+                wgetch(member_details_form.form.window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(member_details_form.form.window, "Return to menu?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_member_details_form(&member_details_form, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    write_members(members, MEMBERS_FILEPATH);
+
+    free_member_details_form(&member_details_form);
+
+    delwin(member_details_window);
 }
 
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
