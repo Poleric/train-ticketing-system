@@ -51,6 +51,8 @@ void print_table_footer(table_t* table, short color_pair) {
 }
 
 void free_table(table_t* table) {
+    wclear(table->window);
+
     free(table->headers);
     free(table->column_widths);
     free(table->footers);
