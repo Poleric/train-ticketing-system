@@ -1,10 +1,15 @@
 #include <tui/start_menu.h>
 #include <tui/form/register_form.h>
 #include <tui/form/login_form.h>
+#include <tui/form/forgot_password_form.h>
 #include <tui/table/schedule_table.h>
 #include <tui/menu/member_menu.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h>
+#ifdef EMAIL_RECOVERY_FEATURE
+#include <recovery_mail.h>
+#endif
 
 #define TITLE "Hambalang Star Rail"
 #define MEMBER_LOGIN_HEADER "Login as Member"
@@ -123,6 +128,16 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 
                 display_login_form(&login_form, COLOR_1);
                 break;
+
+            #ifdef EMAIL_RECOVERY_FEATURE
+            case FORGOT_PASSWORD_ACTION:
+                clear_login_menu(&login_form);
+
+                member_forgot_password(menu_window, members);
+
+                display_login_form(&login_form, COLOR_1);
+                break;
+            #endif
 
             case EXIT_FORM_ACTION:
                 current_menu = EXIT_MENU;
@@ -307,6 +322,111 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
 
     delwin(register_window);
 }
+
+#ifdef EMAIL_RECOVERY_FEATURE
+void member_forgot_password(WINDOW* menu_window, member_vector_t* members) {
+    forgot_password_form_t forgot_password_form;
+    WINDOW* forgot_password_window;
+
+    forgot_password_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_forgot_password_form(&forgot_password_form, forgot_password_window, TITLE, MEMBER_REGISTRATION_HEADER);
+    display_forgot_password_form(&forgot_password_form, COLOR_1);
+
+    int code;
+    char* email;
+    member_t* member;
+    bool exit = false;
+    while (!exit) {
+        switch (forgot_password_form_driver(&forgot_password_form, wgetch(forgot_password_window))) {
+            case RELOAD_ACTION:
+                code = generate_random_code(1, 999999);
+                email = get_recovery_email(&forgot_password_form);
+
+                print_forgot_password_form_message(&forgot_password_form, "Sending recovery code", SELECTED);
+                wrefresh(forgot_password_window);
+
+                for (int i = 0; i < members->num_of_members; i++)
+                    if (strcmp(members->array[i]->email, email) == 0) {
+                        member = members->array[i];
+                        send_recovery(members->array[i]->email, code);
+                        break;
+                    }
+                print_forgot_password_form_message(&forgot_password_form, "Recovery code sent", GOOD);
+                move_cursor_to_input_field(&forgot_password_form.form);
+                break;
+
+            case SUBMIT_ACTION:
+                if (get_recovery_code(&forgot_password_form) == code) {
+                    init_reset_password_fields(&forgot_password_form);
+                    display_forgot_password_form(&forgot_password_form, COLOR_1);
+
+                    while (!exit) {
+                        switch (form_driver(&forgot_password_form.form, wgetch(forgot_password_window))) {
+                            case SUBMIT_ACTION:
+                                if (!validate_new_password_same(&forgot_password_form)) {
+                                    print_forgot_password_form_message(&forgot_password_form, "Password does not match", ERROR);
+                                    break;
+                                }
+                                hash_message(get_recovery_password(&forgot_password_form), member->hashed_password);
+                                exit = true;
+
+                                print_forgot_password_form_message(&forgot_password_form, "Password reset successful. Please login again.", GOOD);
+                                wgetch(forgot_password_window);
+                                break;
+
+                            case EXIT_FORM_ACTION:
+                                exit = true;
+                                break;
+
+                            case FORGOT_PASSWORD_ACTION:
+                                if (confirmation_menu(forgot_password_form.form.window, "Go back login ?") == EXIT_SUCCESS) {
+                                    exit = true;
+                                    break;
+                                }
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    break;
+                }
+                print_forgot_password_form_message(&forgot_password_form, "Incorrect code", ERROR);
+
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case FORGOT_PASSWORD_ACTION:
+                if (confirmation_menu(forgot_password_form.form.window, "Go back login ?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_forgot_password_form(&forgot_password_form, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    free_forgot_password_form(&forgot_password_form);
+
+    delwin(forgot_password_window);
+}
+#endif
 
 void member_feedback_form(WINDOW* menu_window, member_t* member) {
 

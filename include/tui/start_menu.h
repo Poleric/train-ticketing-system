@@ -16,6 +16,9 @@ current_menu_t member_login_menu(WINDOW* menu_window);
 void member_menu(WINDOW* menu_window, member_t* member);
 void view_member_details_menu(WINDOW* menu_window, member_t* member);
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members);
+#ifdef EMAIL_RECOVERY_FEATURE
+void member_forgot_password(WINDOW* menu_window, member_vector_t* members);
+#endif
 void member_feedback_form(WINDOW* menu_window, member_t* member);
 
 current_menu_t staff_login_menu(WINDOW* menu_window);
