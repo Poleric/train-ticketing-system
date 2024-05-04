@@ -124,7 +124,7 @@ void display_member_menu(member_menu_t* member_menu, short color_pair) {
 
     print_member_menu_footer(member_menu, color_pair);
 
-    select_option(&member_menu->menu, 0);
+    select_option(&member_menu->menu, member_menu->menu.selected_option);
 
     wrefresh(member_menu->menu.window);
 }
