@@ -3,6 +3,7 @@
 #include <tui/form/login_form.h>
 #include <tui/form/forgot_password_form.h>
 #include <tui/table/schedule_table.h>
+#include <tui/table/member_ticket_table.h>
 #include <tui/menu/member_menu.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -191,7 +192,7 @@ void member_menu(WINDOW* menu_window, member_t* member) {
 
                 switch (member_menu.menu.selected_option) {
                     case 0:  // book ticket
-                        schedule_menu(menu_window, member);
+                        view_schedule_menu(menu_window, member);
                         break;
                     case 1:  // view own ticket
                         view_ticket_menu(menu_window, member);
@@ -529,7 +530,7 @@ current_menu_t staff_menu(WINDOW* menu_window, staff_t* staff) {
 }
 
 
-void schedule_menu(WINDOW* menu_window, member_t* member) {
+void view_schedule_menu(WINDOW* menu_window, member_t* member) {
     WINDOW* schedule_window;
     weekly_schedule_t weekly_schedule;
     schedule_table_t schedule_table;
@@ -599,5 +600,48 @@ void schedule_menu(WINDOW* menu_window, member_t* member) {
 }
 
 void view_ticket_menu(WINDOW* menu_window, member_t* member) {
+    WINDOW* member_ticket_window;
+    member_ticket_table_t member_ticket_table;
 
+    member_ticket_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_member_ticket_table(member_ticket_window, &member_ticket_table, member);
+
+    bool exit = false;
+    do {
+        display_tickets(&member_ticket_table);
+        switch (wgetch(member_ticket_table.table.window)) {
+            case 'q':
+            case CTRL('C'):
+                exit = true;
+                break;
+
+            case KEY_UP:  // TODO: fix scrolling
+                if (member_ticket_table.table.current_line > 0 &&
+                    member_ticket_table.table.selected_line < member_ticket_table.tickets->num_of_tickets - member_ticket_table.table.number_of_display_lines + 1
+                        )
+                    member_ticket_table.table.current_line--;
+                if (member_ticket_table.table.selected_line > 0)
+                    member_ticket_table.table.selected_line--;
+                break;
+            case KEY_DOWN:
+                if (member_ticket_table.table.current_line < member_ticket_table.tickets->num_of_tickets - member_ticket_table.table.number_of_display_lines)
+                    member_ticket_table.table.current_line++;
+                if (member_ticket_table.table.selected_line < member_ticket_table.tickets->num_of_tickets - 1)
+                    member_ticket_table.table.selected_line++;
+                break;
+            case KEY_ENTER:
+
+                break;
+        }
+        wclear(member_ticket_table.table.window);
+    } while (!exit);
+
+    free_member_ticket_table(&member_ticket_table);
 }
