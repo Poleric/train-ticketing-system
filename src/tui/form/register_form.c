@@ -156,6 +156,8 @@ void display_register_form(register_form_t* register_form, short color_pair) {
 
 void free_register_form(register_form_t* register_form) {
     cleanup_form(&register_form->form);
+    free(register_form->footers);
+    free(register_form->footer_widths);
 }
 
 char* get_register_username(register_form_t* register_form) {
