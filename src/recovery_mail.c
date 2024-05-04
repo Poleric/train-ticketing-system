@@ -1,5 +1,3 @@
-#ifdef EMAIL_RECOVERY_FEATURE
-
 #include <recovery_mail.h>
 #include <stdio.h>
 #include <string.h>
@@ -16,7 +14,7 @@
         "If you haven't made this request, please ignore it.\r\n"
 
 
-int get_random_code(int lower, int upper) {
+int generate_random_code(int lower, int upper) {
     srand(time(NULL));
     return (rand() % (upper - lower + 1)) + lower;
 }
@@ -89,5 +87,3 @@ int send_recovery(const char* to_mail, int code)
 
     return (int)res;
 }
-
-#endif

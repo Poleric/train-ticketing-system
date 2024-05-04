@@ -10,7 +10,7 @@ struct upload_status {
     size_t bytes_read;
 };
 
-int get_random_code(int lower, int upper);
+int generate_random_code(int lower, int upper);
 int send_recovery(const char* to_mail, int code);
 
 #endif //TRAINTICKETINGSYSTEM_RECOVERY_MAIL_H
