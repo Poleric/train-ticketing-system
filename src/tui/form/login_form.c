@@ -140,7 +140,15 @@ void print_login_form_message(login_form_t* login_form, const char* message, sho
 void display_login_form(login_form_t* login_form, short color_pair) {
     print_login_form_header(login_form, color_pair);
 
-    wprintw(login_form->logo_window, "%s", LOGO);
+    wprintw(login_form->logo_window, "%s", LOGO1);
+    wprintw(login_form->logo_window, "%s", LOGO2);
+    wprintw(login_form->logo_window, "%s", LOGO3);
+    wprintw(login_form->logo_window, "%s", LOGO4);
+    wprintw(login_form->logo_window, "%s", LOGO5);
+    wprintw(login_form->logo_window, "%s", LOGO6);
+    wprintw(login_form->logo_window, "%s", LOGO7);
+    wprintw(login_form->logo_window, "%s", LOGO8);
+    wprintw(login_form->logo_window, "%s", LOGO9);
 
     print_login_form_form_header(login_form, color_pair);
 
