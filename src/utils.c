@@ -239,3 +239,9 @@ dt_date_t date_add_days(dt_date_t date, const int days) {
 time_t diff_date(dt_date_t date1, dt_date_t date2) {
     return time_t_from_dt(date1, (dt_time_t){0 , 0, 0}) - time_t_from_dt(date2, (dt_time_t){0 , 0, 0});
 }
+
+void dt_from_timestamp(time_t timestamp, dt_date_t* date, dt_time_t* time, int *tm_wday) {
+    struct tm *tm;
+    tm = localtime(&timestamp);
+    split_tm(*tm, date, time, tm_wday);
+}
