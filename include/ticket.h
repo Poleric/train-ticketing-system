@@ -35,6 +35,7 @@ int add_train_ticket(train_ticket_vector_t* train_tickets, train_ticket_t* train
 int get_ticket_history(train_ticket_vector_t* train_tickets, const char* filepath, const char* username);
 int get_tickets_from_details(train_ticket_vector_t* train_tickets, const char* filepath, const char* train_id, time_t timestamp);
 int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepath);
+int delete_ticket(const char* filepath, unsigned int ticket_id);
 
 int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t* schedule);
 

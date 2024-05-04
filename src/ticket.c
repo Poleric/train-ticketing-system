@@ -131,6 +131,34 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
     return EXIT_SUCCESS;
 }
 
+int delete_ticket(const char* filepath, unsigned int ticket_id) {
+    FILE* r_ptr, *w_ptr;
+    r_ptr = fopen(filepath, "rb");
+    w_ptr = fopen(".ticket_tmp", "wb+");
+
+    if (r_ptr == NULL || w_ptr == NULL) {
+//        fprintf(stderr, "Error to open this file!\n");
+        if (r_ptr) fclose(r_ptr);
+        if (w_ptr) fclose(w_ptr);
+        return EXIT_FAILURE;
+    }
+
+    train_ticket_t buffer;
+    while (fread(&buffer, sizeof(train_ticket_t), 1, r_ptr)) {
+        if (buffer.ticket_id == ticket_id)
+            continue;
+        fwrite(&buffer, sizeof(train_ticket_t), 1, w_ptr);
+    }
+
+    fclose(r_ptr);
+    fclose(w_ptr);
+
+    remove(filepath);
+    rename(".ticket_tmp", filepath);
+
+    return EXIT_SUCCESS;
+}
+
 int add_train_ticket(train_ticket_vector_t* train_tickets, train_ticket_t* train_ticket) {
     if (train_tickets->num_of_tickets + 1 > train_tickets->max_size)
         if (resize_train_ticket_vector(train_tickets, train_tickets->max_size * 2) == EXIT_FAILURE)
