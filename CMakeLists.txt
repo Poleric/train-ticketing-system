@@ -69,7 +69,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
 add_executable(TrainTicketingSystem ${SOURCES})
 target_include_directories(TrainTicketingSystem PRIVATE include/)
 # math.h
-target_link_libraries(TrainTicketingSystem PRIVATE m)
+if (NOT MSVC)
+    target_link_libraries(TrainTicketingSystem PRIVATE m)
+ENDIF ()
 
 # OpenSSL
 find_package(OpenSSL REQUIRED)
