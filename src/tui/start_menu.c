@@ -275,7 +275,7 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
                         NONE
                 );
 
-                print_register_form_message(&register_form, "Successfully registered", GOOD);
+                print_register_form_message(&register_form, "Successfully registered. Press any key to continue.", GOOD);
                 exit = true;
 
                 wgetch(register_form.form.window);
