@@ -13,6 +13,8 @@ struct TrainTicket{
     char train_id[5];
     time_t timestamp;
 
+    time_t order_timestamp;
+
     char username[255];
     int seat;
 };
@@ -25,7 +27,7 @@ struct TrainTicketVector {
 
 
 unsigned long generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat);
-int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp, int seat);
+int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp, time_t order_timestamp, int seat);
 
 train_ticket_vector_t * init_train_ticket_vector();
 int resize_train_ticket_vector(train_ticket_vector_t* train_tickets, int size);
@@ -37,7 +39,7 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
 
 int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t* schedule);
 
-int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, int seat);
+int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, time_t order_timestamp, int seat);
 
 void free_train_ticket_vector(train_ticket_vector_t * members);
 

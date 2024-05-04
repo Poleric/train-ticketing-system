@@ -21,11 +21,12 @@ unsigned long generate_ticket_id(char* train_id, char* username, time_t timestam
     return hash;
 }
 
-int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp, int seat) {
+int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp,time_t order_timestamp,  int seat) {
     ticket->ticket_id = generate_ticket_id(train_id, username, timestamp, seat);
     strncpy(ticket->train_id, train_id, 5);
     strncpy(ticket->username, username, 255);
     ticket->timestamp = timestamp;
+    ticket->order_timestamp = order_timestamp;
     ticket->seat = seat;
     return EXIT_SUCCESS;
 }
@@ -99,7 +100,7 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
     fptr = fopen(filepath, "rb+");
 
     if (fptr == NULL) {
-        fprintf(stderr, "Error to open this file!\n");
+//        fprintf(stderr, "Error to open this file!\n");
         return EXIT_FAILURE;
     }
 
@@ -164,11 +165,25 @@ int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t*
     return n;
 }
 
-int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, int seat) {
+int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, time_t order_timestamp, int seat) {
     train_ticket_t ticket;
 
     time_t timestamp = time_t_from_dt(date, schedule->departure_time);
-    create_ticket(&ticket, schedule->train_id, username, timestamp, seat);
+    create_ticket(&ticket, schedule->train_id, username, timestamp, order_timestamp, seat);
+
+    FILE* fptr;
+    fptr = fopen(filepath, "ab");
+
+    if (fptr == NULL) {
+//        fprintf(stderr, "Error to open this file!\n");
+        return EXIT_FAILURE;
+    }
+
+    fwrite(&ticket, sizeof(train_ticket_t), 1, fptr);
+
+    fclose(fptr);
+
+    return EXIT_SUCCESS;
 }
 
 void free_train_ticket_vector(train_ticket_vector_t * members) {
