@@ -18,13 +18,24 @@ void init_menu(menu_t* menu, WINDOW* menu_window, short default_color_pair, attr
     keypad(menu->window, true);
 }
 
-void highlight_selected_option(menu_t* menu, attr_t attr, short color_pair) {
+void unhighlight_selected_option(menu_t* menu) {
     assert(menu->selected_option < menu->number_of_options);
 
     menu_option_t* option = menu->menu_options + menu->selected_option;
     int start_x = get_option_start_x(menu, option);
 
-    mvwchgat(menu->window, option->y, start_x, strlen(option->label), attr, color_pair, NULL);
+    mvwaddch(menu->window, option->y, start_x - 2, ' ');
+    mvwchgat(menu->window, option->y, start_x, strlen(option->label), A_NORMAL, menu->default_color_pair, NULL);
+}
+
+void highlight_selected_option(menu_t* menu) {
+    assert(menu->selected_option < menu->number_of_options);
+
+    menu_option_t* option = menu->menu_options + menu->selected_option;
+    int start_x = get_option_start_x(menu, option);
+
+    mvwaddch(menu->window, option->y, start_x - 2, '>');
+    mvwchgat(menu->window, option->y, start_x, strlen(option->label), menu->selected_attr, menu->selected_color_pair, NULL);
 }
 
 int get_option_start_x(menu_t* menu, menu_option_t* option) {
@@ -36,11 +47,11 @@ int get_option_start_x(menu_t* menu, menu_option_t* option) {
 void select_option(menu_t* menu, int new_option) {
     assert(new_option < menu->number_of_options);
 
-    highlight_selected_option(menu, A_NORMAL, menu->default_color_pair);
+    unhighlight_selected_option(menu);
 
     menu->selected_option = new_option;
 
-    highlight_selected_option(menu, menu->selected_attr, menu->selected_color_pair);
+    highlight_selected_option(menu);
 }
 
 void print_options(menu_t* menu) {
@@ -53,6 +64,7 @@ void print_options(menu_t* menu) {
 
 form_action_t menu_driver(menu_t* menu, int ch) {
     switch (ch) {
+        case 'q':
         case CTRL('C'):
             if (confirmation_menu(menu->window, "Logout?") == EXIT_SUCCESS)
                 return EXIT_FORM_ACTION;

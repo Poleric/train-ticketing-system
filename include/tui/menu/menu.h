@@ -32,7 +32,8 @@ struct Menu {
 };
 
 void init_menu(menu_t* menu, WINDOW* menu_window, short default_color_pair, attr_t selected_attr, short selected_color_pair);
-void highlight_selected_option(menu_t* menu, attr_t attr, short color_pair);
+void unhighlight_selected_option(menu_t* menu);
+void highlight_selected_option(menu_t* menu);
 
 int get_option_start_x(menu_t* menu, menu_option_t* option);
 void select_option(menu_t* menu, int new_option);
