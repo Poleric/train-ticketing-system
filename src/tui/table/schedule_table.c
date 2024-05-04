@@ -1,5 +1,6 @@
 #include <tui/table/schedule_table.h>
 #include <tui/utils/tui_utils.h>
+#include <tui/utils/menu_utils.h>
 #include <string.h>
 #include <ticket.h>
 
@@ -139,13 +140,13 @@ void print_schedule_row(schedule_table_t* schedule_table, schedule_t* schedule) 
 }
 
 void display_schedules(schedule_table_t* schedule_table) {
-    print_schedule_table_day_header(schedule_table, 2, 3);
+    print_schedule_table_day_header(schedule_table, COLOR_2, SELECTED);
 
     print_schedule_table_date_header(schedule_table);
 
     move_to_next_line(schedule_table->table.window, 0);
 
-    print_table_header(&schedule_table->table, 1);
+    print_table_header(&schedule_table->table, COLOR_1);
 
     move_to_next_line(schedule_table->table.window, 0);
 
@@ -159,9 +160,9 @@ void display_schedules(schedule_table_t* schedule_table) {
         move_to_next_line(schedule_table->table.window, 0);
     }
 
-    highlight_selected_row(&schedule_table->table, 2, 3);
+    highlight_selected_row(&schedule_table->table, 2, SELECTED);
 
-    print_table_footer(&schedule_table->table, 1);
+    print_table_footer(&schedule_table->table, COLOR_1);
 
     wrefresh(schedule_table->table.window);
 }
