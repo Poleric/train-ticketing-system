@@ -207,6 +207,9 @@ bool validate_gender(register_form_t* register_form) {
 }
 
 bool validate_contact_no(register_form_t* register_form) {
+    /*
+     * Allow empty
+     */
     char* p = get_register_contact_no(register_form);
     while (*p) {
         if (isalpha(*p)) return false;
