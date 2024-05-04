@@ -27,6 +27,18 @@ struct MemberVector {
     int num_of_members;
 };
 
+typedef enum {
+    COMPLAINT,
+    SUGGESTION
+}feedback_type_t;
+
+typedef struct {
+    char* member_name;
+    char* member_email;
+    feedback_type_t type;
+    char* message;
+} feedback_t;
+
 member_t* init_member();
 member_vector_t* init_members_vector();
 
