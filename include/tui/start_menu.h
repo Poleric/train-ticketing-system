@@ -14,12 +14,16 @@ void start_menu();
 
 current_menu_t member_login_menu(WINDOW* menu_window);
 void member_menu(WINDOW* menu_window, member_t* member);
+void view_member_details_menu(WINDOW* menu_window, member_t* member);
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members);
+void member_feedback_form(WINDOW* menu_window, member_t* member);
 
 current_menu_t staff_login_menu(WINDOW* menu_window);
 current_menu_t staff_menu(WINDOW* menu_window, staff_t* current_staff);
 
-void schedule_menu();
+void schedule_menu(WINDOW* menu_window, member_t* member);
+
+void view_ticket_menu(WINDOW* menu_window, member_t* member);
 
 
 #endif //TRAINTICKETINGSYSTEM_TUI_H

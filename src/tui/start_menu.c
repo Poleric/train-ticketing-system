@@ -2,6 +2,7 @@
 #include <tui/form/register_form.h>
 #include <tui/form/login_form.h>
 #include <tui/table/schedule_table.h>
+#include <tui/menu/member_menu.h>
 #include <locale.h>
 #include <stdlib.h>
 
@@ -33,6 +34,7 @@ void init_color_pairs() {
     assume_default_colors(-1, -1);
     init_pair(COLOR_1, COLOR_GREEN, COLOR_BLACK);
     init_pair(COLOR_2, COLOR_CYAN, COLOR_BLACK);
+    init_pair(BACKGROUND, -1, COLOR_WHITE);
     init_pair(SELECTED, COLOR_YELLOW, COLOR_BLACK);
     init_pair(ERROR, COLOR_WHITE, COLOR_RED);
     init_pair(GOOD, COLOR_WHITE, COLOR_GREEN);
@@ -149,9 +151,10 @@ current_menu_t member_login_menu(WINDOW* menu_window) {
 }
 
 void member_menu(WINDOW* menu_window, member_t* member) {
-    WINDOW* member_window;
+    WINDOW* member_menu_window;
+    member_menu_t member_menu;
 
-    member_window = derwin(
+    member_menu_window = derwin(
             menu_window,
             LINES,
             COLS,
@@ -159,7 +162,59 @@ void member_menu(WINDOW* menu_window, member_t* member) {
             0
     );
 
-    delwin(member_window);
+    char header_message[50];
+    snprintf(header_message, 50, "Welcome %s", member->username);
+
+    init_member_menu(&member_menu, member_menu_window, TITLE, header_message);
+    display_member_menu(&member_menu, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (menu_driver(&member_menu.menu, wgetch(member_menu_window))) {
+            case SUBMIT_ACTION:
+                cleanup_menu(&member_menu.menu);
+
+                switch (member_menu.menu.selected_option) {
+                    case 0:  // book ticket
+                        schedule_menu(menu_window, member);
+                        break;
+                    case 1:  // view own ticket
+                        view_ticket_menu(menu_window, member);
+                        break;
+                    case 2:  // view own details
+                        view_member_details_menu(menu_window, member);
+                        break;
+                    case 3:  // send feedback
+                        member_feedback_form(menu_window, member);
+                        break;
+                    case 4:  // logout
+                        exit = true;
+                        break;
+                }
+
+                if (!exit) display_member_menu(&member_menu, COLOR_1);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+            case REFRESH_SCREEN_ACTION:
+                display_member_menu(&member_menu, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    free_member_menu(&member_menu);
+
+    delwin(member_menu_window);
+}
+
+void view_member_details_menu(WINDOW* menu_window, member_t* member) {
+
 }
 
 void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
@@ -249,6 +304,9 @@ void member_registration_menu(WINDOW* menu_window, member_vector_t* members) {
     delwin(register_window);
 }
 
+void member_feedback_form(WINDOW* menu_window, member_t* member) {
+
+}
 
 // staff_login -> staff_menu   --┐
 //   / \        -> register_menu --|
@@ -347,16 +405,23 @@ current_menu_t staff_menu(WINDOW* menu_window, staff_t* staff) {
 }
 
 
-void schedule_menu() {
-    WINDOW* window = newwin(LINES, COLS, 0, 0);
-
+void schedule_menu(WINDOW* menu_window, member_t* member) {
+    WINDOW* schedule_window;
     weekly_schedule_t weekly_schedule;
     schedule_table_t schedule_table;
+
+    schedule_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
 
     init_weekly_schedule(&weekly_schedule);
     load_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
 
-    init_schedule_table(window, &schedule_table, &weekly_schedule);
+    init_schedule_table(schedule_window, &schedule_table, &weekly_schedule);
 
     bool exit = false;
     do {
@@ -404,4 +469,8 @@ void schedule_menu() {
 
     free_schedule_table(&schedule_table);
     free_weekly_schedules(&weekly_schedule);
+}
+
+void view_ticket_menu(WINDOW* menu_window, member_t* member) {
+
 }
