@@ -6,8 +6,8 @@
 
 #define BASE_TRAIN_TICKETS_LENGTH 8
 
-unsigned long generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat) {
-    unsigned long hash = 5381;
+unsigned int generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat) {
+    unsigned int hash = 5381;
     int c;
 
     while ((c = (unsigned char)*train_id++))

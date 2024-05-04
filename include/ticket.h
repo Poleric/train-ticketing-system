@@ -3,12 +3,11 @@
 
 #include <schedule.h>
 
-
 typedef struct TrainTicket train_ticket_t;
 typedef struct TrainTicketVector train_ticket_vector_t;
 
 struct TrainTicket{
-    unsigned long ticket_id;
+    unsigned int ticket_id;
 
     char train_id[5];
     time_t timestamp;
@@ -26,7 +25,7 @@ struct TrainTicketVector {
 };
 
 
-unsigned long generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat);
+unsigned int generate_ticket_id(char* train_id, char* username, time_t timestamp, int seat);
 int create_ticket(train_ticket_t* ticket, char* train_id, char* username, time_t timestamp, time_t order_timestamp, int seat);
 
 train_ticket_vector_t * init_train_ticket_vector();
