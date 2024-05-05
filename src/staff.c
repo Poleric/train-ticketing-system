@@ -81,7 +81,7 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
     }
 
     for (int i = 0; i < staff_v->num_of_staff; i++)
-        fprintf(file, "%.254s\t%.64s\t%.254s\t%.19s\t%.50s\t%d\t%lf\n",
+        fprintf(file, "%.254s\t%.64s\t%.254s\t%.19s\t%.50s\t%d\t%.2lf\n",
                 staff_v->array[i]->username,
                 staff_v->array[i]->hashed_password,
                 staff_v->array[i]->email,
@@ -107,7 +107,7 @@ int load_staff(staff_vector_t* staff_v, const char* filepath) {
     enum Permissions permission;
     double salary;
     //fix here (string username_buffer and pw_buffer might no be zero-terminated)
-    while (fscanf(file, "%254[^\t]\t%64s\t%254s\t%19[^\t]\t%49[^\t]\t%d\t%2lf\n",
+    while (fscanf(file, "%254[^\t]\t%64s\t%254s\t%19[^\t]\t%49[^\t]\t%d\t%lf\n",
                   username,
                   hashed_password,
                   email,

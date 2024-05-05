@@ -737,7 +737,7 @@ void staff_registration_menu(WINDOW* menu_window, staff_vector_t* staffs) {
     );
 
     init_staff_register_form(&staff_register_form, staff_register_window, TITLE, MEMBER_REGISTRATION_HEADER);
-    display_staff_register_form(&staff_register_form, COLOR_1);
+    display_staff_register_form(&staff_register_form, COLOR_2);
 
     bool exit = false;
     while (!exit) {
@@ -797,7 +797,7 @@ void staff_registration_menu(WINDOW* menu_window, staff_vector_t* staffs) {
                 }
 
             case REFRESH_SCREEN_ACTION:
-                display_staff_register_form(&staff_register_form, COLOR_1);
+                display_staff_register_form(&staff_register_form, COLOR_2);
                 break;
 
             default:

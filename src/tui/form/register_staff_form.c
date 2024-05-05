@@ -63,6 +63,10 @@ void init_staff_register_form(staff_register_form_t* register_form, WINDOW* form
     register_form->form.fields[5].y = register_form->form_header_y + 9;
     register_form->form.fields[5].offset_x = FIELD_LABEL_WIDTH + STAFF_REGISTER_FIELD_GAP;
     register_form->form.fields[5].x = get_centered_x_start(register_form->form.window, register_form->form.fields[1].offset_x + (int)register_form->form.buffer_length);
+    register_form->form.fields[6].label = STAFF_REGISTER_LABEL_7;
+    register_form->form.fields[6].y = register_form->form_header_y + 11;
+    register_form->form.fields[6].offset_x = FIELD_LABEL_WIDTH + STAFF_REGISTER_FIELD_GAP;
+    register_form->form.fields[6].x = get_centered_x_start(register_form->form.window, register_form->form.fields[1].offset_x + (int)register_form->form.buffer_length);
 
     register_form->number_of_footers = 2;
     register_form->footers = calloc(register_form->number_of_footers, sizeof(const char*));
@@ -73,7 +77,7 @@ void init_staff_register_form(staff_register_form_t* register_form, WINDOW* form
     register_form->footer_widths[0] = 1;
     register_form->footer_widths[1] = 4;
 
-    register_form->form_message_y = register_form->form_header_y + 11;
+    register_form->form_message_y = register_form->form_header_y + 13;
 
     register_form->footer_y = getmaxy(form_window) - 1;
 
