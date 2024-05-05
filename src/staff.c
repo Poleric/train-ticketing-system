@@ -6,6 +6,7 @@
 
 #define BASE_STAFF_LENGTH 4
 
+
 staff_t* init_staff() {
     staff_t* new_staff = malloc(sizeof(staff_t));
     //fix here (derefering NULL pointer 'new_staff')
