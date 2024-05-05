@@ -50,9 +50,12 @@ void print_table_footer(table_t* table, short color_pair) {
     wchgat(table->window, table->width, A_STANDOUT, color_pair, NULL);
 }
 
-void free_table(table_t* table) {
+void clear_table(table_t* table) {
     wclear(table->window);
+}
 
+void free_table(table_t* table) {
+    clear_table(table);
     free(table->headers);
     free(table->column_widths);
     free(table->footers);

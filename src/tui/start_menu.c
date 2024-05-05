@@ -7,6 +7,7 @@
 #include <tui/table/schedule_table.h>
 #include <tui/table/member_ticket_table.h>
 #include <tui/menu/member_menu.h>
+#include <tui/menu/seat_menu.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -725,7 +726,18 @@ void view_schedule_menu(WINDOW* menu_window, member_t* member) {
                     schedule_table.table.selected_line++;
                 break;
             case KEY_ENTER:
+            case '\n':
+            case '\r':
+                schedule_t* schedule = get_selected_schedule(&schedule_table);
+                if (schedule == NULL)
+                    break;
 
+                if (get_schedule_number_of_free_seats(TICKETS_FILEPATH, schedule, schedule_table.selected_date) > 1) {
+                    clear_table(&schedule_table.table);
+                    view_seat_menu(menu_window, member, schedule_table.selected_date,
+                                   get_selected_schedule(&schedule_table));
+                    display_schedules(&schedule_table);
+                }
                 break;
         }
         wclear(schedule_table.table.window);
@@ -782,4 +794,53 @@ void view_ticket_menu(WINDOW* menu_window, member_t* member) {
     } while (!exit);
 
     free_member_ticket_table(&member_ticket_table);
+}
+
+void view_seat_menu(WINDOW* menu_window, member_t* member, dt_date_t date, schedule_t* schedule) {
+    WINDOW* seat_menu_window;
+    seat_menu_t seat_menu;
+
+    seat_menu_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    char header_message[50];
+
+    init_seat_menu(&seat_menu, seat_menu_window, TITLE, header_message, date, schedule);
+    snprintf(header_message, 50, "Carriage %d", get_current_page(&seat_menu.menu));
+    display_seat_menu(&seat_menu, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (int_menu_driver(&seat_menu.menu, wgetch(seat_menu_window))) {
+            case SUBMIT_ACTION:
+                cleanup_int_menu(&seat_menu.menu);
+
+                display_seat_menu(&seat_menu, COLOR_1);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+            case REFRESH_SCREEN_ACTION:
+                snprintf(header_message, 50, "Carriage %d", get_current_page(&seat_menu.menu));
+                display_seat_menu(&seat_menu, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+        // uh cleanup somehow affect member_menu_window
+        keypad(seat_menu_window, true);
+        curs_set(0);
+    }
+
+    free_seat_menu(&seat_menu);
+
+    delwin(seat_menu_window);
 }

@@ -130,7 +130,7 @@ void print_schedule_row(schedule_table_t* schedule_table, schedule_t* schedule) 
 
     move_to_x(schedule_table->table.window, offset_x);
 
-    int free_seats = schedule->n_seats - get_number_of_booked_seats(TICKETS_FILEPATH, schedule_table->selected_date, schedule);
+    int free_seats = get_schedule_number_of_free_seats(SCHEDULES_FILEPATH, schedule, schedule_table->selected_date);
     move_offset_x(schedule_table->table.window, get_offset_for_centered(get_number_of_digits_d(free_seats), schedule_table->table.column_widths[4]));
     wprintw(schedule_table->table.window, "%d", free_seats);
     offset_x += schedule_table->table.column_widths[4];
@@ -174,5 +174,11 @@ void free_schedule_table(schedule_table_t* schedule_table) {
     free_table(&schedule_table->table);
 
     curs_set(1);
+}
+
+schedule_t* get_selected_schedule(schedule_table_t* schedule_table) {
+    if (schedule_table->table.selected_line < schedule_table->weekly_schedule->days[schedule_table->selected_wday].n_elements)
+        return schedule_table->weekly_schedule->days[schedule_table->selected_wday].array[schedule_table->table.selected_line];
+    return NULL;
 }
 

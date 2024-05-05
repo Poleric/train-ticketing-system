@@ -3,6 +3,7 @@
 
 #include <tui/utils/tui_utils.h>
 #include <tui/utils/menu_utils.h>
+#include <schedule.h>
 #include <member.h>
 #include <staff.h>
 
@@ -28,5 +29,6 @@ void view_schedule_menu(WINDOW* menu_window, member_t* member);
 
 void view_ticket_menu(WINDOW* menu_window, member_t* member);
 
+void view_seat_menu(WINDOW* menu_window, member_t* member, dt_date_t date, schedule_t* schedule);
 
 #endif //TRAINTICKETINGSYSTEM_TUI_H

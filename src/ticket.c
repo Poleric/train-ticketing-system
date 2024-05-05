@@ -193,6 +193,10 @@ int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t*
     return n;
 }
 
+int get_schedule_number_of_free_seats(const char* filepath, schedule_t* schedule, dt_date_t date) {
+    return schedule->n_seats - get_number_of_booked_seats(filepath, date, schedule);
+}
+
 int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, time_t order_timestamp, int seat) {
     train_ticket_t ticket;
 
@@ -212,6 +216,22 @@ int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char
     fclose(fptr);
 
     return EXIT_SUCCESS;
+}
+
+train_ticket_t** sort_tickets_by_seat_no(train_ticket_vector_t* train_tickets) {
+    train_ticket_t** sorted_view = malloc(train_tickets->num_of_tickets * sizeof(train_ticket_t*));
+    for (int i = 0; i < train_tickets->num_of_tickets; i++)
+        sorted_view[i] = train_tickets->array + i;
+
+    qsort(sorted_view, train_tickets->num_of_tickets, sizeof(train_ticket_t*), compare_seat_no);
+
+    return sorted_view;
+}
+
+int compare_seat_no(const void* a, const void* b) {
+    train_ticket_t* ticket_1 = *(train_ticket_t**)a;
+    train_ticket_t* ticket_2 = *(train_ticket_t**)b;
+    return ticket_1->seat - ticket_2->seat;
 }
 
 void free_train_ticket_vector(train_ticket_vector_t * members) {

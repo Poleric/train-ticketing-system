@@ -38,6 +38,10 @@ int save_train_tickets(train_ticket_vector_t* train_tickets, const char* filepat
 int delete_ticket(const char* filepath, unsigned int ticket_id);
 
 int get_number_of_booked_seats(const char* filepath, dt_date_t date, schedule_t* schedule);
+int get_schedule_number_of_free_seats(const char* filepath, schedule_t* schedule, dt_date_t date);
+
+train_ticket_t** sort_tickets_by_seat_no(train_ticket_vector_t* train_tickets);
+int compare_seat_no(const void* a, const void* b);
 
 int book_ticket(const char* filepath, dt_date_t date, schedule_t* schedule, char* username, time_t order_timestamp, int seat);
 

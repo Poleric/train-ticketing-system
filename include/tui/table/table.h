@@ -29,6 +29,7 @@ void print_table_header(table_t* table, short color_pair);
 void scale_table_to_window(table_t* table);
 void highlight_selected_row(table_t* table, int header_offset, short selected_color_pair);
 void print_table_footer(table_t* table, short color_pair);
+void clear_table(table_t* table);
 void free_table(table_t* table);
 
 #endif //TRAINTICKETINGSYSTEM_TABLE_H
