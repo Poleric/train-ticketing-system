@@ -737,6 +737,10 @@ void view_schedule_menu(WINDOW* menu_window, member_t* member) {
                     view_seat_menu(menu_window, member, schedule_table.selected_date,
                                    get_selected_schedule(&schedule_table));
                     display_schedules(&schedule_table);
+
+                    // uh cleanup somehow affect member_menu_window
+                    keypad(schedule_window, true);
+                    curs_set(0);
                 }
                 break;
         }
@@ -818,9 +822,28 @@ void view_seat_menu(WINDOW* menu_window, member_t* member, dt_date_t date, sched
     while (!exit) {
         switch (int_menu_driver(&seat_menu.menu, wgetch(seat_menu_window))) {
             case SUBMIT_ACTION:
-                cleanup_int_menu(&seat_menu.menu);
+                int number_of_selected = get_number_of_selected(&seat_menu.menu);
+                if (number_of_selected < 0)
+                    break;
 
-                display_seat_menu(&seat_menu, COLOR_1);
+                if (confirmation_menu(seat_menu_window, "Confirm booking tickets?") == EXIT_FAILURE) {
+                    display_seat_menu(&seat_menu, COLOR_1);
+                    break;
+                }
+
+                char price_text[40];
+                snprintf(price_text, 25, "That will be $%.2lf total", number_of_selected * schedule->price);
+                if (confirmation_menu(seat_menu_window, price_text) == EXIT_FAILURE) {
+                    display_seat_menu(&seat_menu, COLOR_1);
+                    break;
+                }
+
+                for (int i = 0; i < seat_menu.menu.number_of_options; i++)
+                    if (seat_menu.menu.menu_options[i].selected)
+                        book_ticket(TICKETS_FILEPATH, date, schedule, member->username, time(NULL), seat_menu.menu.menu_options[i].label);
+                exit = true;
+
+                confirmation_menu(seat_menu_window, "Successfully booked");
                 break;
 
             case EXIT_FORM_ACTION:
