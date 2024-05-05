@@ -682,16 +682,17 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
 
                 switch (staff_menu.menu.selected_option) {
                     case 0:
+                        cleanup_menu(&staff_menu.menu);
+
                         staff_registration_menu(menu_window, staffs);
+
+                        display_staff_menu(&staff_menu, COLOR_1);
                         break;
                     case 1:
-                        view_ticket_menu(menu_window, member);
                         break;
                     case 2:
-                        view_member_details_menu(menu_window, members, member);
                         break;
                     case 3:
-                        member_feedback_form(menu_window, member);
                         break;
                     case 4:  // logout
                         exit = true;
