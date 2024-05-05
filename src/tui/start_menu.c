@@ -8,6 +8,7 @@
 #include <tui/table/member_ticket_table.h>
 #include <tui/menu/member_menu.h>
 #include <tui/menu/seat_menu.h>
+#include <tui/menu/staff_menu.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -654,18 +655,71 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     return current_menu;
 }
 
-current_menu_t staff_menu(WINDOW* menu_window, staff_t* staff) {
-    current_menu_t current_menu = STAFF_MENU;
+void staff_menu(WINDOW* menu_window, staff_t* staff) {
+    WINDOW* staff_menu_window;
+    staff_menu_t staff_menu;
 
-    wprintw(menu_window, "Welcome %s", staff->username);
-    wrefresh(menu_window);
+    staff_menu_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
 
-    if (wgetch(menu_window) == KEY_ESC)
-        current_menu = EXIT_MENU;
+    char header_message[50];
+    snprintf(header_message, 50, "Welcome %s", staff->username);
 
-    wclear(menu_window);
-    wrefresh(menu_window);
-    return current_menu;
+    init_staff_menu(&staff_menu, staff_menu_window, TITLE, header_message);
+    display_staff_menu(&staff_menu, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (menu_driver(&staff_menu.menu, wgetch(staff_menu_window))) {
+            case SUBMIT_ACTION:
+                cleanup_menu(&staff_menu.menu);
+
+                switch (staff_menu.menu.selected_option) {
+                    case 0:  // book ticket
+                        view_schedule_menu(menu_window, member);
+                        break;
+                    case 1:  // view own ticket
+                        view_ticket_menu(menu_window, member);
+                        break;
+                    case 2:  // view own details
+                        view_member_details_menu(menu_window, members, member);
+                        break;
+                    case 3:  // send feedback
+                        member_feedback_form(menu_window, member);
+                        break;
+                    case 4:  // logout
+                        exit = true;
+                        break;
+                }
+
+                if (!exit) display_staff_menu(&staff_menu, COLOR_1);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+            case REFRESH_SCREEN_ACTION:
+                display_staff_menu(&staff_menu, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+
+        // uh cleanup somehow affect member_menu_window
+        keypad(staff_menu_window, true);
+        curs_set(0);
+    }
+
+    free_staff_menu(&staff_menu);
+
+    delwin(staff_menu_window);
 }
 
 

@@ -47,7 +47,7 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/tui/menu/member_menu.c
         ${CMAKE_SOURCE_DIR}/src/tui/menu/int_menu.c
         ${CMAKE_SOURCE_DIR}/src/tui/menu/seat_menu.c
-#        ${CMAKE_SOURCE_DIR}/src/tui/menu/book_ticket_menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/menu/staff_menu.c
 
         ${CMAKE_SOURCE_DIR}/src/main.c
 )
