@@ -48,6 +48,7 @@ int get_next_not_disabled_int_option(int_menu_t* menu, size_t offset, size_t ste
 form_action_t int_menu_driver(int_menu_t* menu, int ch);
 
 int get_current_page(int_menu_t* menu);
+int get_number_of_selected(int_menu_t* int_menu);
 
 void cleanup_int_menu(int_menu_t* menu);
 

@@ -158,6 +158,14 @@ int get_current_page(int_menu_t* menu) {
     return (menu->selected_option + 1) / (menu->rows_per_page * menu->options_per_row) + 1;
 }
 
+int get_number_of_selected(int_menu_t* int_menu) {
+    int n = 0;
+    for (int i = 0; i < int_menu->number_of_options; i++)
+        if (int_menu->menu_options[i].selected)
+            n++;
+    return n;
+}
+
 void cleanup_int_menu(int_menu_t* menu) {
     wclear(menu->window);
     wrefresh(menu->window);

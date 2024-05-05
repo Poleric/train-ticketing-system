@@ -36,7 +36,7 @@ void print_seat_menu_footer(seat_menu_t* seat_menu, short color_pair);
 
 void display_seat_menu(seat_menu_t* seat_menu, short color_pair);
 
-int get_selected_seat(seat_menu_t* seat_menu);
+int get_current_selected_seat(seat_menu_t* seat_menu);
 
 void free_seat_menu(seat_menu_t* seat_menu);
 

@@ -139,7 +139,7 @@ void display_seat_menu(seat_menu_t* seat_menu, short color_pair) {
     wrefresh(seat_menu->menu.window);
 }
 
-int get_selected_seat(seat_menu_t* seat_menu) {
+int get_current_selected_seat(seat_menu_t* seat_menu) {
     return seat_menu->menu.menu_options[seat_menu->menu.selected_option].label;
 }
 
