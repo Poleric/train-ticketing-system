@@ -108,7 +108,7 @@ form_action_t int_menu_driver(int_menu_t* menu, int ch) {
         case KEY_UP:
             i = get_previous_not_disabled_int_option(menu, 4, 1);
             if (i > -1)
-                select_int_menu_option(menu, MAX(0, menu->selected_option - menu->options_per_row));
+                select_int_menu_option(menu, MAX(0, i));
             if (get_current_page(menu) != current_page)
                 return REFRESH_SCREEN_ACTION;
             break;
@@ -116,7 +116,7 @@ form_action_t int_menu_driver(int_menu_t* menu, int ch) {
         case KEY_DOWN:
             i = get_next_not_disabled_int_option(menu, 4, 1);
             if (i > -1)
-                select_int_menu_option(menu, MIN(menu->number_of_options - 1, menu->selected_option + menu->options_per_row));
+                select_int_menu_option(menu, MIN(menu->number_of_options - 1, i));
             if (get_current_page(menu) != current_page)
                 return REFRESH_SCREEN_ACTION;
             break;

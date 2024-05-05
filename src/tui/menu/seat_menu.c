@@ -51,6 +51,8 @@ void init_seat_menu(seat_menu_t* seat_menu, WINDOW* menu_window, const char* hea
     init_seats_locations(seat_menu);
 
     scale_seat_menu_to_window(seat_menu);
+
+    seat_menu->menu.selected_option = get_next_not_disabled_int_option(&seat_menu->menu, 0, 1);
 }
 
 void init_seats_locations(seat_menu_t* seat_menu) {
@@ -66,7 +68,7 @@ void init_seats_locations(seat_menu_t* seat_menu) {
     const int start_y = seat_menu->menu_header_y + 2;
     for (int i = 0, k = 0; i < seat_menu->schedule->n_seats; i++) {
         bool disabled = false;
-        if (k < booked_tickets->num_of_tickets && i == ticket_p[k]->seat) {
+        if (k < booked_tickets->num_of_tickets && (i + 1) == ticket_p[k]->seat) {
             k++;
             disabled = true;
         }
