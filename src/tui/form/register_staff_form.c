@@ -190,8 +190,6 @@ char* get_staff_register_position(staff_register_form_t* register_form) {
     return register_form->form.fields[6].buffer;
 }
 
-
-
 bool validate_staff_register_email(staff_register_form_t* register_form) {
     // contains @
     char* p = get_staff_register_email(register_form);
