@@ -52,6 +52,7 @@ void print_table_footer(table_t* table, short color_pair) {
 
 void clear_table(table_t* table) {
     wclear(table->window);
+    wrefresh(table->window);
 }
 
 void free_table(table_t* table) {
