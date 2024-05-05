@@ -37,7 +37,7 @@ train_ticket_vector_t * init_train_ticket_vector() {
         return NULL;
 
     train_tickets->max_size = BASE_TRAIN_TICKETS_LENGTH;
-    train_tickets->array = calloc(sizeof(train_ticket_t *), train_tickets->max_size);
+    train_tickets->array = calloc(sizeof(train_ticket_t), train_tickets->max_size);
     train_tickets->num_of_tickets = 0;
 
     return train_tickets;
