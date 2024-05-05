@@ -114,7 +114,7 @@ int load_staff(staff_vector_t* staff_v, const char* filepath) {
                   contact_no,
                   position,
                   &permission,
-                  &salary) == 2)
+                  &salary) == 7)
         create_staff_record_from_hashed_password(staff_v, username, hashed_password, email, contact_no, position, permission, salary);
 
     fclose(file);
