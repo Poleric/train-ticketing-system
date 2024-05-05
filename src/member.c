@@ -80,7 +80,7 @@ int load_members(member_vector_t* members, const char* filepath) {
 
     char username[255], password[65], gender, email[255], contact_no[20];
     membership_t membership;
-    while (fscanf(file, "%254s\t%64s\t%c\t%254s\t%19s\t%d\n",
+    while (fscanf(file, "%254[^\t]\t%64s\t%c\t%254s\t%19[^\t]\t%d\n",
                   username,
                   password,
                   &gender,

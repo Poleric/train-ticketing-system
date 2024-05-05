@@ -81,7 +81,7 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
     }
 
     for (int i = 0; i < staff_v->num_of_staff; i++)
-        fprintf(file, "%.254s\t%.64s\t%.254s\t%.19s\t%.50s\t%d\t%lf\n",
+        fprintf(file, "%.254[^\t]\t%.64s\t%.254s\t%.19[^\t]\t%.50[^\t]\t%d\t%lf\n",
                 staff_v->array[i]->username,
                 staff_v->array[i]->hashed_password,
                 staff_v->array[i]->email,
