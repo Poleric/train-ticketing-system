@@ -672,7 +672,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
     snprintf(header_message, 50, "Welcome %s", staff->username);
 
     init_staff_menu(&staff_menu, staff_menu_window, TITLE, header_message);
-    display_staff_menu(&staff_menu, COLOR_1);
+    display_staff_menu(&staff_menu, COLOR_2);
 
     bool exit = false;
     while (!exit) {
@@ -686,7 +686,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
 
                         staff_registration_menu(menu_window, staffs);
 
-                        display_staff_menu(&staff_menu, COLOR_1);
+                        display_staff_menu(&staff_menu, COLOR_2);
                         break;
                     case 1:
                         break;
@@ -699,7 +699,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
                         break;
                 }
 
-                if (!exit) display_staff_menu(&staff_menu, COLOR_1);
+                if (!exit) display_staff_menu(&staff_menu, COLOR_2);
                 break;
 
             case EXIT_FORM_ACTION:
@@ -707,7 +707,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
                 break;
 
             case REFRESH_SCREEN_ACTION:
-                display_staff_menu(&staff_menu, COLOR_1);
+                display_staff_menu(&staff_menu, COLOR_2);
                 break;
 
             default:
