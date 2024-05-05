@@ -214,7 +214,7 @@ bool validate_staff_register_contact_no(staff_register_form_t* register_form) {
     /*
      * Allow empty
      */
-    char* p = get_register_contact_no(register_form);
+    char* p = get_staff_register_contact_no(register_form);
     while (*p) {
         if (isalpha(*p)) return false;
         p++;
