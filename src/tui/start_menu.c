@@ -4,6 +4,7 @@
 #include <tui/form/forgot_password_form.h>
 #include <tui/form/member_details_form.h>
 #include <tui/form/feedback_form.h>
+#include <tui/form/register_staff_form.h>
 #include <tui/table/schedule_table.h>
 #include <tui/table/member_ticket_table.h>
 #include <tui/menu/member_menu.h>
@@ -610,7 +611,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
                 if (current_staff) {
                     clear_login_menu(&login_form);
 
-                    current_menu = staff_menu(menu_window, current_staff);
+                    staff_menu(menu_window, staffs, current_staff);
 
                     display_login_form(&login_form, COLOR_2);
                 }
@@ -655,7 +656,7 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     return current_menu;
 }
 
-void staff_menu(WINDOW* menu_window, staff_t* staff) {
+void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
     WINDOW* staff_menu_window;
     staff_menu_t staff_menu;
 
@@ -680,16 +681,16 @@ void staff_menu(WINDOW* menu_window, staff_t* staff) {
                 cleanup_menu(&staff_menu.menu);
 
                 switch (staff_menu.menu.selected_option) {
-                    case 0:  // book ticket
-                        view_schedule_menu(menu_window, member);
+                    case 0:
+                        staff_registration_menu(menu_window, staffs);
                         break;
-                    case 1:  // view own ticket
+                    case 1:
                         view_ticket_menu(menu_window, member);
                         break;
-                    case 2:  // view own details
+                    case 2:
                         view_member_details_menu(menu_window, members, member);
                         break;
-                    case 3:  // send feedback
+                    case 3:
                         member_feedback_form(menu_window, member);
                         break;
                     case 4:  // logout
@@ -722,6 +723,93 @@ void staff_menu(WINDOW* menu_window, staff_t* staff) {
     delwin(staff_menu_window);
 }
 
+void staff_registration_menu(WINDOW* menu_window, staff_vector_t* staffs) {
+    staff_register_form_t staff_register_form;
+    WINDOW* staff_register_window;
+
+    staff_register_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_staff_register_form(&staff_register_form, staff_register_window, TITLE, MEMBER_REGISTRATION_HEADER);
+    display_staff_register_form(&staff_register_form, COLOR_1);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&staff_register_form.form, wgetch(staff_register_window))) {
+            case SUBMIT_ACTION:
+                if (is_staff_exists(staffs, get_staff_register_username(&staff_register_form))) {
+                    print_staff_register_form_message(&staff_register_form, "Username is taken", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_email(&staff_register_form)) {
+                    print_staff_register_form_message(&staff_register_form, "Email is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_same_password(&staff_register_form)) {
+                    print_staff_register_form_message(&staff_register_form, "Password does not match", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_salary(&staff_register_form)) {
+                    print_staff_register_form_message(&staff_register_form, "Invalid salary", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_contact_no(&staff_register_form)) {
+                    print_staff_register_form_message(&staff_register_form, "Invalid position", ERROR);
+                    break;
+                }
+
+                create_staff_record(
+                        staffs,
+                        get_staff_register_username(&staff_register_form),
+                        get_staff_register_password(&staff_register_form),
+                        get_staff_register_email(&staff_register_form),
+                        get_staff_register_contact_no(&staff_register_form),
+                        get_staff_register_position(&staff_register_form),
+                        0,
+                        get_staff_register_salary(&staff_register_form)
+                );
+
+                print_staff_register_form_message(&staff_register_form, "Successfully registered. Press any key to continue.", GOOD);
+                exit = true;
+
+                wgetch(staff_register_form.form.window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(staff_register_form.form.window, "Exit registration ?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_staff_register_form(&staff_register_form, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    write_staff(staffs, MEMBERS_FILEPATH);
+
+    free_staff_register_form(&staff_register_form);
+
+    delwin(staff_register_window);
+}
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member) {
     WINDOW* schedule_window;
