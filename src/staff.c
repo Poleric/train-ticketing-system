@@ -53,6 +53,24 @@ int create_staff_record(staff_vector_t* staff_v, char* name, char* password, cha
     return EXIT_SUCCESS;
 }
 
+int create_staff_record_from_hashed_password(staff_vector_t* staff_v, char* name, char* hashed_password, char* email, char* contact_no, char* position, enum Permissions permissions, double salary) {
+    if (is_staff_exists(staff_v, name))
+        return EXIT_FAILURE;
+
+    staff_t* newStaff = init_staff();
+
+    newStaff->username = strdup(name);
+    newStaff->hashed_password = strdup(hashed_password);
+    newStaff->email = strdup(email);
+    newStaff->contact_no = strdup(contact_no);
+    newStaff->position = strdup(position);
+    newStaff->permissions = permissions;
+    newStaff->salary = salary;
+
+    add_staff(staff_v, newStaff);
+    return EXIT_SUCCESS;
+}
+
 int write_staff(staff_vector_t* staff_v, const char* filepath) {
     FILE* file;
     file = fopen(filepath, "w");
@@ -63,7 +81,14 @@ int write_staff(staff_vector_t* staff_v, const char* filepath) {
     }
 
     for (int i = 0; i < staff_v->num_of_staff; i++)
-        fprintf(file, "%s %s\n", staff_v->array[i]->username, staff_v->array[i]->hashed_password);
+        fprintf(file, "%.254s\t%.64s\t%.254s\t%.19s\t%.50s\t%d\t%lf\n",
+                staff_v->array[i]->username,
+                staff_v->array[i]->hashed_password,
+                staff_v->array[i]->email,
+                staff_v->array[i]->contact_no,
+                staff_v->array[i]->position,
+                staff_v->array[i]->permissions,
+                staff_v->array[i]->salary);
 
     fclose(file);
     return EXIT_SUCCESS;
@@ -78,19 +103,19 @@ int load_staff(staff_vector_t* staff_v, const char* filepath) {
         return EXIT_FAILURE;
     }
 
-    char username_buffer[255], password_buffer[255];
+    char username[255], hashed_password[65], email[255], contact_no[20], position[50];
+    enum Permissions permission;
+    double salary;
     //fix here (string username_buffer and pw_buffer might no be zero-terminated)
-    while (fscanf(file, "%254s %254s", username_buffer, password_buffer) == 2) {
-        username_buffer[254] = '\0';
-        password_buffer[254] = '\0';
-
-        staff_t* new_staff = init_staff();
-
-        new_staff->username = strdup(username_buffer);
-        new_staff->hashed_password = strdup(password_buffer);
-
-        add_staff(staff_v, new_staff);
-    }
+    while (fscanf(file, "%254s\t%64s\t%254s\t%19s\t%49s\t%d\t%2lf\n",
+                  username,
+                  hashed_password,
+                  email,
+                  contact_no,
+                  position,
+                  &permission,
+                  &salary) == 2)
+        create_staff_record_from_hashed_password(staff_v, username, hashed_password, email, contact_no, position, permission, salary);
 
     fclose(file);
     return EXIT_SUCCESS;
