@@ -126,6 +126,11 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
                         display_staff_menu(&staff_menu, COLOR_2);
                         break;
                     case 1:  // view schedule
+                        cleanup_menu(&staff_menu.menu);
+
+                        view_staff_schedule_menu(menu_window, staff);
+
+                        display_staff_menu(&staff_menu, COLOR_2);
                         break;
                     case 2:  // edit self
                         break;

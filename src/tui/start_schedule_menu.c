@@ -1,6 +1,7 @@
 #include <tui/start_menu.h>
 #include <tui/table/schedule_table.h>
 #include <tui/menu/seat_menu.h>
+#include <tui/table/staff_schedule_table.h>
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member) {
     WINDOW* schedule_window;
@@ -152,4 +153,83 @@ void view_seat_menu(WINDOW* menu_window, member_t* member, dt_date_t date, sched
     free_seat_menu(&seat_menu);
 
     delwin(seat_menu_window);
+}
+
+void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
+    WINDOW* schedule_window;
+    weekly_schedule_t weekly_schedule;
+    schedule_table_t schedule_table;
+
+    schedule_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_weekly_schedule(&weekly_schedule);
+    load_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
+
+    init_staff_schedule_table(schedule_window, &schedule_table, &weekly_schedule);
+
+    bool exit = false;
+    do {
+        display_schedules(&schedule_table);
+        switch (wgetch(schedule_table.table.window)) {
+            case 'q':
+            case CTRL('C'):
+                exit = true;
+                break;
+            case KEY_LEFT:
+                if (diff_date(schedule_table.selected_date, schedule_table.today_date) <= 0)
+                    break;
+
+                if (schedule_table.selected_wday == 0)
+                    schedule_table.selected_wday = 6;
+                else
+                    schedule_table.selected_wday--;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, -1);
+                schedule_table.selected_wday %= 7;
+                break;
+            case KEY_RIGHT:
+                schedule_table.selected_wday++;
+                schedule_table.selected_date = date_add_days(schedule_table.selected_date, 1);
+                schedule_table.selected_wday %= 7;
+                break;
+            case KEY_UP:  // TODO: fix scrolling
+                if (schedule_table.table.current_line > 0 &&
+                    schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines + 1
+                        )
+                    schedule_table.table.current_line--;
+                if (schedule_table.table.selected_line > 0)
+                    schedule_table.table.selected_line--;
+                break;
+            case KEY_DOWN:
+                if (schedule_table.table.current_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines)
+                    schedule_table.table.current_line++;
+                if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
+                    schedule_table.table.selected_line++;
+                break;
+            case 'd':
+            case 'D':
+                if (confirmation_menu(schedule_window, "Delete selected schedule?") == EXIT_SUCCESS)
+                    delete_schedule_by_info(&weekly_schedule.days[schedule_table.selected_wday], get_selected_schedule(&schedule_table));
+
+                keypad(schedule_window, true);
+                curs_set(0);
+                break;
+            case 'e':
+            case 'E':
+
+                break;
+        }
+        wclear(schedule_table.table.window);
+    } while (!exit);
+
+    save_weekly_schedule(&weekly_schedule, SCHEDULES_FILEPATH);
+
+    free_schedule_table(&schedule_table);
+    free_weekly_schedules(&weekly_schedule);
+
 }
