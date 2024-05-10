@@ -20,18 +20,20 @@ void init_member_ticket_table(WINDOW* window, member_ticket_table_t* member_tick
     member_ticket_table->table.column_widths[3] = 14;
     member_ticket_table->table.column_widths[4] = 6;
 
-    member_ticket_table->table.number_of_footers = 4;
+    member_ticket_table->table.number_of_footers = 5;
     member_ticket_table->table.footers = calloc(member_ticket_table->table.number_of_footers, sizeof(const char*));
     member_ticket_table->table.footers[0] = "[q] Quit";
     member_ticket_table->table.footers[1] = "";
     member_ticket_table->table.footers[2] = "[↑↓] Scroll";
-    member_ticket_table->table.footers[3] = "[Enter] Edit";
+    member_ticket_table->table.footers[3] = "[D] Refund";
+    member_ticket_table->table.footers[4] = "[D] Change Seat";
 
     member_ticket_table->table.footer_widths = calloc(member_ticket_table->table.number_of_footers, sizeof (int));
     member_ticket_table->table.footer_widths[0] = 1;
     member_ticket_table->table.footer_widths[1] = 1;
     member_ticket_table->table.footer_widths[2] = 1;
     member_ticket_table->table.footer_widths[3] = 1;
+    member_ticket_table->table.footer_widths[4] = 1;
 
     member_ticket_table->member = member;
     member_ticket_table->tickets = init_train_ticket_vector();
