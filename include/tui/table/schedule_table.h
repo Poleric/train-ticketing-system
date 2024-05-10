@@ -4,6 +4,9 @@
 #include <tui/table/table.h>
 #include <schedule.h>
 
+#define FIRST_DAY_OF_WEEK SUNDAY
+#define SELECTED_DAY_PADDING 5
+
 typedef struct ScheduleTable schedule_table_t;
 
 struct ScheduleTable {

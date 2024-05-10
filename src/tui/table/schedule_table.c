@@ -4,9 +4,6 @@
 #include <string.h>
 #include <ticket.h>
 
-#define FIRST_DAY_OF_WEEK SUNDAY
-#define SELECTED_DAY_PADDING 5
-
 void init_schedule_table(WINDOW* window, schedule_table_t* schedule_table, weekly_schedule_t* weekly_schedules) {
     schedule_table->table.number_of_columns = 6;
     schedule_table->table.headers = calloc(schedule_table->table.number_of_columns, sizeof(const char*));
