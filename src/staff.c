@@ -173,6 +173,17 @@ int delete_staff(staff_vector_t* staff_v, const char* username) {
     return EXIT_SUCCESS;
 }
 
+const char* permission_to_string(enum Permissions perms) {
+    if (perms & MANAGE_STAFF && perms & MANAGE_MEMBER)
+        return "Manage Staff and Members";
+    else if (perms & MANAGE_STAFF)
+        return "Manage Staff";
+    else if (perms & MANAGE_MEMBER)
+        return "Manage Members";
+    else
+        return "";
+}
+
 void free_staff_vector(staff_vector_t* staff_v) {
     for (int i = 0; i < staff_v->num_of_staff; i++)
         free_staff(staff_v->array[i]);

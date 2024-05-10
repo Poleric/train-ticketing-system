@@ -38,6 +38,8 @@ int find_staff_index(staff_vector_t* staff_v, const char* username);
 int add_staff(staff_vector_t* staff_v, staff_t* staff);
 int delete_staff(staff_vector_t* staff_v, const char* username);
 
+const char* permission_to_string(enum Permissions perms);
+
 void free_staff(staff_t* staff);
 void free_staff_vector(staff_vector_t* staff_v);
 
