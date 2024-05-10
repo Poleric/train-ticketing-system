@@ -2,6 +2,9 @@
 #include <tui/table/schedule_table.h>
 #include <tui/menu/seat_menu.h>
 #include <tui/table/staff_schedule_table.h>
+#include <tui/form/schedule_details_form.h>
+
+#define CREATE_SCHEDULE_HEADER "Create new schedule"
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member) {
     WINDOW* schedule_window;
@@ -181,6 +184,7 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
             case CTRL('C'):
                 exit = true;
                 break;
+
             case KEY_LEFT:
                 if (diff_date(schedule_table.selected_date, schedule_table.today_date) <= 0)
                     break;
@@ -192,11 +196,13 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
                 schedule_table.selected_date = date_add_days(schedule_table.selected_date, -1);
                 schedule_table.selected_wday %= 7;
                 break;
+
             case KEY_RIGHT:
                 schedule_table.selected_wday++;
                 schedule_table.selected_date = date_add_days(schedule_table.selected_date, 1);
                 schedule_table.selected_wday %= 7;
                 break;
+
             case KEY_UP:  // TODO: fix scrolling
                 if (schedule_table.table.current_line > 0 &&
                     schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines + 1
@@ -205,12 +211,14 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
                 if (schedule_table.table.selected_line > 0)
                     schedule_table.table.selected_line--;
                 break;
+
             case KEY_DOWN:
                 if (schedule_table.table.current_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - schedule_table.table.number_of_display_lines)
                     schedule_table.table.current_line++;
                 if (schedule_table.table.selected_line < schedule_table.weekly_schedule->days[schedule_table.selected_wday].n_elements - 1)
                     schedule_table.table.selected_line++;
                 break;
+
             case 'd':
             case 'D':
                 if (confirmation_menu(schedule_window, "Delete selected schedule?") == EXIT_SUCCESS)
@@ -219,9 +227,19 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
                 keypad(schedule_window, true);
                 curs_set(0);
                 break;
+
             case 'e':
             case 'E':
 
+                break;
+
+            case 'a':
+            case 'A':
+                wclear(schedule_table.table.window);
+
+                create_schedule_menu(menu_window, &weekly_schedule);
+
+                curs_set(0);
                 break;
         }
         wclear(schedule_table.table.window);
@@ -231,5 +249,103 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
 
     free_schedule_table(&schedule_table);
     free_weekly_schedules(&weekly_schedule);
+}
 
+
+void create_schedule_menu(WINDOW* menu_window, weekly_schedule_t* weekly_schedules) {
+    schedule_form_t schedule_form;
+    WINDOW* schedule_form_window;
+
+    schedule_form_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_schedule_form(&schedule_form, schedule_form_window, TITLE, CREATE_SCHEDULE_HEADER);
+    display_schedule_form(&schedule_form, COLOR_2);
+
+    schedule_t* schedule;
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&schedule_form.form, wgetch(schedule_form_window))) {
+            case SUBMIT_ACTION:
+                if (!validate_schedule_form_train_id(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Train ID is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_from_station_id(&schedule_form) || !validate_schedule_form_to_station_id(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Station ID", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_weekday(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid weekday", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_departure_time(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Departure Time", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_eta(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Estimated Arrival Time", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_number_of_seats(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Number of seats", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_price(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid price", ERROR);
+                    break;
+                }
+
+                schedule = create_schedule(
+                        get_schedule_form_train_id(&schedule_form),
+                        get_schedule_form_from_station_id(&schedule_form),
+                        get_schedule_form_to_station_id(&schedule_form),
+                        get_schedule_form_departure_time(&schedule_form),
+                        get_schedule_form_eta(&schedule_form),
+                        get_schedule_form_number_of_seats(&schedule_form),
+                        get_schedule_form_price(&schedule_form)
+                );
+                add_schedule(weekly_schedules->days + get_schedule_form_weekday(&schedule_form), schedule);
+
+                print_schedule_form_message(&schedule_form, "Successfully registered. Press any key to continue.", GOOD);
+                exit = true;
+
+                wgetch(schedule_form.form.window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(schedule_form.form.window, "Exit?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_schedule_form(&schedule_form, COLOR_2);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    free_schedule_form(&schedule_form);
+
+    delwin(schedule_form_window);
 }

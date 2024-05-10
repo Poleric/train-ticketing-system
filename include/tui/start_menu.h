@@ -32,6 +32,7 @@ void view_staffs_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* curr
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member);
 void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff);
+void create_schedule_menu(WINDOW* menu_window, weekly_schedule_t* weekly_schedules);
 
 void view_ticket_menu(WINDOW* menu_window, member_t* member);
 
