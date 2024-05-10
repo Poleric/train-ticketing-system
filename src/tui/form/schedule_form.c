@@ -205,15 +205,15 @@ double get_schedule_form_price(schedule_form_t* schedule_form) {
 }
 
 bool validate_schedule_form_train_id(schedule_form_t* schedule_form) {
-    return strlen(get_schedule_form_train_id(schedule_form)) > 0;
+    return strlen(get_schedule_form_train_id(schedule_form)) > 0 && strlen(get_schedule_form_train_id(schedule_form)) <= 4;
 }
 
 bool validate_schedule_form_from_station_id(schedule_form_t* schedule_form) {
-    return strlen(get_schedule_form_from_station_id(schedule_form)) > 0;
+    return strlen(get_schedule_form_from_station_id(schedule_form)) > 0 && strlen(get_schedule_form_from_station_id(schedule_form)) <= 3;
 }
 
 bool validate_schedule_form_to_station_id(schedule_form_t* schedule_form) {
-    return strlen(get_schedule_form_to_station_id(schedule_form)) > 0;
+    return strlen(get_schedule_form_to_station_id(schedule_form)) > 0 && strlen(get_schedule_form_to_station_id(schedule_form)) <= 3;
 }
 
 bool validate_schedule_form_weekday(schedule_form_t* schedule_form) {
