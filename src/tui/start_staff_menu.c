@@ -114,7 +114,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
     bool exit = false;
     while (!exit) {
         switch (menu_driver(&staff_menu.menu, wgetch(staff_menu_window))) {
-            case SUBMIT_ACTION:
+            case SUBMIT_ACTION:  // view staffs
                 cleanup_menu(&staff_menu.menu);
 
                 switch (staff_menu.menu.selected_option) {
@@ -125,11 +125,11 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
 
                         display_staff_menu(&staff_menu, COLOR_2);
                         break;
-                    case 1:
+                    case 1:  // view schedule
                         break;
-                    case 2:
+                    case 2:  // edit self
                         break;
-                    case 3:
+                    case 3:  // view all tickets
                         break;
                     case 4:  // logout
                         exit = true;

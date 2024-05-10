@@ -6,7 +6,7 @@
 
 #define NUMBER_OF_OPTIONS 5
 #define OPTION_1 "View Staff"
-#define OPTION_2 "Add Schedule"
+#define OPTION_2 "View Schedule"
 #define OPTION_3 "Edit Profile"
 #define OPTION_4 "View All Tickets"
 #define OPTION_5 "Logout"
