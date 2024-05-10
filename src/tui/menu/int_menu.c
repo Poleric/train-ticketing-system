@@ -101,7 +101,7 @@ form_action_t int_menu_driver(int_menu_t* menu, int ch) {
     switch (ch) {
         case 'q':
         case CTRL('C'):
-            if (confirmation_menu(menu->window, "Logout?") == EXIT_SUCCESS)
+            if (confirmation_menu(menu->window, "Exit ?") == EXIT_SUCCESS)
                 return EXIT_FORM_ACTION;
             return REFRESH_SCREEN_ACTION;
 
