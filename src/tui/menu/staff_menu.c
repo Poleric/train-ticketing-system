@@ -4,7 +4,7 @@
 #include <utils.h>
 #include <string.h>
 
-#define NUMBER_OF_OPTIONS 5
+#define NUMBER_OF_OPTIONS 4
 #define OPTION_1 "View Staff"
 #define OPTION_2 "View Schedule"
 #define OPTION_3 "Edit Profile"
@@ -47,15 +47,20 @@ void init_staff_menu(staff_menu_t* staff_menu, WINDOW* menu_window, const char* 
             CENTERED_X
     };
     staff_menu->menu.menu_options[3] = (menu_option_t) {
-            OPTION_4,
+            OPTION_5,
             staff_menu->menu_header_y + 8,
             CENTERED_X
     };
-    staff_menu->menu.menu_options[4] = (menu_option_t) {
-            OPTION_5,
-            staff_menu->menu_header_y + 10,
-            CENTERED_X
-    };
+//    staff_menu->menu.menu_options[3] = (menu_option_t) {
+//            OPTION_4,
+//            staff_menu->menu_header_y + 8,
+//            CENTERED_X
+//    };
+//    staff_menu->menu.menu_options[4] = (menu_option_t) {
+//            OPTION_5,
+//            staff_menu->menu_header_y + 10,
+//            CENTERED_X
+//    };
 
     staff_menu->number_of_footers = 3;
     staff_menu->footers = calloc(staff_menu->number_of_footers, sizeof(const char*));

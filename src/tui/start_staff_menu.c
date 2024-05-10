@@ -160,10 +160,11 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
 
                         display_staff_menu(&staff_menu, COLOR_2);
                     case 3:  // view all tickets
+                        exit = true;  // temporary logout
                         break;
-                    case 4:  // logout
-                        exit = true;
-                        break;
+//                    case 4:  // logout
+//                        exit = true;
+//                        break;
                 }
 
                 if (!exit) display_staff_menu(&staff_menu, COLOR_2);
