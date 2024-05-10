@@ -3,6 +3,7 @@
 #include <tui/form/register_staff_form.h>
 #include <tui/form/staff_details_form.h>
 #include <tui/table/staff_table.h>
+#include <tui/utils/menu_utils.h>
 #include <string.h>
 
 #define STAFF_LOGIN_HEADER "Login as Staff"
@@ -44,9 +45,26 @@ current_menu_t staff_login_menu(WINDOW* menu_window) {
     load_staff(staffs, STAFFS_FILEPATH);
 
     current_menu_t current_menu = STAFF_MENU;
+    int minori_count = 0;
     while (current_menu == STAFF_MENU) {
         switch (form_driver(&login_form.form, wgetch(login_window))) {
             case SUBMIT_ACTION:
+                if (strcmp(get_username(&login_form), "MINORI") == 0 && strcmp(get_password(&login_form), "MINORI") == 0) {
+                    minori_count++;
+                    if (minori_count > 3) {
+                        clear_login_menu(&login_form);
+
+                        wmove(login_window, 0, get_centered_x_start(login_window, 90));
+                        print_minori(login_window);
+                        wgetch(login_window);
+
+                        wclear(login_window);
+
+                        display_login_form(&login_form, COLOR_2);
+                        break;
+                    }
+                }
+
                 current_staff = login_as_staff(staffs, get_username(&login_form), get_password(&login_form));
                 if (current_staff) {
                     clear_login_menu(&login_form);
