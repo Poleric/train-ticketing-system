@@ -21,4 +21,6 @@ void print_ticket_row(member_ticket_table_t* table, schedule_t* schedule);
 void display_tickets(member_ticket_table_t* member_ticket_table);
 void free_member_ticket_table(member_ticket_table_t* member_ticket_table);
 
+train_ticket_t* get_member_selected_ticket(member_ticket_table_t* member_ticket_table);
+
 #endif //TRAINTICKETINGSYSTEM_MEMBER_TICKET_TABLE_H

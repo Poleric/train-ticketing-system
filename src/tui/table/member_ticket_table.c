@@ -123,3 +123,7 @@ void free_member_ticket_table(member_ticket_table_t* member_ticket_table) {
     curs_set(1);
 }
 
+train_ticket_t* get_member_selected_ticket(member_ticket_table_t* member_ticket_table) {
+    return member_ticket_table->tickets->array + member_ticket_table->table.selected_line;
+}
+
