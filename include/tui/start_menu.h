@@ -7,6 +7,8 @@
 #include <member.h>
 #include <staff.h>
 
+#define TITLE "Hambalang Star Rail"
+
 void reload_members(member_vector_t* members);
 void reload_staff(staff_vector_t* staff);
 

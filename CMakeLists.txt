@@ -32,6 +32,9 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/stations.c
 
         ${CMAKE_SOURCE_DIR}/src/tui/start_menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/start_member_menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/start_staff_menu.c
+        ${CMAKE_SOURCE_DIR}/src/tui/start_schedule_menu.c
         ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_utils.c
         ${CMAKE_SOURCE_DIR}/src/tui/utils/tui_last_pos.c
         ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
