@@ -40,7 +40,7 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/tui/utils/menu_utils.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
-        ${CMAKE_SOURCE_DIR}/src/tui/form/register_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/register_member_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/register_staff_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/feedback_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/member_details_form.c

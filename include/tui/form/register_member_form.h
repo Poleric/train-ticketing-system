@@ -1,5 +1,5 @@
-#ifndef TRAINTICKETINGSYSTEM_REGISTER_FORM_H
-#define TRAINTICKETINGSYSTEM_REGISTER_FORM_H
+#ifndef TRAINTICKETINGSYSTEM_REGISTER_MEMBER_FORM_H
+#define TRAINTICKETINGSYSTEM_REGISTER_MEMBER_FORM_H
 
 #include <tui/form/form.h>
 
@@ -48,4 +48,4 @@ bool validate_same_password(register_form_t* register_form);;
 bool validate_gender(register_form_t* register_form);;
 bool validate_contact_no(register_form_t* register_form);;
 
-#endif //TRAINTICKETINGSYSTEM_REGISTER_FORM_H
+#endif //TRAINTICKETINGSYSTEM_REGISTER_MEMBER_FORM_H

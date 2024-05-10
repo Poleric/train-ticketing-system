@@ -2,7 +2,7 @@
 #include <string.h>
 #include <utils.h>
 #include <ctype.h>
-#include "tui/form/register_form.h"
+#include "tui/form/register_member_form.h"
 
 #define STAFF_REGISTER_LABEL_1  "Username         :"
 #define STAFF_REGISTER_LABEL_2  "Email address    :"

@@ -1,7 +1,7 @@
 #include <tui/start_menu.h>
 #include <tui/menu/member_menu.h>
 #include <tui/form/member_details_form.h>
-#include <tui/form/register_form.h>
+#include <tui/form/register_member_form.h>
 #include <tui/form/forgot_password_form.h>
 #include <tui/form/feedback_form.h>
 #include <tui/table/member_ticket_table.h>
