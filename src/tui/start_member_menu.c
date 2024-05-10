@@ -557,12 +557,14 @@ void view_ticket_menu(WINDOW* menu_window, member_t* member) {
                 if (member_ticket_table.table.selected_line > 0)
                     member_ticket_table.table.selected_line--;
                 break;
+
             case KEY_DOWN:
                 if (member_ticket_table.table.current_line < member_ticket_table.tickets->num_of_tickets - member_ticket_table.table.number_of_display_lines)
                     member_ticket_table.table.current_line++;
                 if (member_ticket_table.table.selected_line < member_ticket_table.tickets->num_of_tickets - 1)
                     member_ticket_table.table.selected_line++;
                 break;
+
             case 'D':
             case 'd':
                 selected_ticket = get_member_selected_ticket(&member_ticket_table);
@@ -582,6 +584,11 @@ void view_ticket_menu(WINDOW* menu_window, member_t* member) {
                     delete_ticket(TICKETS_FILEPATH, get_member_selected_ticket(&member_ticket_table)->ticket_id);
                 curs_set(0);
                 break;
+
+//            case 'E':
+//            case 'e':
+//
+//                break;
         }
         wclear(member_ticket_table.table.window);
     } while (!exit);
