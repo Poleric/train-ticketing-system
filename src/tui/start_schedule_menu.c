@@ -3,8 +3,10 @@
 #include <tui/menu/seat_menu.h>
 #include <tui/table/staff_schedule_table.h>
 #include <tui/form/schedule_details_form.h>
+#include <string.h>
 
 #define CREATE_SCHEDULE_HEADER "Create new schedule"
+#define EDIT_SCHEDULE_HEADER "Editing schedule"
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member) {
     WINDOW* schedule_window;
@@ -230,12 +232,18 @@ void view_staff_schedule_menu(WINDOW* menu_window, staff_t* staff) {
 
             case 'e':
             case 'E':
+                wclear(schedule_window);
+                curs_set(1);
 
+                edit_schedule_menu(menu_window, &weekly_schedule, get_selected_schedule(&schedule_table), schedule_table.selected_wday);
+
+                curs_set(0);
                 break;
 
             case 'a':
             case 'A':
-                wclear(schedule_table.table.window);
+                wclear(schedule_window);
+                curs_set(1);
 
                 create_schedule_menu(menu_window, &weekly_schedule);
 
@@ -320,6 +328,100 @@ void create_schedule_menu(WINDOW* menu_window, weekly_schedule_t* weekly_schedul
                 add_schedule(weekly_schedules->days + get_schedule_form_weekday(&schedule_form), schedule);
 
                 print_schedule_form_message(&schedule_form, "Successfully registered. Press any key to continue.", GOOD);
+                exit = true;
+
+                wgetch(schedule_form.form.window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(schedule_form.form.window, "Exit?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_schedule_form(&schedule_form, COLOR_2);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    free_schedule_form(&schedule_form);
+
+    delwin(schedule_form_window);
+}
+
+void edit_schedule_menu(WINDOW* menu_window, weekly_schedule_t* weekly_schedules, schedule_t* schedule, tm_wday_t weekday) {
+    schedule_form_t schedule_form;
+    WINDOW* schedule_form_window;
+
+    schedule_form_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_schedule_details_form(&schedule_form, schedule_form_window, TITLE, EDIT_SCHEDULE_HEADER, schedule, weekday);
+    display_schedule_form(&schedule_form, COLOR_2);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&schedule_form.form, wgetch(schedule_form_window))) {
+            case SUBMIT_ACTION:
+                if (!validate_schedule_form_train_id(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Train ID is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_from_station_id(&schedule_form) || !validate_schedule_form_to_station_id(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Station ID", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_weekday(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid weekday", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_departure_time(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Departure Time", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_eta(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Estimated Arrival Time", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_number_of_seats(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid Number of seats", ERROR);
+                    break;
+                }
+
+                if (!validate_schedule_form_price(&schedule_form)) {
+                    print_schedule_form_message(&schedule_form, "Invalid price", ERROR);
+                    break;
+                }
+
+                // updating
+                strncpy(schedule->train_id, get_schedule_form_train_id(&schedule_form), 5);
+                strncpy(schedule->from_station_id, get_schedule_form_from_station_id(&schedule_form), 4);
+                strncpy(schedule->to_station_id, get_schedule_form_to_station_id(&schedule_form), 4);
+                schedule->departure_time = get_schedule_form_departure_time(&schedule_form);
+                schedule->eta = get_schedule_form_eta(&schedule_form);
+                schedule->n_seats = get_schedule_form_number_of_seats(&schedule_form);
+                schedule->price = get_schedule_form_price(&schedule_form);
+
+                print_schedule_form_message(&schedule_form, "Edited. Press any key to continue.", GOOD);
                 exit = true;
 
                 wgetch(schedule_form.form.window);

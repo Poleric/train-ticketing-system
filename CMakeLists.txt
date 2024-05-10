@@ -42,10 +42,11 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/tui/form/login_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/register_member_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/register_staff_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/schedule_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/feedback_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/member_details_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/form/staff_details_form.c
-        ${CMAKE_SOURCE_DIR}/src/tui/form/schedule_form.c
+        ${CMAKE_SOURCE_DIR}/src/tui/form/schedule_details_form.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/staff_schedule_table.c
