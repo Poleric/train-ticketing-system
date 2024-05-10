@@ -3,6 +3,7 @@
 
 #include <tui/form/form.h>
 
+
 typedef struct RegisterForm register_form_t;
 
 struct RegisterForm {
