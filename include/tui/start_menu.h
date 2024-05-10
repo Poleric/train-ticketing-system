@@ -26,6 +26,7 @@ void member_feedback_form(WINDOW* menu_window, member_t* member);
 
 current_menu_t staff_login_menu(WINDOW* menu_window);
 void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff);
+void view_staff_details_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff);
 void staff_registration_menu(WINDOW* menu_window, staff_vector_t* staffs);
 
 void view_schedule_menu(WINDOW* menu_window, member_t* member);

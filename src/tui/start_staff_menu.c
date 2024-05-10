@@ -1,6 +1,8 @@
 #include <tui/start_menu.h>
 #include <tui/menu/staff_menu.h>
 #include <tui/form/register_staff_form.h>
+#include <tui/form/staff_details_form.h>
+#include <string.h>
 
 #define STAFF_LOGIN_HEADER "Login as Staff"
 #define STAFF_REGISTRATION_HEADER "Staff Registration"
@@ -133,7 +135,11 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
                         display_staff_menu(&staff_menu, COLOR_2);
                         break;
                     case 2:  // edit self
-                        break;
+                        cleanup_menu(&staff_menu.menu);
+
+                        view_staff_details_menu(menu_window, staffs, staff);
+
+                        display_staff_menu(&staff_menu, COLOR_2);
                     case 3:  // view all tickets
                         break;
                     case 4:  // logout
@@ -252,4 +258,104 @@ void staff_registration_menu(WINDOW* menu_window, staff_vector_t* staffs) {
     free_staff_register_form(&staff_register_form);
 
     delwin(staff_register_window);
+}
+
+void view_staff_details_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
+    staff_register_form_t register_form;
+    WINDOW* register_form_window;
+
+    register_form_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_staff_details_form(&register_form, register_form_window, TITLE, STAFF_REGISTRATION_HEADER, staff);
+    display_staff_register_form(&register_form, COLOR_2);
+
+    bool exit = false;
+    while (!exit) {
+        switch (form_driver(&register_form.form, wgetch(register_form_window))) {
+            case SUBMIT_ACTION:
+                if (is_staff_exists(staffs, get_staff_register_username(&register_form)) &&
+                    strcmp(staff->username, get_staff_register_username(&register_form)) != 0) {
+                    print_staff_register_form_message(&register_form, "Username is taken", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_email(&register_form)) {
+                    print_staff_register_form_message(&register_form, "Email is invalid", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_same_password(&register_form) &&
+                    strlen(get_staff_register_password(&register_form))) {
+                    print_staff_register_form_message(&register_form, "Password does not match", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_salary(&register_form)) {
+                    print_staff_register_form_message(&register_form, "Invalid salary amount", ERROR);
+                    break;
+                }
+
+                if (!validate_staff_register_contact_no(&register_form)) {
+                    print_staff_register_form_message(&register_form, "Invalid contact no", ERROR);
+                    break;
+                }
+
+                // saving
+                if (strcmp(staff->username, get_staff_register_username(&register_form)) != 0) {
+                    free(staff->username);
+                    staff->username = strdup(get_staff_register_username(&register_form));
+                }
+                if (strcmp(staff->email, get_staff_register_username(&register_form)) != 0) {
+                    free(staff->email);
+                    staff->email = strdup(get_staff_register_email(&register_form));
+                }
+                if (strlen(get_staff_register_password(&register_form)) > 0) {
+                    hash_message(get_staff_register_password(&register_form), staff->hashed_password);
+                }
+                staff->salary = get_staff_register_salary(&register_form);
+                if (strcmp(staff->contact_no, get_staff_register_contact_no(&register_form)) != 0) {
+                    free(staff->contact_no);
+                    staff->contact_no = strdup(get_staff_register_contact_no(&register_form));
+                }
+                if (strcmp(staff->position, get_staff_register_position(&register_form)) != 0) {
+                    free(staff->position);
+                    staff->position = get_staff_register_position(&register_form);
+                }
+
+                exit = true;
+                print_staff_register_form_message(&register_form, "Details saved. Press any key", GOOD);
+                wgetch(register_form.form.window);
+                break;
+
+            case EXIT_FORM_ACTION:
+                exit = true;
+                break;
+
+                // refresh even if not change screen
+            case REGISTER_ACTION:
+                if (confirmation_menu(register_form.form.window, "Return to menu?") == EXIT_SUCCESS) {
+                    exit = true;
+                    break;
+                }
+
+            case REFRESH_SCREEN_ACTION:
+                display_staff_register_form(&register_form, COLOR_1);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    write_staff(staffs, MEMBERS_FILEPATH);
+
+    free_staff_register_form(&register_form);
+
+    delwin(register_form_window);
 }
