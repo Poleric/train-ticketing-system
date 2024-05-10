@@ -2,6 +2,7 @@
 #include <tui/menu/staff_menu.h>
 #include <tui/form/register_staff_form.h>
 #include <tui/form/staff_details_form.h>
+#include <tui/table/staff_table.h>
 #include <string.h>
 
 #define STAFF_LOGIN_HEADER "Login as Staff"
@@ -123,7 +124,7 @@ void staff_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* staff) {
                     case 0:
                         cleanup_menu(&staff_menu.menu);
 
-                        staff_registration_menu(menu_window, staffs);
+                        view_staffs_menu(menu_window, staffs, staff);
 
                         display_staff_menu(&staff_menu, COLOR_2);
                         break;
@@ -358,4 +359,69 @@ void view_staff_details_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_
     free_staff_register_form(&register_form);
 
     delwin(register_form_window);
+}
+
+void view_staffs_menu(WINDOW* menu_window, staff_vector_t* staffs, staff_t* current_staff) {
+    WINDOW* staff_table_window;
+    staff_table_t staff_table;
+
+    staff_table_window = derwin(
+            menu_window,
+            LINES,
+            COLS,
+            0,
+            0
+    );
+
+    init_staff_table(staff_table_window, &staff_table, staffs, current_staff);
+
+    bool exit = false;
+    do {
+        display_staffs(&staff_table);
+        switch (wgetch(staff_table.table.window)) {
+            case 'q':
+            case CTRL('C'):
+                exit = true;
+                break;
+
+            case KEY_UP:  // TODO: fix scrolling
+                if (staff_table.table.current_line > 0 &&
+                    staff_table.table.selected_line < staffs->num_of_staff - staff_table.table.number_of_display_lines + 1
+                        )
+                    staff_table.table.current_line--;
+                if (staff_table.table.selected_line > 0)
+                    staff_table.table.selected_line--;
+                break;
+            case KEY_DOWN:
+                if (staff_table.table.current_line < staffs->num_of_staff - staff_table.table.number_of_display_lines)
+                    staff_table.table.current_line++;
+                if (staff_table.table.selected_line < staffs->num_of_staff - 1)
+                    staff_table.table.selected_line++;
+                break;
+            case 'R':
+            case 'r':
+                wclear(staff_table_window);
+                curs_set(1);
+                staff_registration_menu(menu_window, staffs);
+                curs_set(0);
+                break;
+
+            case 'D':
+            case 'd':
+                if (confirmation_menu(staff_table_window, "Delete the selected staff?") == EXIT_SUCCESS)
+                    delete_staff(staffs, get_selected_staff(&staff_table)->username);
+                curs_set(0);
+                break;
+            case 'E':
+            case 'e':
+                wclear(staff_table_window);
+                curs_set(1);
+                view_staff_details_menu(menu_window, staffs, get_selected_staff(&staff_table));
+                curs_set(0);
+                break;
+        }
+        wclear(staff_table.table.window);
+    } while (!exit);
+
+    free_staff_table(&staff_table);
 }

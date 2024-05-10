@@ -49,6 +49,7 @@ set (SOURCES
         ${CMAKE_SOURCE_DIR}/src/tui/table/schedule_table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/staff_schedule_table.c
         ${CMAKE_SOURCE_DIR}/src/tui/table/member_ticket_table.c
+        ${CMAKE_SOURCE_DIR}/src/tui/table/staff_table.c
         ${CMAKE_SOURCE_DIR}/src/tui/menu/menu.c
         ${CMAKE_SOURCE_DIR}/src/tui/menu/member_menu.c
         ${CMAKE_SOURCE_DIR}/src/tui/menu/int_menu.c
