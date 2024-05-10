@@ -18,7 +18,7 @@ void init_staff_schedule_table(WINDOW* window, schedule_table_t* schedule_table,
     schedule_table->table.column_widths[4] = 10;
     schedule_table->table.column_widths[5] = 8;
 
-    schedule_table->table.number_of_footers = 6;
+    schedule_table->table.number_of_footers = 7;
     schedule_table->table.footers = calloc(schedule_table->table.number_of_footers, sizeof(const char*));
     schedule_table->table.footers[0] = "[q] Quit";
     schedule_table->table.footers[1] = "[← →] Change Day";
@@ -26,6 +26,7 @@ void init_staff_schedule_table(WINDOW* window, schedule_table_t* schedule_table,
     schedule_table->table.footers[3] = "";
     schedule_table->table.footers[4] = "[D] Delete";
     schedule_table->table.footers[5] = "[E] Edit";
+    schedule_table->table.footers[6] = "[A] Add";
 
     schedule_table->table.footer_widths = calloc(schedule_table->table.number_of_footers, sizeof (int));
     schedule_table->table.footer_widths[0] = 1;
@@ -34,6 +35,7 @@ void init_staff_schedule_table(WINDOW* window, schedule_table_t* schedule_table,
     schedule_table->table.footer_widths[3] = 1;
     schedule_table->table.footer_widths[4] = 1;
     schedule_table->table.footer_widths[5] = 1;
+    schedule_table->table.footer_widths[6] = 1;
 
     schedule_table->weekly_schedule = weekly_schedules;
 
