@@ -77,13 +77,13 @@ void print_member_ticket_table_row(member_ticket_table_t* member_ticket_table, t
     move_to_x(member_ticket_table->table.window, offset_x);
 
     move_offset_x(member_ticket_table->table.window, get_offset_for_centered(5, member_ticket_table->table.column_widths[2]));
-    wprintw(member_ticket_table->table.window, "%d:%d", departure_time.tm_hour, departure_time.tm_min);
+    wprintw(member_ticket_table->table.window, "%02d:%02d", departure_time.tm_hour, departure_time.tm_min);
     offset_x += member_ticket_table->table.column_widths[2];
 
     move_to_x(member_ticket_table->table.window, offset_x);
 
     move_offset_x(member_ticket_table->table.window, get_offset_for_centered(16, member_ticket_table->table.column_widths[3]));
-    wprintw(member_ticket_table->table.window, "%d-%d-%d %d:%d", order_date.tm_year, order_date.tm_mon, order_date.tm_mday, order_time.tm_hour, order_time.tm_min);
+    wprintw(member_ticket_table->table.window, "%d-%d-%d %02d:%02d", order_date.tm_year, order_date.tm_mon, order_date.tm_mday, order_time.tm_hour, order_time.tm_min);
     offset_x += member_ticket_table->table.column_widths[3];
 
     move_to_x(member_ticket_table->table.window, offset_x);
