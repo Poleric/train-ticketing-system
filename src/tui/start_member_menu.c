@@ -15,6 +15,10 @@
 #define MEMBER_REGISTRATION_HEADER "Registration"
 #define FEEDBACK_FORM_HEADER "Send a feedback"
 
+#define SECONDS_IN_MINUTE 60
+#define SECONDS_IN_HOUR (60 * SECONDS_IN_MINUTE)
+#define SECONDS_IN_DAYS (24 * SECONDS_IN_HOUR)
+
 void reload_members(member_vector_t* members) {
     for (int i = 0; i < members->num_of_members; i++)
         free_member(members->array[i]);
@@ -534,6 +538,8 @@ void view_ticket_menu(WINDOW* menu_window, member_t* member) {
 
     init_member_ticket_table(member_ticket_window, &member_ticket_table, member);
 
+    train_ticket_t* selected_ticket;
+    const time_t NOW = time(NULL);
     bool exit = false;
     do {
         display_tickets(&member_ticket_table);
@@ -557,8 +563,24 @@ void view_ticket_menu(WINDOW* menu_window, member_t* member) {
                 if (member_ticket_table.table.selected_line < member_ticket_table.tickets->num_of_tickets - 1)
                     member_ticket_table.table.selected_line++;
                 break;
-            case KEY_ENTER:
+            case 'D':
+            case 'd':
+                selected_ticket = get_member_selected_ticket(&member_ticket_table);
+                if ((NOW - selected_ticket->order_timestamp > 7 * SECONDS_IN_DAYS) ||
+                    (selected_ticket->timestamp - NOW < 3 * SECONDS_IN_DAYS)) {
+                    const char* error_text = "Refund ineligible. Purchased less than a week and 3 days before departure.";
+                    wattron(member_ticket_window, COLOR_PAIR(ERROR));
+                    wmove(member_ticket_window, getmaxy(member_ticket_window) - 2, get_centered_x_start(member_ticket_window,(int)strlen(error_text)));
+                    wprintw(member_ticket_window, "%s", error_text);
+                    wattroff(member_ticket_window, COLOR_PAIR(ERROR));
+                    wrefresh(member_ticket_window);
+                    wgetch(member_ticket_window);
+                    break;
+                }
 
+                if (confirmation_menu(member_ticket_window, "Confirm Refund?") == EXIT_SUCCESS)
+                    delete_ticket(TICKETS_FILEPATH, get_member_selected_ticket(&member_ticket_table)->ticket_id);
+                curs_set(0);
                 break;
         }
         wclear(member_ticket_table.table.window);
